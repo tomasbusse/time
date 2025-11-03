@@ -27,6 +27,8 @@ export default function FoodApp() {
   const updateRecipe = useMutation(api.food.updateRecipe)
   const deleteRecipe = useMutation(api.food.deleteRecipe)
   const addRecipeIngredient = useMutation(api.food.addRecipeIngredient)
+  const updateRecipeIngredient = useMutation(api.food.updateRecipeIngredient)
+  const deleteRecipeIngredient = useMutation(api.food.deleteRecipeIngredient)
 
   // Recipe modal state
   const [showRecipeModal, setShowRecipeModal] = useState(false)
@@ -210,11 +212,63 @@ export default function FoodApp() {
                       Add Ingredient
                     </button>
                   </div>
-                  <ul className="mt-3 text-sm text-neutral-700 list-disc pl-5">
+                  <div className="mt-3 space-y-2">
                     {recipeForm.ingredients.map((ing, idx) => (
-                      <li key={idx}>{ing.quantity ? `${ing.quantity} ` : ''}{ing.unit ? `${ing.unit} ` : ''}{ing.name}</li>
+                      <div key={idx} className="grid grid-cols-1 md:grid-cols-5 gap-2 items-center">
+                        <input
+                          className="h-9 rounded-md border border-neutral-300 px-3 text-sm"
+                          value={ing.name}
+                          onChange={(e) => {
+                            const next = [...recipeForm.ingredients]
+                            next[idx] = { ...ing, name: e.target.value }
+                            setRecipeForm({ ...recipeForm, ingredients: next })
+                          }}
+                        />
+                        <input
+                          className="h-9 rounded-md border border-neutral-300 px-3 text-sm"
+                          value={ing.quantity || ''}
+                          placeholder="Qty"
+                          onChange={(e) => {
+                            const next = [...recipeForm.ingredients]
+                            next[idx] = { ...ing, quantity: e.target.value }
+                            setRecipeForm({ ...recipeForm, ingredients: next })
+                          }}
+                        />
+                        <input
+                          className="h-9 rounded-md border border-neutral-300 px-3 text-sm"
+                          value={ing.unit || ''}
+                          placeholder="Unit"
+                          onChange={(e) => {
+                            const next = [...recipeForm.ingredients]
+                            next[idx] = { ...ing, unit: e.target.value }
+                            setRecipeForm({ ...recipeForm, ingredients: next })
+                          }}
+                        />
+                        <button
+                          className="h-9 rounded-md border border-neutral-300 px-3 text-sm"
+                          onClick={async () => {
+                            // If editing existing recipe, persist edited ingredient immediately
+                            if (editingRecipeId) {
+                              await addRecipeIngredient({ recipeId: editingRecipeId as any, ingredientName: ing.name, quantity: ing.quantity, unit: ing.unit })
+                            }
+                          }}
+                        >
+                          Save Row
+                        </button>
+                        <button
+                          className="h-9 rounded-md border border-red-300 text-red-700 px-3 text-sm"
+                          onClick={async () => {
+                            const next = [...recipeForm.ingredients]
+                            next.splice(idx, 1)
+                            setRecipeForm({ ...recipeForm, ingredients: next })
+                            // If editing existing recipe and ingredient has been persisted, we’d call deleteRecipeIngredient here when we track ids
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               </div>
               <div className="p-6 border-t flex gap-3">

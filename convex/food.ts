@@ -24,6 +24,28 @@ export const listRecipes = query({
   },
 });
 
+export const updateRecipeIngredient = mutation({
+  args: {
+    ingredientId: v.id("recipeIngredients"),
+    ingredientName: v.optional(v.string()),
+    quantity: v.optional(v.string()),
+    unit: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const { ingredientId, ...updates } = args as any;
+    await ctx.db.patch(ingredientId, updates);
+    return ingredientId;
+  },
+});
+
+export const deleteRecipeIngredient = mutation({
+  args: { ingredientId: v.id("recipeIngredients") },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.ingredientId);
+    return args.ingredientId;
+  },
+});
+
 export const updateRecipe = mutation({
   args: {
     recipeId: v.id("recipes"),
