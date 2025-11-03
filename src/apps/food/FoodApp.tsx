@@ -131,8 +131,33 @@ export default function FoodApp() {
         {activeTab === 'recipes' && (
           <RecipeList
             recipes={recipes}
-            onAddRecipe={() => alert('Add Recipe - Coming soon')}
-            onEditRecipe={() => alert('Edit Recipe - Coming soon')}
+            onAddRecipe={() => {
+              const name = prompt('Recipe name')
+              if (!name) return
+              const instructions = prompt('Instructions (optional)') || undefined
+              const ingRaw = prompt('Ingredients (comma separated, e.g., "2 cup flour, 1 egg")') || ''
+              const ingredients = ingRaw
+                .split(',')
+                .map(s => s.trim())
+                .filter(s => s.length > 0)
+                .map(s => {
+                  // naive parse: first token quantity, second unit, rest name
+                  const parts = s.split(' ')
+                  const quantity = parts[0] && /[\d/]+/.test(parts[0]) ? parts[0] : undefined
+                  const unit = parts[1] && quantity ? parts[1] : undefined
+                  const nameStart = unit ? 2 : (quantity ? 1 : 0)
+                  const itemName = parts.slice(nameStart).join(' ') || s
+                  return { name: itemName, quantity, unit }
+                })
+              const newRecipe: Recipe = {
+                id: Date.now().toString(),
+                name,
+                instructions,
+                ingredients,
+              }
+              setRecipes([newRecipe, ...recipes])
+            }}
+            onEditRecipe={(id) => alert('Edit Recipe - Coming soon')}
             onDeleteRecipe={(id) => setRecipes(recipes.filter((r) => r.id !== id))}
             onAddToShoppingList={handleAddToShoppingList}
           />
