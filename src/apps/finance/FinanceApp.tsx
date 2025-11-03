@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { useQuery, useMutation } from 'convex/react'
+import { api } from '../../../convex/_generated/api'
+import { useWorkspace } from '@/lib/WorkspaceContext'
 import AccountList from './components/AccountList'
 import AccountForm from './components/AccountForm'
 import EquityGoal from './components/EquityGoal'
@@ -41,33 +44,27 @@ interface Subscription {
 }
 
 export default function FinanceApp() {
+  const { workspaceId, userId } = useWorkspace()
   const [activeTab, setActiveTab] = useState<TabType>('liquidity')
   const [showAccountForm, setShowAccountForm] = useState(false)
   const [editingAccount, setEditingAccount] = useState<Account | undefined>()
 
-  const [accounts, setAccounts] = useState<Account[]>([
-    {
-      id: '1',
-      name: 'Main Checking Account',
-      accountType: 'bank',
-      currentBalance: 5420.50,
-      isPrivate: false,
-    },
-    {
-      id: '2',
-      name: 'Emergency Savings',
-      accountType: 'savings',
-      currentBalance: 12000,
-      isPrivate: false,
-    },
-    {
-      id: '3',
-      name: 'Mortgage',
-      accountType: 'loan',
-      currentBalance: -180000,
-      isPrivate: false,
-    },
-  ])
+  // Query accounts from Convex
+  const accountsData = useQuery(api.finance.listAccounts, 
+    workspaceId ? { workspaceId } : 'skip'
+  )
+  const accounts = (accountsData || []).map(acc => ({
+    id: acc._id,
+    name: acc.name,
+    accountType: acc.accountType,
+    currentBalance: acc.currentBalance,
+    isPrivate: acc.isPrivate,
+  }))
+
+  // Mutations
+  const createAccountMutation = useMutation(api.finance.createAccount)
+  const updateAccountMutation = useMutation(api.finance.updateAccount)
+  const deleteAccountMutation = useMutation(api.finance.deleteAccount)
 
   const [assets, setAssets] = useState<Asset[]>([
     {
@@ -112,11 +109,27 @@ export default function FinanceApp() {
     },
   ])
 
-  const handleSaveAccount = (accountData: Partial<Account>) => {
+  const handleSaveAccount = async (accountData: Partial<Account>) => {
+    if (!workspaceId || !userId) return
+
     if (accountData.id) {
-      setAccounts(accounts.map((a) => (a.id === accountData.id ? { ...a, ...accountData } as Account : a)))
+      // Update existing account
+      await updateAccountMutation({
+        id: accountData.id as any,
+        name: accountData.name,
+        currentBalance: accountData.currentBalance,
+        isPrivate: accountData.isPrivate,
+      })
     } else {
-      setAccounts([...accounts, { ...accountData, id: Date.now().toString() } as Account])
+      // Create new account
+      await createAccountMutation({
+        workspaceId: workspaceId as any,
+        ownerId: userId as any,
+        name: accountData.name!,
+        accountType: accountData.accountType!,
+        currentBalance: accountData.currentBalance!,
+        isPrivate: accountData.isPrivate!,
+      })
     }
     setShowAccountForm(false)
     setEditingAccount(undefined)
@@ -128,18 +141,20 @@ export default function FinanceApp() {
     setShowAccountForm(true)
   }
 
-  const handleDeleteAccount = (accountId: string) => {
+  const handleDeleteAccount = async (accountId: string) => {
     if (confirm('Are you sure you want to delete this account?')) {
-      setAccounts(accounts.filter((a) => a.id !== accountId))
+      await deleteAccountMutation({ id: accountId as any })
     }
   }
 
-  const handleTogglePrivacy = (accountId: string) => {
-    setAccounts(
-      accounts.map((a) =>
-        a.id === accountId ? { ...a, isPrivate: !a.isPrivate } : a
-      )
-    )
+  const handleTogglePrivacy = async (accountId: string) => {
+    const account = accounts.find((a) => a.id === accountId)
+    if (account) {
+      await updateAccountMutation({
+        id: accountId as any,
+        isPrivate: !account.isPrivate,
+      })
+    }
   }
 
   const totalLiquidity = accounts

@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import { Clock, DollarSign, FileText, UtensilsCrossed, Calendar, Lightbulb, Settings } from 'lucide-react'
 import { format } from 'date-fns'
+import { useWorkspace } from '@/lib/WorkspaceContext'
 
 export default function Dashboard() {
   const now = new Date()
+  const { userName } = useWorkspace()
   
   const modules = [
     {
@@ -58,7 +60,7 @@ export default function Dashboard() {
             <Clock className="w-12 h-12 text-neutral-700" />
             <h1 className="text-5xl font-bold text-neutral-800">Time</h1>
           </div>
-          <p className="text-xl text-neutral-600">Welcome, Tomas. Your calm productivity sanctuary awaits.</p>
+          <p className="text-xl text-neutral-600">Welcome, {userName || 'User'}. Your calm productivity sanctuary awaits.</p>
           
           <div className="mt-8 flex justify-center">
             <div className="relative">
