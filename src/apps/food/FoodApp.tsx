@@ -13,32 +13,25 @@ export default function FoodApp() {
   const { workspaceId, userId } = useWorkspace()
   const [activeTab, setActiveTab] = useState<TabType>('recipes')
 
-  const [recipes, setRecipes] = useState<Recipe[]>([
-    {
-      id: '1',
-      name: 'Spaghetti Carbonara',
-      instructions: 'Cook pasta. Fry pancetta. Mix eggs and cheese. Combine all with pasta water.',
-      ingredients: [
-        { name: 'Spaghetti', quantity: '400', unit: 'g' },
-        { name: 'Pancetta', quantity: '200', unit: 'g' },
-        { name: 'Eggs', quantity: '4', unit: '' },
-        { name: 'Parmesan cheese', quantity: '100', unit: 'g' },
-        { name: 'Black pepper', quantity: '1', unit: 'tsp' },
-      ],
-    },
-    {
-      id: '2',
-      name: 'Chicken Stir-Fry',
-      instructions: 'Cut chicken and vegetables. Stir-fry in wok with sauce.',
-      ingredients: [
-        { name: 'Chicken breast', quantity: '500', unit: 'g' },
-        { name: 'Bell peppers', quantity: '2', unit: '' },
-        { name: 'Broccoli', quantity: '1', unit: 'head' },
-        { name: 'Soy sauce', quantity: '3', unit: 'tbsp' },
-        { name: 'Ginger', quantity: '1', unit: 'tbsp' },
-      ],
-    },
-  ])
+  // Recipes from Convex
+  const recipesData = useQuery(api.food.listRecipes, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
+  const recipes: Recipe[] = Array.isArray(recipesData)
+    ? recipesData.map((r: any) => ({
+        id: r._id,
+        name: r.name,
+        instructions: r.instructions,
+        ingredients: (r.ingredients || []).map((ing: any) => ({ name: ing.ingredientName, quantity: ing.quantity, unit: ing.unit })),
+      }))
+    : []
+  const createRecipe = useMutation(api.food.createRecipe)
+  const updateRecipe = useMutation(api.food.updateRecipe)
+  const deleteRecipe = useMutation(api.food.deleteRecipe)
+  const addRecipeIngredient = useMutation(api.food.addRecipeIngredient)
+
+  // Recipe modal state
+  const [showRecipeModal, setShowRecipeModal] = useState(false)
+  const [editingRecipeId, setEditingRecipeId] = useState<string | null>(null)
+  const [recipeForm, setRecipeForm] = useState<{ name: string; instructions?: string; ingredients: { name: string; quantity?: string; unit?: string }[] }>({ name: '', instructions: '', ingredients: [] })
 
   const listsData = useQuery(api.food.listShoppingLists, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
   const shoppingLists: ShoppingList[] = Array.isArray(listsData)
@@ -132,46 +125,23 @@ export default function FoodApp() {
           <RecipeList
             recipes={recipes}
             onAddRecipe={() => {
-              const name = prompt('Recipe name')
-              if (!name) return
-              const instructions = prompt('Instructions (optional)') || undefined
-              const ingRaw = prompt('Ingredients (comma separated, e.g., "2 cup flour, 1 egg")') || ''
-              const ingredients = ingRaw
-                .split(',')
-                .map(s => s.trim())
-                .filter(s => s.length > 0)
-                .map(s => {
-                  // naive parse: first token quantity, second unit, rest name
-                  const parts = s.split(' ')
-                  const quantity = parts[0] && /[\d/]+/.test(parts[0]) ? parts[0] : undefined
-                  const unit = parts[1] && quantity ? parts[1] : undefined
-                  const nameStart = unit ? 2 : (quantity ? 1 : 0)
-                  const itemName = parts.slice(nameStart).join(' ') || s
-                  return { name: itemName, quantity, unit }
-                })
-              const newRecipe: Recipe = {
-                id: Date.now().toString(),
-                name,
-                instructions,
-                ingredients,
-              }
-              setRecipes([newRecipe, ...recipes])
+              setEditingRecipeId(null)
+              setRecipeForm({ name: '', instructions: '', ingredients: [] })
+              setShowRecipeModal(true)
             }}
             onEditRecipe={(id) => {
               const r = recipes.find(x => x.id === id)
               if (!r) return
-              const name = prompt('Recipe name', r.name) || r.name
-              const instructions = prompt('Instructions (optional)', r.instructions || '') || r.instructions
-              setRecipes(recipes.map(x => (x.id === id ? { ...x, name, instructions } : x)))
+              setEditingRecipeId(id)
+              setRecipeForm({ name: r.name, instructions: r.instructions, ingredients: r.ingredients })
+              setShowRecipeModal(true)
             }}
-            onDeleteRecipe={(id) => setRecipes(recipes.filter((r) => r.id !== id))}
+            onDeleteRecipe={async (id) => {
+              await deleteRecipe({ recipeId: id as any })
+            }}
             onAddToShoppingList={handleAddToShoppingList}
-            onAddIngredient={(recipeId, ing) => {
-              setRecipes(
-                recipes.map(r =>
-                  r.id === recipeId ? { ...r, ingredients: [...r.ingredients, { name: ing.name, quantity: ing.quantity, unit: ing.unit }] } : r
-                )
-              )
+            onAddIngredient={async (recipeId, ing) => {
+              await addRecipeIngredient({ recipeId: recipeId as any, ingredientName: ing.name, quantity: ing.quantity, unit: ing.unit })
             }}
           />
         )}
@@ -192,6 +162,92 @@ export default function FoodApp() {
               })
             }}
           />
+        )}
+
+        {showRecipeModal && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-lg w-full">
+              <div className="p-6 border-b">
+                <h2 className="text-xl font-semibold text-neutral-800">{editingRecipeId ? 'Edit Recipe' : 'Add Recipe'}</h2>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">Name</label>
+                  <input
+                    className="h-10 w-full rounded-md border border-neutral-300 px-3 text-sm"
+                    value={recipeForm.name}
+                    onChange={(e) => setRecipeForm({ ...recipeForm, name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">Instructions (optional)</label>
+                  <textarea
+                    className="w-full min-h-[100px] rounded-md border border-neutral-300 px-3 py-2 text-sm"
+                    value={recipeForm.instructions || ''}
+                    onChange={(e) => setRecipeForm({ ...recipeForm, instructions: e.target.value })}
+                  />
+                </div>
+                <div className="p-3 border border-neutral-200 rounded-lg">
+                  <div className="text-sm font-medium text-neutral-700 mb-2">Ingredients</div>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                    <input id="newIngName" placeholder="Ingredient" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
+                    <input id="newIngQty" placeholder="Qty" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
+                    <input id="newIngUnit" placeholder="Unit" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
+                    <button
+                      className="h-10 rounded-md bg-neutral-900 text-white px-4 text-sm"
+                      onClick={() => {
+                        const nameEl = document.getElementById('newIngName') as HTMLInputElement
+                        const qtyEl = document.getElementById('newIngQty') as HTMLInputElement
+                        const unitEl = document.getElementById('newIngUnit') as HTMLInputElement
+                        const name = nameEl?.value?.trim()
+                        if (!name) return
+                        setRecipeForm({ ...recipeForm, ingredients: [...recipeForm.ingredients, { name, quantity: qtyEl?.value || undefined, unit: unitEl?.value || undefined }] })
+                        if (nameEl) nameEl.value = ''
+                        if (qtyEl) qtyEl.value = ''
+                        if (unitEl) unitEl.value = ''
+                      }}
+                    >
+                      Add Ingredient
+                    </button>
+                  </div>
+                  <ul className="mt-3 text-sm text-neutral-700 list-disc pl-5">
+                    {recipeForm.ingredients.map((ing, idx) => (
+                      <li key={idx}>{ing.quantity ? `${ing.quantity} ` : ''}{ing.unit ? `${ing.unit} ` : ''}{ing.name}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="p-6 border-t flex gap-3">
+                <button onClick={() => setShowRecipeModal(false)} className="flex-1 h-10 px-4 rounded-md border border-neutral-300">Cancel</button>
+                <button
+                  onClick={async () => {
+                    if (!workspaceId || !userId || !recipeForm.name) return
+                    if (editingRecipeId) {
+                      await updateRecipe({ recipeId: editingRecipeId as any, name: recipeForm.name, instructions: recipeForm.instructions })
+                      // New ingredients added in modal are only queued locally; add them now as separate inserts
+                      for (const ing of recipeForm.ingredients) {
+                        await addRecipeIngredient({ recipeId: editingRecipeId as any, ingredientName: ing.name, quantity: ing.quantity, unit: ing.unit })
+                      }
+                    } else {
+                      await createRecipe({
+                        workspaceId: workspaceId as any,
+                        userId: userId as any,
+                        name: recipeForm.name,
+                        instructions: recipeForm.instructions,
+                        ingredients: recipeForm.ingredients.map(ing => ({ ingredientName: ing.name, quantity: ing.quantity, unit: ing.unit }))
+                      })
+                    }
+                    setShowRecipeModal(false)
+                    setEditingRecipeId(null)
+                    setRecipeForm({ name: '', instructions: '', ingredients: [] })
+                  }}
+                  className="flex-1 h-10 px-4 rounded-md bg-neutral-900 text-white"
+                >
+                  Save Recipe
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
