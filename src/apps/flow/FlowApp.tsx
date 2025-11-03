@@ -4,97 +4,56 @@ import { ArrowLeft, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import TaskBoard, { Task } from './components/TaskBoard'
 import IdeaList, { Idea } from './components/IdeaList'
+import { useQuery, useMutation } from 'convex/react'
+import { api } from '../../../convex/_generated/api'
+import { useWorkspace } from '@/lib/WorkspaceContext'
 
 type TabType = 'tasks' | 'ideas'
 
 export default function FlowApp() {
+  const { workspaceId, userId } = useWorkspace()
   const [activeTab, setActiveTab] = useState<TabType>('tasks')
 
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: '1',
-      title: 'Design the Flow mini-app UI',
-      status: 'in_progress',
-      priority: 'high',
-      dueDate: '2025-12-15',
-    },
-    {
-      id: '2',
-      title: 'Develop task creation form',
-      status: 'todo',
-      priority: 'medium',
-      dueDate: '2025-12-20',
-    },
-    {
-      id: '3',
-      title: 'Setup Convex database',
-      status: 'completed',
-      priority: 'high',
-    },
-    {
-      id: '4',
-      title: 'Write documentation',
-      status: 'todo',
-      priority: 'low',
-    },
-  ])
+  // Tasks & Ideas from Convex
+  const tasksData = useQuery(api.flow.listTasks, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
+  const tasks: Task[] = Array.isArray(tasksData)
+    ? tasksData.map((t: any) => ({ id: t._id, title: t.title, status: t.status, priority: t.priority, dueDate: t.dueDate, ideaId: t.ideaId }))
+    : []
+  const ideasData = useQuery(api.flow.listIdeas, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
+  const ideas: Idea[] = Array.isArray(ideasData)
+    ? ideasData.map((i: any) => ({ id: i._id, title: i.title, description: i.description, status: i.status }))
+    : []
+  const createTask = useMutation(api.flow.createTask)
+  const updateTaskStatus = useMutation(api.flow.updateTaskStatus)
+  const deleteTaskMutation = useMutation(api.flow.deleteTask)
+  const createIdea = useMutation(api.flow.createIdea)
+  const updateIdeaStatus = useMutation(api.flow.updateIdeaStatus)
+  const deleteIdeaMutation = useMutation(api.flow.deleteIdea)
 
-  const [ideas, setIdeas] = useState<Idea[]>([
-    {
-      id: '1',
-      title: 'Add dark mode support',
-      description: 'Implement dark mode toggle for better UX at night',
-      status: 'new',
-    },
-    {
-      id: '2',
-      title: 'Integration with Calendar',
-      description: 'Sync tasks with Google Calendar for better planning',
-      status: 'reviewing',
-    },
-    {
-      id: '3',
-      title: 'Export to CSV',
-      description: 'Allow users to export their tasks and time logs',
-      status: 'new',
-    },
-  ])
-
-  const handleUpdateTaskStatus = (
+  const handleUpdateTaskStatus = async (
     taskId: string,
     status: 'todo' | 'in_progress' | 'completed'
   ) => {
-    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, status } : task)))
+    await updateTaskStatus({ taskId: taskId as any, status })
   }
 
-  const handleDeleteTask = (taskId: string) => {
+  const handleDeleteTask = async (taskId: string) => {
     if (confirm('Are you sure you want to delete this task?')) {
-      setTasks(tasks.filter((task) => task.id !== taskId))
+      await deleteTaskMutation({ taskId: taskId as any })
     }
   }
 
-  const handleConvertToTask = (ideaId: string) => {
+  const handleConvertToTask = async (ideaId: string) => {
     const idea = ideas.find((i) => i.id === ideaId)
-    if (!idea) return
-
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title: idea.title,
-      status: 'todo',
-      priority: 'medium',
-      ideaId: idea.id,
-    }
-
-    setTasks([...tasks, newTask])
-    setIdeas(
-      ideas.map((i) => (i.id === ideaId ? { ...i, status: 'converted' as const } : i))
-    )
+    if (!idea || !workspaceId || !userId) return
+    await createTask({ workspaceId: workspaceId as any, userId: userId as any, title: idea.title, status: 'todo', priority: 'medium', ideaId: idea.id as any })
+    await updateIdeaStatus({ ideaId: ideaId as any, status: 'converted' })
     setActiveTab('tasks')
   }
 
-  const handleDeleteIdea = (ideaId: string) => {
+  const handleDeleteIdea = async (ideaId: string) => {
     if (confirm('Are you sure you want to delete this idea?')) {
-      setIdeas(ideas.filter((idea) => idea.id !== ideaId))
+      await deleteIdeaMutation({ ideaId: ideaId as any })
     }
   }
 
@@ -131,7 +90,11 @@ export default function FlowApp() {
                   {taskStats.completed} / {taskStats.total} completed
                 </span>
               </div>
-              <Button onClick={() => alert('Add Task - Coming soon')}>
+              <Button onClick={async () => {
+                const title = prompt('Task title')
+                if (!title || !workspaceId || !userId) return
+                await createTask({ workspaceId: workspaceId as any, userId: userId as any, title, status: 'todo', priority: 'medium' })
+              }}>
                 <Plus className="w-4 h-4 mr-2" />
                 New Task
               </Button>
@@ -184,7 +147,11 @@ export default function FlowApp() {
         {activeTab === 'ideas' && (
           <IdeaList
             ideas={ideas}
-            onAddIdea={() => alert('Add Idea - Coming soon')}
+            onAddIdea={async () => {
+              const title = prompt('Idea title')
+              if (!title || !workspaceId || !userId) return
+              await createIdea({ workspaceId: workspaceId as any, userId: userId as any, title, status: 'new' })
+            }}
             onEditIdea={() => alert('Edit Idea - Coming soon')}
             onDeleteIdea={handleDeleteIdea}
             onConvertToTask={handleConvertToTask}
