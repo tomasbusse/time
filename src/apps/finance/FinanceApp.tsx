@@ -99,25 +99,31 @@ export default function FinanceApp() {
       relatedAssetId: '1',
     },
   ])
-
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([
-    {
-      id: '1',
-      name: 'Netflix',
-      cost: 15.99,
-      billingCycle: 'monthly',
-      nextBillingDate: '2025-12-01',
-      isActive: true,
-    },
-    {
-      id: '2',
-      name: 'Spotify',
-      cost: 9.99,
-      billingCycle: 'monthly',
-      nextBillingDate: '2025-12-05',
-      isActive: true,
-    },
-  ])
+  // Subscriptions (Convex)
+  const subscriptionsData = useQuery(
+    api.finance.listSubscriptions,
+    workspaceId ? { workspaceId } : 'skip'
+  )
+  const subs: Subscription[] = (subscriptionsData || []).map((s: any) => ({
+    id: s._id,
+    name: s.name,
+    cost: s.cost,
+    billingCycle: s.billingCycle,
+    nextBillingDate: s.nextBillingDate,
+    isActive: s.isActive,
+  }))
+  const createSubscription = useMutation(api.finance.createSubscription)
+  const updateSubscription = useMutation(api.finance.updateSubscription)
+  const deleteSubscription = useMutation(api.finance.deleteSubscription)
+  const [showSubModal, setShowSubModal] = useState(false)
+  const [editingSub, setEditingSub] = useState<Subscription | undefined>()
+  const [subForm, setSubForm] = useState({
+    name: '',
+    cost: 0,
+    billingCycle: 'monthly' as 'monthly' | 'yearly',
+    nextBillingDate: '',
+    isActive: true,
+  })
 
   const handleSaveAccount = async (accountData: Partial<Account>) => {
     if (!workspaceId || !userId) return
@@ -250,6 +256,100 @@ export default function FinanceApp() {
           </div>
         )}
 
+      {showSubModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="p-6 border-b">
+              <h2 className="text-xl font-semibold text-neutral-800">{editingSub ? 'Edit Subscription' : 'Add Subscription'}</h2>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Name</label>
+                <input
+                  type="text"
+                  value={subForm.name}
+                  onChange={(e) => setSubForm({ ...subForm, name: e.target.value })}
+                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Cost (€)</label>
+                <input
+                  type="number"
+                  min={0}
+                  step={0.01}
+                  value={subForm.cost}
+                  onChange={(e) => setSubForm({ ...subForm, cost: Number(e.target.value) })}
+                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Billing Cycle</label>
+                <select
+                  value={subForm.billingCycle}
+                  onChange={(e) => setSubForm({ ...subForm, billingCycle: e.target.value as 'monthly' | 'yearly' })}
+                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                >
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Next Billing Date</label>
+                <input
+                  type="date"
+                  value={subForm.nextBillingDate}
+                  onChange={(e) => setSubForm({ ...subForm, nextBillingDate: e.target.value })}
+                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={subForm.isActive}
+                  onChange={(e) => setSubForm({ ...subForm, isActive: e.target.checked })}
+                />
+                <span className="text-sm text-neutral-700">Active</span>
+              </div>
+            </div>
+            <div className="p-6 border-t flex gap-3">
+              <button onClick={() => setShowSubModal(false)} className="flex-1 h-10 px-4 rounded-md border border-neutral-300">Cancel</button>
+              <button
+                onClick={async () => {
+                  if (!workspaceId || !userId || !subForm.name || subForm.cost <= 0 || !subForm.nextBillingDate) return
+                  if (editingSub) {
+                    await updateSubscription({
+                      id: editingSub.id as any,
+                      name: subForm.name,
+                      cost: subForm.cost,
+                      billingCycle: subForm.billingCycle,
+                      nextBillingDate: subForm.nextBillingDate,
+                      isActive: subForm.isActive,
+                      ownerId: userId as any,
+                    })
+                  } else {
+                    await createSubscription({
+                      workspaceId: workspaceId as any,
+                      ownerId: userId as any,
+                      name: subForm.name,
+                      cost: subForm.cost,
+                      billingCycle: subForm.billingCycle,
+                      nextBillingDate: subForm.nextBillingDate,
+                      isActive: subForm.isActive,
+                    })
+                  }
+                  setShowSubModal(false)
+                  setEditingSub(undefined)
+                }}
+                className="flex-1 h-10 px-4 rounded-md bg-neutral-900 text-white"
+              >
+                Save Subscription
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
         {activeTab === 'assets' && (
           <AssetsLiabilities
             assets={assets}
@@ -265,12 +365,30 @@ export default function FinanceApp() {
 
         {activeTab === 'subscriptions' && (
           <SubscriptionList
-            subscriptions={subscriptions}
-            onAddSubscription={() => alert('Add Subscription - Coming soon')}
-            onEditSubscription={() => alert('Edit Subscription - Coming soon')}
-            onDeleteSubscription={(id) =>
-              setSubscriptions(subscriptions.filter((s) => s.id !== id))
-            }
+            subscriptions={subs}
+            onAddSubscription={() => {
+              setEditingSub(undefined)
+              setSubForm({ name: '', cost: 0, billingCycle: 'monthly', nextBillingDate: '', isActive: true })
+              setShowSubModal(true)
+            }}
+            onEditSubscription={(id) => {
+              const found = subs.find((s) => s.id === id)
+              if (found) {
+                setEditingSub(found)
+                setSubForm({
+                  name: found.name,
+                  cost: found.cost,
+                  billingCycle: found.billingCycle,
+                  nextBillingDate: found.nextBillingDate,
+                  isActive: found.isActive,
+                })
+                setShowSubModal(true)
+              }
+            }}
+            onDeleteSubscription={async (id) => {
+              if (!userId) return
+              await deleteSubscription({ id: id as any, ownerId: userId as any })
+            }}
           />
         )}
 
