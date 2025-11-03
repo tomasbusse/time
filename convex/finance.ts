@@ -107,3 +107,72 @@ export const listSubscriptions = query({
       .collect();
   },
 });
+
+// Equity Goal
+export const getEquityGoal = query({
+  args: { workspaceId: v.id("workspaces") },
+  handler: async (ctx, args) => {
+    const goals = await ctx.db
+      .query("equityGoals")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .collect();
+    if (goals.length === 0) return null;
+    // Return the most recently updated goal
+    goals.sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0));
+    return goals[0];
+  },
+});
+
+export const upsertEquityGoal = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+    ownerId: v.id("users"),
+    targetEquity: v.number(),
+    targetDate: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    // Permission check: allow owner or users with permissions.canAdd || permissions.canEditShared for finance
+    const workspace = await ctx.db.get(args.workspaceId);
+    if (!workspace) throw new Error("Workspace not found");
+
+    let allowed = false;
+    // Owner can always edit
+    if (workspace.ownerId === args.ownerId) {
+      allowed = true;
+    } else {
+      const perm = await ctx.db
+        .query("permissions")
+        .withIndex("by_workspace_user", (q) => q.eq("workspaceId", args.workspaceId).eq("userId", args.ownerId))
+        .first();
+      if (perm && perm.module === "finance" && (perm.canAdd || perm.canEditShared)) {
+        allowed = true;
+      }
+    }
+    if (!allowed) {
+      throw new Error("Not authorized to update equity goal");
+    }
+
+    const existing = await ctx.db
+      .query("equityGoals")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .first();
+
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        targetEquity: args.targetEquity,
+        targetDate: args.targetDate,
+        updatedAt: Date.now(),
+      });
+      return existing._id;
+    }
+    const id = await ctx.db.insert("equityGoals", {
+      workspaceId: args.workspaceId,
+      ownerId: args.ownerId,
+      targetEquity: args.targetEquity,
+      targetDate: args.targetDate,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+    return id;
+  },
+});

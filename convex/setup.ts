@@ -1,4 +1,4 @@
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 export const setupDefaultData = mutation({
@@ -118,7 +118,7 @@ export const setupDefaultData = mutation({
   },
 });
 
-export const getDefaultWorkspace = mutation({
+export const getDefaultWorkspace = query({
   args: {},
   handler: async (ctx) => {
     const user = await ctx.db

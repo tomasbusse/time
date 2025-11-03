@@ -66,6 +66,16 @@ export default function FinanceApp() {
   const updateAccountMutation = useMutation(api.finance.updateAccount)
   const deleteAccountMutation = useMutation(api.finance.deleteAccount)
 
+  // Equity goal (Convex)
+  const goal = useQuery(
+    api.finance.getEquityGoal,
+    workspaceId ? { workspaceId } : 'skip'
+  )
+  const upsertGoal = useMutation(api.finance.upsertEquityGoal)
+  const [showGoalModal, setShowGoalModal] = useState(false)
+  const [goalAmount, setGoalAmount] = useState<number>(goal?.targetEquity ?? 0)
+  const [goalDate, setGoalDate] = useState<string>(goal?.targetDate ?? '')
+
   const [assets, setAssets] = useState<Asset[]>([
     {
       id: '1',
@@ -221,8 +231,10 @@ export default function FinanceApp() {
           <div className="space-y-6">
             <EquityGoal
               currentEquity={currentEquity}
-              targetEquity={50000}
-              targetDate="2026-12-31"
+              targetEquity={goal?.targetEquity ?? 0}
+              targetDate={goal?.targetDate}
+              canEdit={Boolean(userId)}
+              onEdit={() => setShowGoalModal(true)}
             />
 
             <AccountList
@@ -271,6 +283,60 @@ export default function FinanceApp() {
               setEditingAccount(undefined)
             }}
           />
+        )}
+
+        {showGoalModal && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+              <div className="p-6 border-b">
+                <h2 className="text-xl font-semibold text-neutral-800">Set Equity Goal</h2>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">Target Amount (€)</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={goalAmount}
+                    onChange={(e) => setGoalAmount(Number(e.target.value))}
+                    className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">Target Date (optional)</label>
+                  <input
+                    type="date"
+                    value={goalDate}
+                    onChange={(e) => setGoalDate(e.target.value)}
+                    className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+              <div className="p-6 border-t flex gap-3">
+                <button
+                  onClick={() => setShowGoalModal(false)}
+                  className="flex-1 h-10 px-4 rounded-md border border-neutral-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!workspaceId || !userId || goalAmount <= 0) return
+                    await upsertGoal({
+                      workspaceId: workspaceId as any,
+                      ownerId: userId as any,
+                      targetEquity: goalAmount,
+                      targetDate: goalDate || undefined,
+                    })
+                    setShowGoalModal(false)
+                  }}
+                  className="flex-1 h-10 px-4 rounded-md bg-neutral-900 text-white"
+                >
+                  Save Goal
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

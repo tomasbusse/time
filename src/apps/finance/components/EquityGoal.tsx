@@ -1,16 +1,20 @@
-import { Target, TrendingUp } from 'lucide-react'
+import { Target, TrendingUp, Edit2 } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
 
 interface EquityGoalProps {
   currentEquity: number
   targetEquity: number
   targetDate?: string
+  canEdit?: boolean
+  onEdit?: () => void
 }
 
 export default function EquityGoal({
   currentEquity,
   targetEquity,
   targetDate,
+  canEdit = false,
+  onEdit,
 }: EquityGoalProps) {
   const progress = targetEquity > 0 ? (currentEquity / targetEquity) * 100 : 0
   const remaining = targetEquity - currentEquity
@@ -25,10 +29,21 @@ export default function EquityGoal({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Target className="w-5 h-5 text-blue-600" />
-          Equity Goal
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <Target className="w-5 h-5 text-blue-600" />
+            Equity Goal
+          </CardTitle>
+          {canEdit && (
+            <button
+              onClick={onEdit}
+              className="p-2 rounded hover:bg-neutral-100"
+              title="Edit goal"
+            >
+              <Edit2 className="w-4 h-4 text-neutral-600" />
+            </button>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
