@@ -24,6 +24,53 @@ export const listRecipes = query({
   },
 });
 
+export const updateRecipe = mutation({
+  args: {
+    recipeId: v.id("recipes"),
+    name: v.optional(v.string()),
+    instructions: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const { recipeId, ...updates } = args as any;
+    await ctx.db.patch(recipeId, {
+      ...updates,
+      updatedAt: Date.now(),
+    });
+    return recipeId;
+  },
+});
+
+export const deleteRecipe = mutation({
+  args: { recipeId: v.id("recipes") },
+  handler: async (ctx, args) => {
+    // delete ingredients first
+    const ings = await ctx.db
+      .query("recipeIngredients")
+      .withIndex("by_recipe", (q) => q.eq("recipeId", args.recipeId))
+      .collect();
+    await Promise.all(ings.map((ing) => ctx.db.delete(ing._id)));
+    await ctx.db.delete(args.recipeId);
+    return args.recipeId;
+  },
+});
+
+export const addRecipeIngredient = mutation({
+  args: {
+    recipeId: v.id("recipes"),
+    ingredientName: v.string(),
+    quantity: v.optional(v.string()),
+    unit: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.insert("recipeIngredients", {
+      recipeId: args.recipeId,
+      ingredientName: args.ingredientName,
+      quantity: args.quantity,
+      unit: args.unit,
+    });
+  },
+});
+
 export const createRecipe = mutation({
   args: {
     workspaceId: v.id("workspaces"),

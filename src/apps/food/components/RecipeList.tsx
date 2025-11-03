@@ -19,6 +19,7 @@ interface RecipeListProps {
   onEditRecipe: (recipeId: string) => void
   onDeleteRecipe: (recipeId: string) => void
   onAddToShoppingList: (recipe: Recipe) => void
+  onAddIngredient?: (recipeId: string, ing: { name: string; quantity?: string; unit?: string }) => void
 }
 
 export default function RecipeList({
@@ -27,6 +28,7 @@ export default function RecipeList({
   onEditRecipe,
   onDeleteRecipe,
   onAddToShoppingList,
+  onAddIngredient,
 }: RecipeListProps) {
   return (
     <div className="space-y-6">
@@ -104,6 +106,31 @@ export default function RecipeList({
                     </p>
                   </div>
                 )}
+
+                {/* Add ingredient form */}
+                <div className="mb-4 p-3 border border-neutral-200 rounded-lg">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                    <input id={`rname-${recipe.id}`} placeholder="Ingredient" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
+                    <input id={`rqty-${recipe.id}`} placeholder="Qty" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
+                    <input id={`runit-${recipe.id}`} placeholder="Unit" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
+                    <button
+                      className="h-10 rounded-md bg-neutral-900 text-white px-4 text-sm"
+                      onClick={() => {
+                        const nameEl = document.getElementById(`rname-${recipe.id}`) as HTMLInputElement
+                        const qtyEl = document.getElementById(`rqty-${recipe.id}`) as HTMLInputElement
+                        const unitEl = document.getElementById(`runit-${recipe.id}`) as HTMLInputElement
+                        const name = nameEl?.value?.trim()
+                        if (!name) return
+                        onAddIngredient?.(recipe.id, { name, quantity: qtyEl?.value || undefined, unit: unitEl?.value || undefined })
+                        if (nameEl) nameEl.value = ''
+                        if (qtyEl) qtyEl.value = ''
+                        if (unitEl) unitEl.value = ''
+                      }}
+                    >
+                      Add Ingredient
+                    </button>
+                  </div>
+                </div>
 
                 <Button
                   onClick={() => onAddToShoppingList(recipe)}

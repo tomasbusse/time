@@ -157,9 +157,22 @@ export default function FoodApp() {
               }
               setRecipes([newRecipe, ...recipes])
             }}
-            onEditRecipe={(id) => alert('Edit Recipe - Coming soon')}
+            onEditRecipe={(id) => {
+              const r = recipes.find(x => x.id === id)
+              if (!r) return
+              const name = prompt('Recipe name', r.name) || r.name
+              const instructions = prompt('Instructions (optional)', r.instructions || '') || r.instructions
+              setRecipes(recipes.map(x => (x.id === id ? { ...x, name, instructions } : x)))
+            }}
             onDeleteRecipe={(id) => setRecipes(recipes.filter((r) => r.id !== id))}
             onAddToShoppingList={handleAddToShoppingList}
+            onAddIngredient={(recipeId, ing) => {
+              setRecipes(
+                recipes.map(r =>
+                  r.id === recipeId ? { ...r, ingredients: [...r.ingredients, { name: ing.name, quantity: ing.quantity, unit: ing.unit }] } : r
+                )
+              )
+            }}
           />
         )}
 
