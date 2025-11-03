@@ -1,5 +1,0 @@
-{
-  "node": "18.18.0",
-  "generateCommonJSApi": false,
-  "functions": "convex/"
-}

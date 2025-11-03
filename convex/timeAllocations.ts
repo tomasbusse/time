@@ -9,8 +9,8 @@ export const list = query({
   handler: async (ctx, args) => {
     const allocations = await ctx.db
       .query("timeAllocations")
-      .withIndex("by_user_date", (q) => q.eq("date", args.date))
-      .filter((q) => q.eq(q.field("workspaceId"), args.workspaceId))
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .filter((q) => q.eq(q.field("date"), args.date))
       .collect();
     return allocations;
   },
