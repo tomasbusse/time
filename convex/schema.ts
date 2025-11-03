@@ -170,6 +170,8 @@ export default defineSchema({
     status: v.union(v.literal("todo"), v.literal("in_progress"), v.literal("completed")),
     priority: v.union(v.literal("low"), v.literal("medium"), v.literal("high")),
     dueDate: v.optional(v.string()),
+    description: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
     createdAt: v.number(),
     updatedAt: v.number(),
   })

@@ -21,6 +21,8 @@ export const createTask = mutation({
     priority: v.union(v.literal("low"), v.literal("medium"), v.literal("high")),
     dueDate: v.optional(v.string()),
     ideaId: v.optional(v.id("ideas")),
+    description: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("tasks", {
@@ -39,6 +41,24 @@ export const updateTaskStatus = mutation({
   handler: async (ctx, args) => {
     return await ctx.db.patch(args.taskId, {
       status: args.status,
+      updatedAt: Date.now(),
+    });
+  },
+});
+
+export const updateTask = mutation({
+  args: {
+    taskId: v.id("tasks"),
+    title: v.optional(v.string()),
+    priority: v.optional(v.union(v.literal("low"), v.literal("medium"), v.literal("high"))),
+    dueDate: v.optional(v.string()),
+    description: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
+  },
+  handler: async (ctx, args) => {
+    const { taskId, ...updates } = args as any;
+    return await ctx.db.patch(taskId, {
+      ...updates,
       updatedAt: Date.now(),
     });
   },
