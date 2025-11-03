@@ -46,14 +46,11 @@ export default function FoodApp() {
 
   const handleAddToShoppingList = async (recipe: Recipe) => {
     if (!workspaceId || !userId) return
-    // Allow user to select target list; if none, create one first.
+    // Add directly to the first list; if none, create one first.
     let targetListId: any = shoppingLists[0]?.id
     if (!targetListId) {
       targetListId = await createList({ workspaceId: workspaceId as any, userId: userId as any, name: 'Shopping List' })
     }
-    const listName = shoppingLists.find(l => l.id === targetListId)?.name || 'Shopping List'
-    const confirmed = confirm(`Add ingredients from "${recipe.name}" to list: ${listName}?`)
-    if (!confirmed) return
     for (const ing of recipe.ingredients) {
       await addItem({
         shoppingListId: targetListId,
