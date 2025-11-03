@@ -13,6 +13,112 @@ export const listAccounts = query({
   },
 });
 
+// Subscriptions CRUD with permissions
+export const createSubscription = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+    ownerId: v.id("users"),
+    name: v.string(),
+    cost: v.number(),
+    billingCycle: v.union(v.literal("monthly"), v.literal("yearly")),
+    nextBillingDate: v.string(),
+    isActive: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    // Permission: owner or finance editor
+    const workspace = await ctx.db.get(args.workspaceId);
+    if (!workspace) throw new Error("Workspace not found");
+    let allowed = workspace.ownerId === args.ownerId;
+    if (!allowed) {
+      const perm = await ctx.db
+        .query("permissions")
+        .withIndex("by_workspace_user", (q) => q.eq("workspaceId", args.workspaceId).eq("userId", args.ownerId))
+        .first();
+      if (perm && perm.module === "finance" && (perm.canAdd || perm.canEditShared)) allowed = true;
+    }
+    if (!allowed) throw new Error("Not authorized to create subscription");
+
+    return await ctx.db.insert("subscriptions", {
+      workspaceId: args.workspaceId,
+      ownerId: args.ownerId,
+      name: args.name,
+      cost: args.cost,
+      billingCycle: args.billingCycle,
+      nextBillingDate: args.nextBillingDate,
+      isActive: args.isActive,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+  },
+});
+
+export const updateSubscription = mutation({
+  args: {
+    id: v.id("subscriptions"),
+    name: v.optional(v.string()),
+    cost: v.optional(v.number()),
+    billingCycle: v.optional(v.union(v.literal("monthly"), v.literal("yearly"))),
+    nextBillingDate: v.optional(v.string()),
+    isActive: v.optional(v.boolean()),
+    ownerId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const sub = await ctx.db.get(args.id);
+    if (!sub) throw new Error("Subscription not found");
+    const workspaceId = sub.workspaceId as any;
+    const workspace = await ctx.db.get(workspaceId);
+    if (!workspace) throw new Error("Workspace not found");
+    let allowed = workspace.ownerId === args.ownerId;
+    if (!allowed) {
+      const perm = await ctx.db
+        .query("permissions")
+        .withIndex("by_workspace_user", (q) => q.eq("workspaceId", workspaceId).eq("userId", args.ownerId))
+        .first();
+      if (perm && perm.module === "finance" && (perm.canAdd || perm.canEditShared)) allowed = true;
+    }
+    if (!allowed) throw new Error("Not authorized to update subscription");
+
+    const { id, ownerId, ...updates } = args as any;
+    await ctx.db.patch(id, { ...updates, updatedAt: Date.now() });
+    return id;
+  },
+});
+
+export const deleteSubscription = mutation({
+  args: { id: v.id("subscriptions"), ownerId: v.id("users") },
+  handler: async (ctx, args) => {
+    const sub = await ctx.db.get(args.id);
+    if (!sub) throw new Error("Subscription not found");
+    const workspace = await ctx.db.get(sub.workspaceId);
+    if (!workspace) throw new Error("Workspace not found");
+    let allowed = workspace.ownerId === args.ownerId;
+    if (!allowed) {
+      const perm = await ctx.db
+        .query("permissions")
+        .withIndex("by_workspace_user", (q) => q.eq("workspaceId", sub.workspaceId).eq("userId", args.ownerId))
+        .first();
+      if (perm && perm.module === "finance" && (perm.canDelete || perm.canEditShared)) allowed = true;
+    }
+    if (!allowed) throw new Error("Not authorized to delete subscription");
+
+    await ctx.db.delete(args.id);
+    return args.id;
+  },
+});
+
+export const subscriptionTotals = query({
+  args: { workspaceId: v.id("workspaces") },
+  handler: async (ctx, args) => {
+    const subs = await ctx.db
+      .query("subscriptions")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .collect();
+    const active = subs.filter((s) => s.isActive);
+    const monthlyTotal = active.reduce((sum, s) => sum + (s.billingCycle === "monthly" ? s.cost : s.cost / 12), 0);
+    return { monthlyTotal, activeCount: active.length };
+  },
+});
+
 export const createAccount = mutation({
   args: {
     workspaceId: v.id("workspaces"),
