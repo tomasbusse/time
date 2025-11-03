@@ -28,7 +28,12 @@ export const createSubscription = mutation({
     // Permission: owner or finance editor
     const workspace = await ctx.db.get(args.workspaceId);
     if (!workspace) throw new Error("Workspace not found");
-    let allowed = workspace.ownerId === args.ownerId;
+    // workspace here is a Workspaces row; compare via query to ensure owner
+    const wsOwner = await ctx.db
+      .query("workspaces")
+      .withIndex("by_owner", (q) => q.eq("ownerId", args.ownerId))
+      .first();
+    let allowed = Boolean(wsOwner);
     if (!allowed) {
       const perm = await ctx.db
         .query("permissions")
@@ -66,9 +71,11 @@ export const updateSubscription = mutation({
     const sub = await ctx.db.get(args.id);
     if (!sub) throw new Error("Subscription not found");
     const workspaceId = sub.workspaceId as any;
-    const workspace = await ctx.db.get(workspaceId);
-    if (!workspace) throw new Error("Workspace not found");
-    let allowed = workspace.ownerId === args.ownerId;
+    const wsOwner = await ctx.db
+      .query("workspaces")
+      .withIndex("by_owner", (q) => q.eq("ownerId", args.ownerId))
+      .first();
+    let allowed = Boolean(wsOwner);
     if (!allowed) {
       const perm = await ctx.db
         .query("permissions")
@@ -89,9 +96,11 @@ export const deleteSubscription = mutation({
   handler: async (ctx, args) => {
     const sub = await ctx.db.get(args.id);
     if (!sub) throw new Error("Subscription not found");
-    const workspace = await ctx.db.get(sub.workspaceId);
-    if (!workspace) throw new Error("Workspace not found");
-    let allowed = workspace.ownerId === args.ownerId;
+    const wsOwner = await ctx.db
+      .query("workspaces")
+      .withIndex("by_owner", (q) => q.eq("ownerId", args.ownerId))
+      .first();
+    let allowed = Boolean(wsOwner);
     if (!allowed) {
       const perm = await ctx.db
         .query("permissions")
