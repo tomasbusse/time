@@ -49,41 +49,22 @@ export default function FoodApp() {
   const toggleItem = useMutation(api.food.toggleShoppingItem)
   const deleteItem = useMutation(api.food.deleteShoppingItem)
 
-  const handleAddToShoppingList = (recipe: Recipe) => {
-    const defaultList = shoppingLists[0]
-    if (!defaultList) {
-      const newList: ShoppingList = {
-        id: Date.now().toString(),
-        name: 'Shopping List',
-        items: recipe.ingredients.map((ing, idx) => ({
-          id: `${Date.now()}-${idx}`,
-          ingredientName: ing.name,
-          quantity: ing.quantity,
-          unit: ing.unit,
-          completed: false,
-          recipeSourceId: recipe.id,
-        })),
-      }
-      setShoppingLists([newList])
-    } else {
-      const newItems: ShoppingListItem[] = recipe.ingredients.map((ing, idx) => ({
-        id: `${Date.now()}-${idx}`,
+  const handleAddToShoppingList = async (recipe: Recipe) => {
+    if (!workspaceId || !userId) return
+    // Choose first list or create one
+    let targetListId: any = shoppingLists[0]?.id
+    if (!targetListId) {
+      targetListId = await createList({ workspaceId: workspaceId as any, userId: userId as any, name: 'Shopping List' })
+    }
+    // Add each ingredient to DB
+    for (const ing of recipe.ingredients) {
+      await addItem({
+        shoppingListId: targetListId,
         ingredientName: ing.name,
         quantity: ing.quantity,
         unit: ing.unit,
-        completed: false,
-        recipeSourceId: recipe.id,
-      }))
-
-      setShoppingLists(
-        shoppingLists.map((list) =>
-          list.id === defaultList.id
-            ? { ...list, items: [...list.items, ...newItems] }
-            : list
-        )
-      )
+      })
     }
-
     setActiveTab('shopping')
   }
 
