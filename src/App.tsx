@@ -2,7 +2,8 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { ConvexProvider, ConvexReactClient } from 'convex/react'
 import AppRoutes from './routes'
 
-const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string)
+const convexUrl = import.meta.env.VITE_CONVEX_URL || 'https://placeholder.convex.cloud'
+const convex = new ConvexReactClient(convexUrl)
 
 function App() {
   return (
