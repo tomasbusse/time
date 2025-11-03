@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import RecipeList, { Recipe } from './components/RecipeList'
 import ShoppingListView, { ShoppingList, ShoppingListItem } from './components/ShoppingListView'
+import { useQuery, useMutation } from 'convex/react'
+import { api } from '../../../convex/_generated/api'
+import { useWorkspace } from '@/lib/WorkspaceContext'
 
 type TabType = 'recipes' | 'shopping'
 
 export default function FoodApp() {
+  const { workspaceId, userId } = useWorkspace()
   const [activeTab, setActiveTab] = useState<TabType>('recipes')
 
   const [recipes, setRecipes] = useState<Recipe[]>([
@@ -36,28 +40,14 @@ export default function FoodApp() {
     },
   ])
 
-  const [shoppingLists, setShoppingLists] = useState<ShoppingList[]>([
-    {
-      id: '1',
-      name: 'Weekly Groceries',
-      items: [
-        {
-          id: '1',
-          ingredientName: 'Milk',
-          quantity: '2',
-          unit: 'L',
-          completed: false,
-        },
-        {
-          id: '2',
-          ingredientName: 'Bread',
-          quantity: '1',
-          unit: 'loaf',
-          completed: true,
-        },
-      ],
-    },
-  ])
+  const listsData = useQuery(api.food.listShoppingLists, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
+  const shoppingLists: ShoppingList[] = Array.isArray(listsData)
+    ? listsData.map((l: any) => ({ id: l._id, name: l.name, items: (l.items || []).map((it: any) => ({ id: it._id, ingredientName: it.ingredientName, quantity: it.quantity, unit: it.unit, completed: it.completed, recipeSourceId: it.recipeSourceId })) }))
+    : []
+  const createList = useMutation(api.food.createShoppingList)
+  const addItem = useMutation(api.food.addItemToShoppingList)
+  const toggleItem = useMutation(api.food.toggleShoppingItem)
+  const deleteItem = useMutation(api.food.deleteShoppingItem)
 
   const handleAddToShoppingList = (recipe: Recipe) => {
     const defaultList = shoppingLists[0]
@@ -97,44 +87,21 @@ export default function FoodApp() {
     setActiveTab('shopping')
   }
 
-  const handleToggleItem = (listId: string, itemId: string) => {
-    setShoppingLists(
-      shoppingLists.map((list) =>
-        list.id === listId
-          ? {
-              ...list,
-              items: list.items.map((item) =>
-                item.id === itemId ? { ...item, completed: !item.completed } : item
-              ),
-            }
-          : list
-      )
-    )
+  const handleToggleItem = async (listId: string, itemId: string) => {
+    await toggleItem({ itemId: itemId as any })
   }
 
-  const handleDeleteItem = (listId: string, itemId: string) => {
-    setShoppingLists(
-      shoppingLists.map((list) =>
-        list.id === listId
-          ? { ...list, items: list.items.filter((item) => item.id !== itemId) }
-          : list
-      )
-    )
+  const handleDeleteItem = async (listId: string, itemId: string) => {
+    await deleteItem({ itemId: itemId as any })
   }
 
   const handleDeleteList = (listId: string) => {
-    if (confirm('Are you sure you want to delete this shopping list?')) {
-      setShoppingLists(shoppingLists.filter((list) => list.id !== listId))
-    }
+    alert('Delete list coming soon')
   }
 
-  const handleAddList = () => {
-    const newList: ShoppingList = {
-      id: Date.now().toString(),
-      name: `Shopping List ${shoppingLists.length + 1}`,
-      items: [],
-    }
-    setShoppingLists([...shoppingLists, newList])
+  const handleAddList = async () => {
+    if (!workspaceId || !userId) return
+    await createList({ workspaceId: workspaceId as any, userId: userId as any, name: `Shopping List ${shoppingLists.length + 1}` })
   }
 
   return (
@@ -194,6 +161,14 @@ export default function FoodApp() {
             onDeleteList={handleDeleteList}
             onToggleItem={handleToggleItem}
             onDeleteItem={handleDeleteItem}
+            onAddItem={async (listId, item) => {
+              await addItem({
+                shoppingListId: listId as any,
+                ingredientName: item.ingredientName,
+                quantity: item.quantity,
+                unit: item.unit,
+              })
+            }}
           />
         )}
       </div>

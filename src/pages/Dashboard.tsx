@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom'
 import { Clock, DollarSign, FileText, UtensilsCrossed, Calendar, Lightbulb, Settings } from 'lucide-react'
 import { format } from 'date-fns'
 import { useWorkspace } from '@/lib/WorkspaceContext'
+import { useQuery } from 'convex/react'
+import { api } from '../../convex/_generated/api'
+import { Card, CardContent } from '@/components/ui/Card'
 
 export default function Dashboard() {
   const now = new Date()
@@ -60,6 +63,9 @@ export default function Dashboard() {
             <Clock className="w-12 h-12 text-neutral-700" />
             <h1 className="text-5xl font-bold text-neutral-800">Time</h1>
           </div>
+
+        {/* Quick Overview Widgets */}
+        <OverviewWidgets />
           <p className="text-xl text-neutral-600">Welcome, {userName || 'User'}. Your calm productivity sanctuary awaits.</p>
           
           <div className="mt-8 flex justify-center">
@@ -146,6 +152,52 @@ export default function Dashboard() {
           </Link>
         </div>
       </div>
+    </div>
+  )
+}
+
+function OverviewWidgets() {
+  const { workspaceId } = useWorkspace()
+  const finance = useQuery(api.finance.subscriptionTotals, workspaceId ? { workspaceId } : 'skip')
+  const lists = useQuery(api.food.listShoppingLists, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
+  const itemsRemaining = Array.isArray(lists)
+    ? lists.reduce((sum, l) => sum + (Array.isArray(l.items) ? l.items.filter((i: any) => !i.completed).length : 0), 0)
+    : 0
+  const listCount = Array.isArray(lists) ? lists.length : 0
+
+  return (
+    <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-neutral-500">Monthly Subscriptions</div>
+              <div className="text-2xl font-semibold text-neutral-800">
+                {finance ? new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(finance.monthlyTotal || 0) : '—'}
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-neutral-600">
+              <DollarSign className="w-5 h-5 text-purple-600" />
+              <span>{finance ? finance.activeCount : 0} active</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-neutral-500">Shopping Items Remaining</div>
+              <div className="text-2xl font-semibold text-neutral-800">{itemsRemaining}</div>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-neutral-600">
+              <UtensilsCrossed className="w-5 h-5 text-red-600" />
+              <span>{listCount} list{listCount !== 1 ? 's' : ''}</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

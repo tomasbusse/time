@@ -23,6 +23,7 @@ interface ShoppingListViewProps {
   onDeleteList: (listId: string) => void
   onToggleItem: (listId: string, itemId: string) => void
   onDeleteItem: (listId: string, itemId: string) => void
+  onAddItem?: (listId: string, item: { ingredientName: string; quantity?: string; unit?: string }) => void
 }
 
 export default function ShoppingListView({
@@ -31,6 +32,7 @@ export default function ShoppingListView({
   onDeleteList,
   onToggleItem,
   onDeleteItem,
+  onAddItem,
 }: ShoppingListViewProps) {
   return (
     <div className="space-y-6">
@@ -136,6 +138,53 @@ export default function ShoppingListView({
                       </p>
                     </div>
                   )}
+
+                  {/* Add item inline form */}
+                  <div className="mt-4 p-3 border border-neutral-200 rounded-lg">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                      <input
+                        placeholder="Item name"
+                        className="h-10 rounded-md border border-neutral-300 px-3 text-sm"
+                        onKeyDown={(e) => {
+                          // store temporary values on DOM element dataset
+                          const t = e.target as HTMLInputElement
+                          ;(t as any)._val = t.value
+                        }}
+                        onChange={(e) => ((e.target as any)._val = e.target.value)}
+                        id={`name-${list.id}`}
+                      />
+                      <input
+                        placeholder="Qty"
+                        className="h-10 rounded-md border border-neutral-300 px-3 text-sm"
+                        onChange={(e) => ((e.target as any)._val = e.target.value)}
+                        id={`qty-${list.id}`}
+                      />
+                      <input
+                        placeholder="Unit"
+                        className="h-10 rounded-md border border-neutral-300 px-3 text-sm"
+                        onChange={(e) => ((e.target as any)._val = e.target.value)}
+                        id={`unit-${list.id}`}
+                      />
+                      <button
+                        className="h-10 rounded-md bg-neutral-900 text-white px-4 text-sm"
+                        onClick={() => {
+                          const nameEl = document.getElementById(`name-${list.id}`) as any
+                          const qtyEl = document.getElementById(`qty-${list.id}`) as any
+                          const unitEl = document.getElementById(`unit-${list.id}`) as any
+                          const name = nameEl?._val || nameEl?.value
+                          const quantity = qtyEl?._val || qtyEl?.value
+                          const unit = unitEl?._val || unitEl?.value
+                          if (!name) return
+                          onAddItem?.(list.id, { ingredientName: name, quantity, unit })
+                          if (nameEl) nameEl.value = ''
+                          if (qtyEl) qtyEl.value = ''
+                          if (unitEl) unitEl.value = ''
+                        }}
+                      >
+                        Add Item
+                      </button>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             )
