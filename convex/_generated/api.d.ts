@@ -11,6 +11,8 @@
 import type * as finance from "../finance.js";
 import type * as flow from "../flow.js";
 import type * as food from "../food.js";
+import type * as migrations_migrateAccounts from "../migrations/migrateAccounts.js";
+import type * as migrations_setIsActive from "../migrations/setIsActive.js";
 import type * as setup from "../setup.js";
 import type * as timeAllocations from "../timeAllocations.js";
 import type * as users from "../users.js";
@@ -33,6 +35,8 @@ declare const fullApi: ApiFromModules<{
   finance: typeof finance;
   flow: typeof flow;
   food: typeof food;
+  "migrations/migrateAccounts": typeof migrations_migrateAccounts;
+  "migrations/setIsActive": typeof migrations_setIsActive;
   setup: typeof setup;
   timeAllocations: typeof timeAllocations;
   users: typeof users;

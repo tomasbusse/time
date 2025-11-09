@@ -204,3 +204,18 @@ export const deleteShoppingItem = mutation({
     return await ctx.db.delete(args.itemId);
   },
 });
+
+export const deleteShoppingList = mutation({
+  args: { shoppingListId: v.id("shoppingLists") },
+  handler: async (ctx, args) => {
+    const items = await ctx.db
+      .query("shoppingListItems")
+      .withIndex("by_shopping_list", (q) => q.eq("shoppingListId", args.shoppingListId))
+      .collect();
+    
+    await Promise.all(items.map((item) => ctx.db.delete(item._id)));
+    
+    await ctx.db.delete(args.shoppingListId);
+    return args.shoppingListId;
+  },
+});

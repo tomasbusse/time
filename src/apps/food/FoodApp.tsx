@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import RecipeList, { Recipe } from './components/RecipeList'
-import ShoppingListView, { ShoppingList, ShoppingListItem } from './components/ShoppingListView'
+import ShoppingListView, { ShoppingList } from './components/ShoppingListView'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { useWorkspace } from '@/lib/WorkspaceContext'
@@ -27,8 +27,6 @@ export default function FoodApp() {
   const updateRecipe = useMutation(api.food.updateRecipe)
   const deleteRecipe = useMutation(api.food.deleteRecipe)
   const addRecipeIngredient = useMutation(api.food.addRecipeIngredient)
-  const updateRecipeIngredient = useMutation(api.food.updateRecipeIngredient)
-  const deleteRecipeIngredient = useMutation(api.food.deleteRecipeIngredient)
 
   // Recipe modal state
   const [showRecipeModal, setShowRecipeModal] = useState(false)
@@ -43,6 +41,7 @@ export default function FoodApp() {
   const addItem = useMutation(api.food.addItemToShoppingList)
   const toggleItem = useMutation(api.food.toggleShoppingItem)
   const deleteItem = useMutation(api.food.deleteShoppingItem)
+  const deleteList = useMutation(api.food.deleteShoppingList)
 
   const handleAddToShoppingList = async (recipe: Recipe) => {
     if (!workspaceId || !userId) return
@@ -63,16 +62,18 @@ export default function FoodApp() {
     setActiveTab('shopping')
   }
 
-  const handleToggleItem = async (listId: string, itemId: string) => {
+  const handleToggleItem = async (_listId: string, itemId: string) => {
     await toggleItem({ itemId: itemId as any })
   }
 
-  const handleDeleteItem = async (listId: string, itemId: string) => {
+  const handleDeleteItem = async (_listId: string, itemId: string) => {
     await deleteItem({ itemId: itemId as any })
   }
 
-  const handleDeleteList = (listId: string) => {
-    alert('Delete list coming soon')
+  const handleDeleteList = async (listId: string) => {
+    if (confirm('Are you sure you want to delete this shopping list and all its items?')) {
+      await deleteList({ shoppingListId: listId as any })
+    }
   }
 
   const handleAddList = async () => {

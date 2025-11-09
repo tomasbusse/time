@@ -8,9 +8,14 @@ import AccountList from './components/AccountList'
 import AccountForm from './components/AccountForm'
 import EquityGoal from './components/EquityGoal'
 import AssetsLiabilities from './components/AssetsLiabilities'
+import { AssetForm } from './components/AssetForm'
+import { LiabilityForm } from './components/LiabilityForm'
+import { MonthlyValuationChart } from './components/MonthlyValuationChart'
+import { ValuationEntry } from './components/ValuationEntry'
 import SubscriptionList from './components/SubscriptionList'
+import CategoryBudgetsPanel from './components/CategoryBudgetsPanel'
 
-type TabType = 'liquidity' | 'assets' | 'subscriptions'
+type TabType = 'liquidity' | 'assets' | 'subscriptions' | 'categories'
 
 interface Account {
   id: string
@@ -20,26 +25,72 @@ interface Account {
   isPrivate: boolean
 }
 
+interface AccountWithBalance {
+  _id: string
+  workspaceId: string
+  accountCode: string
+  accountName: string
+  accountType: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense'
+  accountCategory: string
+  isActive: boolean
+  currentBalance: number
+  createdAt: number
+}
+
 interface Asset {
   id: string
+  accountId: string
   name: string
-  type: 'property' | 'vehicle' | 'investment' | 'other'
-  value: number
+  type: string
+  purchasePrice?: number
+  currentValue?: number
+  isFixed: boolean
 }
 
 interface Liability {
   id: string
+  accountId: string
   name: string
-  amount: number
-  relatedAssetId?: string
+  type: string
+  originalAmount?: number
+  currentBalance?: number
+  isFixed: boolean
+}
+
+interface MonthlyValuation {
+  _id: string
+  workspaceId: string
+  accountId: string
+  year: number
+  month: number
+  beginningBalance: number
+  endingBalance: number
+  netTransactions: number
+  notes?: string
 }
 
 interface Subscription {
   id: string
   name: string
   cost: number
+  yearlyAmount?: number
   billingCycle: 'monthly' | 'yearly'
   nextBillingDate: string
+  isActive: boolean
+  isNecessary?: boolean
+  classification: 'business' | 'private'
+  category: 'ai' | 'software' | 'marketing' | 'productivity' | 'design' | 'communication' | 'development' | 'analytics' | 'security' | 'other'
+  subcategory?: string
+}
+
+interface CategoryBudget {
+  id: string
+  classification: 'business' | 'private'
+  category: 'ai' | 'software' | 'marketing' | 'productivity' | 'design' | 'communication' | 'development' | 'analytics' | 'security' | 'other'
+  subcategory?: string
+  monthlyBudgetLimit: number
+  yearlyBudgetLimit: number
+  alertThreshold: '50' | '75' | '90' | '100'
   isActive: boolean
 }
 
@@ -76,30 +127,97 @@ export default function FinanceApp() {
   const [goalAmount, setGoalAmount] = useState<number>(goal?.targetEquity ?? 0)
   const [goalDate, setGoalDate] = useState<string>(goal?.targetDate ?? '')
 
-  const [assets, setAssets] = useState<Asset[]>([
-    {
-      id: '1',
-      name: 'Primary Residence',
-      type: 'property',
-      value: 350000,
-    },
-    {
-      id: '2',
-      name: '2019 Toyota',
-      type: 'vehicle',
-      value: 15000,
-    },
-  ])
+  // New Account-based Assets & Liabilities System
+  const accountsForAssets = useQuery(
+    api.finance.listAccounts,
+    workspaceId ? { workspaceId, accountType: 'asset' } : 'skip'
+  )
+  const accountsForLiabilities = useQuery(
+    api.finance.listAccounts,
+    workspaceId ? { workspaceId, accountType: 'liability' } : 'skip'
+  )
 
-  const [liabilities, setLiabilities] = useState<Liability[]>([
-    {
-      id: '1',
-      name: 'Home Mortgage',
-      amount: 180000,
-      relatedAssetId: '1',
-    },
-  ])
-  // Subscriptions (Convex)
+  const assetAccounts = (accountsForAssets || []).map((a: AccountWithBalance) => ({
+    id: a._id,
+    accountId: a._id,
+    accountCode: a.accountCode,
+    accountName: a.accountName,
+    accountCategory: a.accountCategory,
+    currentBalance: a.currentBalance,
+    isActive: a.isActive,
+  }))
+
+  const liabilityAccounts = (accountsForLiabilities || []).map((a: AccountWithBalance) => ({
+    id: a._id,
+    accountId: a._id,
+    accountCode: a.accountCode,
+    accountName: a.accountName,
+    accountCategory: a.accountCategory,
+    currentBalance: a.currentBalance,
+    isActive: a.isActive,
+  }))
+
+  const assetsMutation = useMutation(api.finance.createAsset)
+  const updateAssetMutation = useMutation(api.finance.updateAsset)
+  const deleteAssetMutation = useMutation(api.finance.deleteAsset)
+
+  const liabilityMutation = useMutation(api.finance.createLiability)
+  const updateLiabilityMutation = useMutation(api.finance.updateLiability)
+  const deleteLiabilityMutation = useMutation(api.finance.deleteLiability)
+
+  // Monthly valuation mutation
+  const createMonthlyValuationMutation = useMutation(api.finance.createMonthlyValuation)
+
+  // Asset form state
+  const [showAssetForm, setShowAssetForm] = useState(false)
+  const [editingAsset, setEditingAsset] = useState<Asset | undefined>()
+
+  // Liability form state
+  const [showLiabilityForm, setShowLiabilityForm] = useState(false)
+  const [editingLiability, setEditingLiability] = useState<Liability | undefined>()
+
+  // Valuation state
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+  const [showAssetValuationEntry, setShowAssetValuationEntry] = useState(false)
+  const [showLiabilityValuationEntry, setShowLiabilityValuationEntry] = useState(false)
+  const [isSubmittingValuation, setIsSubmittingValuation] = useState(false)
+
+  // Monthly Valuations (new system)
+  const monthlyValuationsData = useQuery(
+    api.finance.listMonthlyValuations,
+    workspaceId ? { workspaceId, year: selectedYear } : 'skip'
+  )
+
+  const monthlyValuations = (monthlyValuationsData || []).map((v: MonthlyValuation) => ({
+    _id: v._id,
+    accountId: v.accountId,
+    year: v.year,
+    month: v.month,
+    beginningBalance: v.beginningBalance,
+    endingBalance: v.endingBalance,
+    netTransactions: v.netTransactions,
+  }))
+
+  // Aggregate valuations by month for chart display
+  const monthlyTotals = Array.from({ length: 12 }, (_, i) => {
+    const monthNumber = i + 1
+    const monthValuations = monthlyValuations.filter(v => v.month === monthNumber && v.year === selectedYear)
+    const assetValuations = monthValuations.filter(v => {
+      const assetAccount = assetAccounts.find(a => a.id === v.accountId)
+      return assetAccount !== undefined
+    })
+    const liabilityValuations = monthValuations.filter(v => {
+      const liabilityAccount = liabilityAccounts.find(a => a.id === v.accountId)
+      return liabilityAccount !== undefined
+    })
+    
+    return {
+      month: String(monthNumber),
+      assets: assetValuations.reduce((sum, v) => sum + v.endingBalance, 0),
+      liabilities: liabilityValuations.reduce((sum, v) => sum + v.endingBalance, 0),
+    }
+  }).filter(m => m.assets > 0 || m.liabilities > 0)
+
   const subscriptionsData = useQuery(
     api.finance.listSubscriptions,
     workspaceId ? { workspaceId } : 'skip'
@@ -108,21 +226,83 @@ export default function FinanceApp() {
     id: s._id,
     name: s.name,
     cost: s.cost,
+    yearlyAmount: s.yearlyAmount,
     billingCycle: s.billingCycle,
     nextBillingDate: s.nextBillingDate,
     isActive: s.isActive,
+    isNecessary: s.isNecessary ?? true,
+    classification: s.classification ?? 'private',
+    category: s.category ?? 'other',
+    subcategory: s.subcategory,
   }))
   const createSubscription = useMutation(api.finance.createSubscription)
   const updateSubscription = useMutation(api.finance.updateSubscription)
   const deleteSubscription = useMutation(api.finance.deleteSubscription)
+  
+  // Category Budgets (Convex)
+  const categoryBudgetsData = useQuery(
+    api.finance.listCategoryBudgets,
+    workspaceId ? { workspaceId } : 'skip'
+  )
+  const categoryBudgets: CategoryBudget[] = (categoryBudgetsData || []).map((b: any) => ({
+    id: b._id,
+    classification: b.classification ?? 'business',
+    category: b.category ?? 'other',
+    subcategory: b.subcategory,
+    monthlyBudgetLimit: b.monthlyBudgetLimit,
+    yearlyBudgetLimit: b.yearlyBudgetLimit,
+    alertThreshold: b.alertThreshold ?? '75',
+    isActive: b.isActive ?? true,
+  }))
+  const createCategoryBudgetMutation = useMutation(api.finance.createCategoryBudget)
+  const updateCategoryBudgetMutation = useMutation(api.finance.updateCategoryBudget)
+  const deleteCategoryBudgetMutation = useMutation(api.finance.deleteCategoryBudget)
+
+  const handleCreateCategoryBudget = async (payload: {
+    classification: 'business' | 'private'
+    category: 'ai' | 'software' | 'marketing' | 'productivity' | 'design' | 'communication' | 'development' | 'analytics' | 'security' | 'other'
+    subcategory?: string
+    monthlyBudgetLimit: number
+    yearlyBudgetLimit: number
+    alertThreshold: '50' | '75' | '90' | '100'
+  }) => {
+    if (!workspaceId) return
+    await createCategoryBudgetMutation({
+      workspaceId: workspaceId as any,
+      ...payload,
+    })
+  }
+
+  const handleUpdateCategoryBudget = async (payload: {
+    id: string
+    monthlyBudgetLimit?: number
+    yearlyBudgetLimit?: number
+    alertThreshold?: '50' | '75' | '90' | '100'
+    isActive?: boolean
+  }) => {
+    await updateCategoryBudgetMutation({
+      ...payload,
+      id: payload.id as any,
+    })
+  }
+
+  const handleDeleteCategoryBudget = async ({ id }: { id: string }) => {
+    await deleteCategoryBudgetMutation({ id: id as any })
+  }
+
   const [showSubModal, setShowSubModal] = useState(false)
   const [editingSub, setEditingSub] = useState<Subscription | undefined>()
   const [subForm, setSubForm] = useState({
     name: '',
     cost: 0,
+    yearlyAmount: undefined as number | undefined,
     billingCycle: 'monthly' as 'monthly' | 'yearly',
     nextBillingDate: '',
     isActive: true,
+    isNecessary: true,
+    classification: 'private' as 'business' | 'private',
+    category: 'other' as 'ai' | 'software' | 'marketing' | 'productivity' | 'design' | 'communication' | 'development' | 'analytics' | 'security' | 'other',
+    subcategory: '' as string | undefined,
   })
 
   const handleSaveAccount = async (accountData: Partial<Account>) => {
@@ -158,9 +338,7 @@ export default function FinanceApp() {
   }
 
   const handleDeleteAccount = async (accountId: string) => {
-    if (confirm('Are you sure you want to delete this account?')) {
-      await deleteAccountMutation({ id: accountId as any })
-    }
+    await deleteAccountMutation({ accountId: accountId as any })
   }
 
   const handleTogglePrivacy = async (accountId: string) => {
@@ -171,6 +349,178 @@ export default function FinanceApp() {
         isPrivate: !account.isPrivate,
       })
     }
+  }
+
+  // Asset handlers (account-based)
+  const handleSaveAsset = async (assetData: { name: string; type: string; accountId?: string; purchasePrice?: number; currentValue?: number }) => {
+    if (!workspaceId || !userId) return
+
+    if (editingAsset) {
+      await updateAssetMutation({
+        id: editingAsset.id as any,
+        name: assetData.name,
+        type: assetData.type,
+        ownerId: userId as any,
+      })
+    } else {
+      if (!assetData.accountId) {
+        alert('Please select or create an asset account')
+        return
+      }
+      await assetsMutation({
+        workspaceId: workspaceId as any,
+        ownerId: userId as any,
+        accountId: assetData.accountId as any,
+        name: assetData.name,
+        type: assetData.type,
+        purchasePrice: assetData.purchasePrice,
+        currentValue: assetData.currentValue,
+        isFixed: assetData.type === 'property' || assetData.type === 'vehicle',
+      })
+    }
+    setShowAssetForm(false)
+    setEditingAsset(undefined)
+  }
+
+  const handleEditAsset = (assetId: string) => {
+    const asset = assetAccounts.find((a) => a.id === assetId)
+    if (asset) {
+      setEditingAsset({
+        id: asset.id,
+        accountId: asset.accountId,
+        name: asset.accountName,
+        type: asset.accountCategory,
+        isFixed: asset.accountCategory.includes('fixed'),
+      })
+      setShowAssetForm(true)
+    }
+  }
+
+  const handleDeleteAsset = async (assetId: string) => {
+    if (!userId) return
+    try {
+      await deleteAccountMutation({ accountId: assetId as any })
+    } catch (error) {
+      console.error('Error deleting asset:', error)
+      alert('Failed to delete asset')
+    }
+  }
+
+  // Liability handlers (account-based)
+  const handleSaveLiability = async (liabilityData: { name: string; type: string; accountId?: string; originalAmount?: number; currentBalance?: number }) => {
+    if (!workspaceId || !userId) return
+
+    if (editingLiability) {
+      await updateLiabilityMutation({
+        id: editingLiability.id as any,
+        name: liabilityData.name,
+        type: liabilityData.type,
+        ownerId: userId as any,
+      })
+    } else {
+      if (!liabilityData.accountId) {
+        alert('Please select or create a liability account')
+        return
+      }
+      await liabilityMutation({
+        workspaceId: workspaceId as any,
+        ownerId: userId as any,
+        accountId: liabilityData.accountId as any,
+        name: liabilityData.name,
+        type: liabilityData.type,
+        originalAmount: liabilityData.originalAmount,
+        currentBalance: liabilityData.currentBalance,
+        isFixed: liabilityData.type === 'mortgage' || liabilityData.type === 'loan',
+      })
+    }
+    setShowLiabilityForm(false)
+    setEditingLiability(undefined)
+  }
+
+  const handleEditLiability = (liabilityId: string) => {
+    const liability = liabilityAccounts.find((l) => l.id === liabilityId)
+    if (liability) {
+      setEditingLiability({
+        id: liability.id,
+        accountId: liability.accountId,
+        name: liability.accountName,
+        type: liability.accountCategory,
+        isFixed: liability.accountCategory.includes('long_term'),
+      })
+      setShowLiabilityForm(true)
+    }
+  }
+
+  const handleDeleteLiability = async (liabilityId: string) => {
+    if (!userId) return
+    try {
+      await deleteAccountMutation({ accountId: liabilityId as any })
+    } catch (error) {
+      console.error('Error deleting liability:', error)
+      alert('Failed to delete liability')
+    }
+  }
+
+  const handleAddAssetValuation = async (date: string, amount: number, accountId: string) => {
+    if (!workspaceId || !userId) return
+    setIsSubmittingValuation(true)
+    try {
+      const [year, month, day] = date.split('-').map(Number)
+      await createMonthlyValuationMutation({
+        workspaceId: workspaceId as any,
+        accountId: accountId as any,
+        year,
+        month,
+        beginningBalance: 0,
+        endingBalance: amount,
+        netTransactions: amount,
+        createdBy: userId as any,
+      })
+      setShowAssetValuationEntry(false)
+    } catch (error) {
+      console.error('Error creating asset valuation:', error)
+    } finally {
+      setIsSubmittingValuation(false)
+    }
+  }
+
+  const handleAddLiabilityValuation = async (date: string, amount: number, accountId: string) => {
+    if (!workspaceId || !userId) return
+    setIsSubmittingValuation(true)
+    try {
+      const [year, month, day] = date.split('-').map(Number)
+      await createMonthlyValuationMutation({
+        workspaceId: workspaceId as any,
+        accountId: accountId as any,
+        year,
+        month,
+        beginningBalance: 0,
+        endingBalance: amount,
+        netTransactions: amount,
+        createdBy: userId as any,
+      })
+      setShowLiabilityValuationEntry(false)
+    } catch (error) {
+      console.error('Error creating liability valuation:', error)
+    } finally {
+      setIsSubmittingValuation(false)
+    }
+  }
+
+  const handleToggleNecessary = async (subscriptionId: string, isNecessary: boolean) => {
+    await updateSubscription({
+      id: subscriptionId as any,
+      isNecessary: isNecessary,
+      ownerId: userId as any,
+    })
+  }
+
+  const handleToggleActive = async (subscriptionId: string, isActive: boolean) => {
+    await updateSubscription({
+      id: subscriptionId as any,
+      isActive: isActive,
+      ownerId: userId as any,
+    })
   }
 
   const totalLiquidity = accounts
@@ -229,6 +579,16 @@ export default function FinanceApp() {
               >
                 Subscriptions
               </button>
+              <button
+                onClick={() => setActiveTab('categories')}
+                className={`px-6 py-3 font-medium transition-colors ${
+                  activeTab === 'categories'
+                    ? 'text-blue-600 border-b-2 border-blue-600'
+                    : 'text-neutral-600 hover:text-neutral-800'
+                }`}
+              >
+                Categories
+              </button>
             </div>
           </div>
         </div>
@@ -272,16 +632,32 @@ export default function FinanceApp() {
                   className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Cost (€)</label>
-                <input
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  value={subForm.cost}
-                  onChange={(e) => setSubForm({ ...subForm, cost: Number(e.target.value) })}
-                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    {subForm.billingCycle === 'monthly' ? 'Monthly Cost (€)' : 'Yearly Cost (€)'}
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={subForm.cost}
+                    onChange={(e) => setSubForm({ ...subForm, cost: Number(e.target.value) })}
+                    className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">Yearly Amount (€) <span className="text-xs text-neutral-500">(Optional)</span></label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={subForm.yearlyAmount || ''}
+                    onChange={(e) => setSubForm({ ...subForm, yearlyAmount: e.target.value ? Number(e.target.value) : undefined })}
+                    placeholder="Leave empty to auto-calc"
+                    className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">Billing Cycle</label>
@@ -294,6 +670,64 @@ export default function FinanceApp() {
                   <option value="yearly">Yearly</option>
                 </select>
               </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={subForm.isNecessary}
+                    onChange={(e) => setSubForm({ ...subForm, isNecessary: e.target.checked })}
+                  />
+                  <span className="text-sm text-neutral-700">Necessary subscription</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={subForm.isActive}
+                    onChange={(e) => setSubForm({ ...subForm, isActive: e.target.checked })}
+                  />
+                  <span className="text-sm text-neutral-700">Active</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Classification</label>
+                <select
+                  value={subForm.classification}
+                  onChange={(e) => setSubForm({ ...subForm, classification: e.target.value as 'business' | 'private' })}
+                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                >
+                  <option value="business">Business</option>
+                  <option value="private">Private</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Category</label>
+                <select
+                  value={subForm.category}
+                  onChange={(e) => setSubForm({ ...subForm, category: e.target.value as any })}
+                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                >
+                  <option value="ai">AI</option>
+                  <option value="software">Software Tools</option>
+                  <option value="marketing">Marketing</option>
+                  <option value="productivity">Productivity</option>
+                  <option value="design">Design</option>
+                  <option value="communication">Communication</option>
+                  <option value="development">Development</option>
+                  <option value="analytics">Analytics</option>
+                  <option value="security">Security</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Subcategory (Optional)</label>
+                <input
+                  type="text"
+                  value={subForm.subcategory || ''}
+                  onChange={(e) => setSubForm({ ...subForm, subcategory: e.target.value || undefined })}
+                  placeholder="e.g., ChatGPT, Figma Pro, etc."
+                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">Next Billing Date</label>
                 <input
@@ -302,14 +736,6 @@ export default function FinanceApp() {
                   onChange={(e) => setSubForm({ ...subForm, nextBillingDate: e.target.value })}
                   className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
                 />
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={subForm.isActive}
-                  onChange={(e) => setSubForm({ ...subForm, isActive: e.target.checked })}
-                />
-                <span className="text-sm text-neutral-700">Active</span>
               </div>
             </div>
             <div className="p-6 border-t flex gap-3">
@@ -322,9 +748,14 @@ export default function FinanceApp() {
                       id: editingSub.id as any,
                       name: subForm.name,
                       cost: subForm.cost,
+                      yearlyAmount: subForm.yearlyAmount,
                       billingCycle: subForm.billingCycle,
                       nextBillingDate: subForm.nextBillingDate,
                       isActive: subForm.isActive,
+                      isNecessary: subForm.isNecessary,
+                      classification: subForm.classification,
+                      category: subForm.category,
+                      subcategory: subForm.subcategory,
                       ownerId: userId as any,
                     })
                   } else {
@@ -333,9 +764,14 @@ export default function FinanceApp() {
                       ownerId: userId as any,
                       name: subForm.name,
                       cost: subForm.cost,
+                      yearlyAmount: subForm.yearlyAmount,
                       billingCycle: subForm.billingCycle,
                       nextBillingDate: subForm.nextBillingDate,
                       isActive: subForm.isActive,
+                      isNecessary: subForm.isNecessary,
+                      classification: subForm.classification,
+                      category: subForm.category,
+                      subcategory: subForm.subcategory,
                     })
                   }
                   setShowSubModal(false)
@@ -351,16 +787,114 @@ export default function FinanceApp() {
       )}
 
         {activeTab === 'assets' && (
-          <AssetsLiabilities
-            assets={assets}
-            liabilities={liabilities}
-            onAddAsset={() => alert('Add Asset - Coming soon')}
-            onEditAsset={() => alert('Edit Asset - Coming soon')}
-            onDeleteAsset={(id) => setAssets(assets.filter((a) => a.id !== id))}
-            onAddLiability={() => alert('Add Liability - Coming soon')}
-            onEditLiability={() => alert('Edit Liability - Coming soon')}
-            onDeleteLiability={(id) => setLiabilities(liabilities.filter((l) => l.id !== id))}
-          />
+          <>
+            <div className="mb-8">
+              <div className="flex gap-4 mb-6">
+                <button
+                  onClick={() => setShowAssetValuationEntry(true)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  disabled={assetAccounts.length === 0}
+                >
+                  Record Asset Valuation
+                </button>
+                <button
+                  onClick={() => setShowLiabilityValuationEntry(true)}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                  disabled={liabilityAccounts.length === 0}
+                >
+                  Record Liability Valuation
+                </button>
+              </div>
+              <MonthlyValuationChart 
+                data={monthlyTotals} 
+                onYearChange={setSelectedYear}
+                currentYear={selectedYear}
+              />
+            </div>
+
+            <AssetsLiabilities
+              assetAccounts={assetAccounts}
+              liabilityAccounts={liabilityAccounts}
+              monthlyTotals={monthlyTotals}
+              onAddAsset={() => {
+                setEditingAsset(undefined)
+                setShowAssetForm(true)
+              }}
+              onEditAsset={handleEditAsset}
+              onDeleteAsset={handleDeleteAsset}
+              onAddLiability={() => {
+                setEditingLiability(undefined)
+                setShowLiabilityForm(true)
+              }}
+              onEditLiability={handleEditLiability}
+              onDeleteLiability={handleDeleteLiability}
+            />
+
+            {showAssetForm && (
+              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+                  <div className="p-6">
+                    <AssetForm
+                      initialData={editingAsset ? {
+                        id: editingAsset.id,
+                        name: editingAsset.name,
+                        type: editingAsset.type,
+                      } : undefined}
+                      onSubmit={handleSaveAsset}
+                      onCancel={() => {
+                        setShowAssetForm(false)
+                        setEditingAsset(undefined)
+                      }}
+                      title={editingAsset ? 'Edit Asset' : 'Add Asset'}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showLiabilityForm && (
+              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+                  <div className="p-6">
+                    <LiabilityForm
+                      initialData={editingLiability ? {
+                        id: editingLiability.id,
+                        name: editingLiability.name,
+                        relatedAssetId: editingLiability.relatedAssetId || '',
+                      } : undefined}
+                      availableAssets={assets}
+                      onSubmit={handleSaveLiability}
+                      onCancel={() => {
+                        setShowLiabilityForm(false)
+                        setEditingLiability(undefined)
+                      }}
+                      title={editingLiability ? 'Edit Liability' : 'Add Liability'}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showAssetValuationEntry && (
+              <ValuationEntry
+                type="asset"
+                onSubmit={(date, amount, accountId) => handleAddAssetValuation(date, amount, accountId)}
+                onCancel={() => setShowAssetValuationEntry(false)}
+                isLoading={isSubmittingValuation}
+                accounts={assetAccounts}
+              />
+            )}
+
+            {showLiabilityValuationEntry && (
+              <ValuationEntry
+                type="liability"
+                onSubmit={(date, amount, accountId) => handleAddLiabilityValuation(date, amount, accountId)}
+                onCancel={() => setShowLiabilityValuationEntry(false)}
+                isLoading={isSubmittingValuation}
+                accounts={liabilityAccounts}
+              />
+            )}
+          </>
         )}
 
         {activeTab === 'subscriptions' && (
@@ -368,7 +902,17 @@ export default function FinanceApp() {
             subscriptions={subs}
             onAddSubscription={() => {
               setEditingSub(undefined)
-              setSubForm({ name: '', cost: 0, billingCycle: 'monthly', nextBillingDate: '', isActive: true })
+              setSubForm({ 
+                name: '', 
+                cost: 0, 
+                billingCycle: 'monthly', 
+                nextBillingDate: '', 
+                isActive: true,
+                isNecessary: true,
+                classification: 'private',
+                category: 'other',
+                subcategory: undefined
+              })
               setShowSubModal(true)
             }}
             onEditSubscription={(id) => {
@@ -378,9 +922,14 @@ export default function FinanceApp() {
                 setSubForm({
                   name: found.name,
                   cost: found.cost,
+                  yearlyAmount: found.yearlyAmount,
                   billingCycle: found.billingCycle,
                   nextBillingDate: found.nextBillingDate,
                   isActive: found.isActive,
+                  isNecessary: found.isNecessary ?? true,
+                  classification: found.classification,
+                  category: found.category,
+                  subcategory: found.subcategory,
                 })
                 setShowSubModal(true)
               }
@@ -389,6 +938,18 @@ export default function FinanceApp() {
               if (!userId) return
               await deleteSubscription({ id: id as any, ownerId: userId as any })
             }}
+            onToggleNecessary={handleToggleNecessary}
+            onToggleActive={handleToggleActive}
+          />
+        )}
+
+        {activeTab === 'categories' && (
+          <CategoryBudgetsPanel
+            subscriptions={subs}
+            categoryBudgets={categoryBudgets}
+            onCreateBudget={handleCreateCategoryBudget}
+            onUpdateBudget={handleUpdateCategoryBudget}
+            onDeleteBudget={handleDeleteCategoryBudget}
           />
         )}
 

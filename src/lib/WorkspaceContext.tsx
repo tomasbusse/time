@@ -1,10 +1,11 @@
 import { createContext, useContext, ReactNode } from 'react'
 import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
+import type { Id } from '../../convex/_generated/dataModel'
 
 interface WorkspaceContextType {
-  userId: string | null
-  workspaceId: string | null
+  userId: Id<"users"> | null
+  workspaceId: Id<"workspaces"> | null
   userName: string | null
   isLoading: boolean
 }

@@ -1,5 +1,4 @@
 import { mutation, query } from "./_generated/server";
-import { v } from "convex/values";
 
 export const setupDefaultData = mutation({
   args: {},
@@ -30,40 +29,64 @@ export const setupDefaultData = mutation({
     });
 
     // Add sample finance data
-    await ctx.db.insert("accounts", {
+    const checkingAccountId = await ctx.db.insert("accounts", {
       workspaceId,
-      ownerId: userId,
-      name: "Main Checking Account",
-      accountType: "bank",
+      accountCode: "1100",
+      accountName: "Main Checking Account",
+      accountType: "asset",
+      accountCategory: "current_asset",
+      isActive: true,
+      createdBy: userId,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+
+    await ctx.db.insert("accountBalances", {
+      workspaceId,
+      accountId: checkingAccountId,
       currentBalance: 5420.50,
-      isPrivate: false,
-      isDeleted: false,
+      lastUpdated: Date.now(),
+      createdAt: Date.now(),
+    });
+
+    const savingsAccountId = await ctx.db.insert("accounts", {
+      workspaceId,
+      accountCode: "1200",
+      accountName: "Emergency Savings",
+      accountType: "asset",
+      accountCategory: "current_asset",
+      isActive: true,
+      createdBy: userId,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
 
-    await ctx.db.insert("accounts", {
+    await ctx.db.insert("accountBalances", {
       workspaceId,
-      ownerId: userId,
-      name: "Emergency Savings",
-      accountType: "savings",
+      accountId: savingsAccountId,
       currentBalance: 12000,
-      isPrivate: false,
-      isDeleted: false,
+      lastUpdated: Date.now(),
+      createdAt: Date.now(),
+    });
+
+    const mortgageAccountId = await ctx.db.insert("accounts", {
+      workspaceId,
+      accountCode: "2500",
+      accountName: "Mortgage",
+      accountType: "liability",
+      accountCategory: "long_term_liability",
+      isActive: true,
+      createdBy: userId,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
 
-    await ctx.db.insert("accounts", {
+    await ctx.db.insert("accountBalances", {
       workspaceId,
-      ownerId: userId,
-      name: "Mortgage",
-      accountType: "loan",
+      accountId: mortgageAccountId,
       currentBalance: -180000,
-      isPrivate: false,
-      isDeleted: false,
+      lastUpdated: Date.now(),
       createdAt: Date.now(),
-      updatedAt: Date.now(),
     });
 
     // Add equity goal
@@ -84,6 +107,10 @@ export const setupDefaultData = mutation({
       status: "in_progress",
       priority: "high",
       dueDate: "2025-12-15",
+      position: 1,
+      estimatedHours: 8,
+      timeSpent: 2,
+      isArchived: false,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
@@ -95,6 +122,9 @@ export const setupDefaultData = mutation({
       status: "todo",
       priority: "medium",
       dueDate: "2025-12-20",
+      position: 2,
+      estimatedHours: 5,
+      isArchived: false,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });

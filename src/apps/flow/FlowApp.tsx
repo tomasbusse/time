@@ -4,37 +4,73 @@ import { ArrowLeft, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import TaskBoard, { Task } from './components/TaskBoard'
 import IdeaList, { Idea } from './components/IdeaList'
+import TaskDetailModal from './components/TaskDetailModal'
+import IdeaFormModal from './components/IdeaFormModal'
+import IdeaDetailModal from './components/IdeaDetailModal'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { useWorkspace } from '@/lib/WorkspaceContext'
 
 type TabType = 'tasks' | 'ideas'
+type ModalType = 'create' | 'edit' | null
 
 export default function FlowApp() {
   const { workspaceId, userId } = useWorkspace()
   const [activeTab, setActiveTab] = useState<TabType>('tasks')
+  const [taskModalType, setTaskModalType] = useState<ModalType>(null)
+  const [ideaModalType, setIdeaModalType] = useState<ModalType>(null)
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
+  const [selectedIdeaId, setSelectedIdeaId] = useState<string | null>(null)
+  const [isIdeaDetailOpen, setIsIdeaDetailOpen] = useState(false)
+  const [newTaskStatus, setNewTaskStatus] = useState<'todo' | 'in_progress' | 'completed'>('todo')
 
   // Tasks & Ideas from Convex
   const tasksData = useQuery(api.flow.listTasks, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
-  const tasks: Task[] = Array.isArray(tasksData)
-    ? tasksData.map((t: any) => ({ id: t._id, title: t.title, status: t.status, priority: t.priority, dueDate: t.dueDate, ideaId: t.ideaId }))
-    : []
+  const tasks: Task[] = Array.isArray(tasksData) ? tasksData : []
   const ideasData = useQuery(api.flow.listIdeas, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
-  const ideas: Idea[] = Array.isArray(ideasData)
-    ? ideasData.map((i: any) => ({ id: i._id, title: i.title, description: i.description, status: i.status }))
-    : []
+  const ideas: Idea[] = Array.isArray(ideasData) ? ideasData.map((i: any) => ({ 
+    id: i._id, 
+    title: i.title, 
+    description: i.description,
+    richDescription: i.richDescription,
+    category: i.category,
+    tags: i.tags,
+    priority: i.priority,
+    attachments: i.attachments,
+    status: i.status 
+  })) : []
+  
+  // Fetch related tasks for the selected idea
+  const relatedTasksData = useQuery(
+    selectedIdeaId ? api.flow.getTasksByIdea : 'skip',
+    selectedIdeaId ? { ideaId: selectedIdeaId as any } : 'skip'
+  ) as any[] | 'skip' | undefined
+  
+  const relatedTasks = Array.isArray(relatedTasksData) ? relatedTasksData.map((t: any) => ({
+    id: t._id,
+    title: t.title,
+    status: t.status,
+    priority: t.priority,
+    createdAt: t.createdAt
+  })) : []
+  
   const createTask = useMutation(api.flow.createTask)
-  const updateTaskStatus = useMutation(api.flow.updateTaskStatus)
+  const updateTask = useMutation(api.flow.updateTask)
+  // const updateTaskStatus = useMutation(api.flow.updateTaskStatus)
   const deleteTaskMutation = useMutation(api.flow.deleteTask)
   const createIdea = useMutation(api.flow.createIdea)
+  const updateIdea = useMutation(api.flow.updateIdea)
   const updateIdeaStatus = useMutation(api.flow.updateIdeaStatus)
   const deleteIdeaMutation = useMutation(api.flow.deleteIdea)
 
-  const handleUpdateTaskStatus = async (
-    taskId: string,
-    status: 'todo' | 'in_progress' | 'completed'
-  ) => {
-    await updateTaskStatus({ taskId: taskId as any, status })
+  const handleCreateTask = (status: 'todo' | 'in_progress' | 'completed') => {
+    setNewTaskStatus(status)
+    setTaskModalType('create')
+  }
+
+  const handleEditTask = (taskId: string) => {
+    setSelectedTaskId(taskId)
+    setTaskModalType('edit')
   }
 
   const handleDeleteTask = async (taskId: string) => {
@@ -43,10 +79,111 @@ export default function FlowApp() {
     }
   }
 
+  const handleSaveTask = async (taskData: any) => {
+    if (taskModalType === 'create' && workspaceId && userId) {
+      await createTask({
+        workspaceId: workspaceId as any,
+        userId: userId as any,
+        ...taskData,
+        status: newTaskStatus,
+      })
+      setTaskModalType(null)
+    } else if (taskModalType === 'edit' && selectedTaskId) {
+      await updateTask({
+        taskId: selectedTaskId as any,
+        ...taskData,
+      })
+      setTaskModalType(null)
+      setSelectedTaskId(null)
+    }
+  }
+
+  // const handleUpdateTaskStatus = async (
+  //   taskId: string,
+  //   status: 'todo' | 'in_progress' | 'completed'
+  // ) => {
+  //   await updateTaskStatus({ taskId: taskId as any, status })
+  // }
+
+  const handleCreateIdea = () => {
+    setSelectedIdeaId(null)
+    setIdeaModalType('create')
+  }
+
+  const handleEditIdea = (idea: Idea) => {
+    setSelectedIdeaId(idea.id)
+    setIdeaModalType('edit')
+  }
+
+  const handleSaveIdea = async (ideaData: any) => {
+    if (ideaModalType === 'create' && workspaceId && userId) {
+      await createIdea({
+        workspaceId: workspaceId as any,
+        userId: userId as any,
+        ...ideaData,
+        status: 'new'
+      })
+      setIdeaModalType(null)
+    } else if (ideaModalType === 'edit' && selectedIdeaId) {
+      await updateIdea({
+        ideaId: selectedIdeaId as any,
+        ...ideaData,
+      })
+      setIdeaModalType(null)
+      setSelectedIdeaId(null)
+    }
+  }
+
+  const handleViewIdeaDetail = (ideaId: string) => {
+    setSelectedIdeaId(ideaId)
+    setIsIdeaDetailOpen(true)
+  }
+
+  const handleCreateMultipleTasks = async (taskTitles: string[]) => {
+    if (!workspaceId || !userId || !selectedIdeaId) return
+    
+    for (const title of taskTitles) {
+      if (title.trim()) {
+        await createTask({
+          workspaceId: workspaceId as any,
+          userId: userId as any,
+          title: title.trim(),
+          description: `Created from idea: ${ideas.find(i => i.id === selectedIdeaId)?.title}`,
+          status: 'todo',
+          priority: 'medium',
+          ideaId: selectedIdeaId as any
+        })
+      }
+    }
+    
+    // Update idea status to converted
+    await updateIdeaStatus({ 
+      ideaId: selectedIdeaId as any, 
+      status: 'converted' 
+    })
+  }
+
+  const handleArchiveIdea = async () => {
+    if (!selectedIdeaId) return
+    await updateIdeaStatus({ 
+      ideaId: selectedIdeaId as any, 
+      status: 'archived' 
+    })
+    setIsIdeaDetailOpen(false)
+    setSelectedIdeaId(null)
+  }
+
   const handleConvertToTask = async (ideaId: string) => {
     const idea = ideas.find((i) => i.id === ideaId)
     if (!idea || !workspaceId || !userId) return
-    await createTask({ workspaceId: workspaceId as any, userId: userId as any, title: idea.title, status: 'todo', priority: 'medium', ideaId: idea.id as any })
+    await createTask({ 
+      workspaceId: workspaceId as any, 
+      userId: userId as any, 
+      title: idea.title, 
+      description: idea.description,
+      status: 'todo', 
+      priority: 'medium'
+    })
     await updateIdeaStatus({ ideaId: ideaId as any, status: 'converted' })
     setActiveTab('tasks')
   }
@@ -64,110 +201,150 @@ export default function FlowApp() {
     total: tasks.length,
   }
 
-  return (
-    <div className="min-h-screen bg-neutral-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-800 mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Dashboard
-        </Link>
+  const selectedTask = selectedTaskId ? tasks.find(t => t._id === selectedTaskId) : null
 
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-neutral-800 mb-2">Flow</h1>
-            <p className="text-neutral-600">
-              Organize your work and life, effortlessly.
-            </p>
+  return (
+    <div className="min-h-screen bg-slate-50">
+      {/* Header */}
+      <div className="bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-8 py-6">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-800 mb-4"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Dashboard
+          </Link>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-800 mb-2">Flow</h1>
+              <p className="text-slate-600">
+                Sophisticated task management with advanced filtering and organization.
+              </p>
+            </div>
+
+            {activeTab === 'tasks' && (
+              <div className="flex items-center gap-4">
+                <div className="text-sm text-slate-500">
+                  {taskStats.completed} / {taskStats.total} completed
+                </div>
+                <Button 
+                  onClick={() => handleCreateTask('todo')}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Task
+                </Button>
+              </div>
+            )}
           </div>
 
-          {activeTab === 'tasks' && (
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-neutral-500">
-                  {taskStats.completed} / {taskStats.total} completed
-                </span>
-              </div>
-              <Button onClick={async () => {
-                const title = prompt('Task title')
-                if (!title || !workspaceId || !userId) return
-                await createTask({ workspaceId: workspaceId as any, userId: userId as any, title, status: 'todo', priority: 'medium' })
-              }}>
-                <Plus className="w-4 h-4 mr-2" />
-                New Task
-              </Button>
-            </div>
-          )}
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md mb-6">
-          <div className="border-b border-neutral-200">
-            <div className="flex">
+          {/* Tab Navigation */}
+          <div className="mt-6">
+            <nav className="flex space-x-8">
               <button
                 onClick={() => setActiveTab('tasks')}
-                className={`px-6 py-3 font-medium transition-colors ${
+                className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'tasks'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                 }`}
               >
                 Tasks
-                <span className="ml-2 text-xs px-2 py-1 bg-neutral-100 rounded">
+                <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
                   {taskStats.total}
                 </span>
               </button>
               <button
                 onClick={() => setActiveTab('ideas')}
-                className={`px-6 py-3 font-medium transition-colors ${
+                className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'ideas'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                 }`}
               >
                 Ideas
-                <span className="ml-2 text-xs px-2 py-1 bg-neutral-100 rounded">
+                <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
                   {ideas.filter((i) => i.status !== 'archived').length}
                 </span>
               </button>
-            </div>
+            </nav>
           </div>
         </div>
+      </div>
 
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-8 py-8">
         {activeTab === 'tasks' && (
           <TaskBoard
-            tasks={tasks}
-            onEditTask={async (id) => {
-              const t = tasks.find((x) => x.id === id)
-              if (!t) return
-              const title = prompt('Title', t.title) || t.title
-              const dueDate = prompt('Due date (YYYY-MM-DD, optional)', t.dueDate || '') || t.dueDate
-              const priority = (prompt('Priority: low | medium | high', t.priority) || t.priority) as 'low' | 'medium' | 'high'
-              // For simplicity, recreate task with same status via server: create + delete (or extend API later)
-              // Better: add updateTask mutation, but for now we keep status updates only.
-              // Here we just display prompt result and ask user to manually update if needed.
-              alert('Title/priority/due date saved locally for now. I can add updateTask mutation next if you want.')
-            }}
-            onDeleteTask={handleDeleteTask}
-            onUpdateStatus={handleUpdateTaskStatus}
+            onEditTask={(taskId) => handleEditTask(taskId as string)}
+            onDeleteTask={(taskId) => handleDeleteTask(taskId as string)}
+            onCreateTask={handleCreateTask}
           />
         )}
 
         {activeTab === 'ideas' && (
           <IdeaList
             ideas={ideas}
-            onAddIdea={async () => {
-              const title = prompt('Idea title')
-              if (!title || !workspaceId || !userId) return
-              await createIdea({ workspaceId: workspaceId as any, userId: userId as any, title, status: 'new' })
-            }}
-            onEditIdea={() => alert('Edit Idea - Coming soon')}
+            onAddIdea={handleCreateIdea}
+            onEditIdea={handleEditIdea}
+            onViewIdeaDetail={handleViewIdeaDetail}
             onDeleteIdea={handleDeleteIdea}
             onConvertToTask={handleConvertToTask}
           />
         )}
       </div>
+
+      {/* Task Detail Modal */}
+      {taskModalType && (
+        <TaskDetailModal
+          isOpen={!!taskModalType}
+          onClose={() => {
+            setTaskModalType(null)
+            setSelectedTaskId(null)
+          }}
+          onSave={handleSaveTask}
+          task={selectedTask || null}
+          mode={taskModalType}
+        />
+      )}
+
+      {/* Idea Form Modal */}
+      {ideaModalType && (
+        <IdeaFormModal
+          isOpen={!!ideaModalType}
+          onClose={() => {
+            setIdeaModalType(null)
+            setSelectedIdeaId(null)
+          }}
+          onSave={handleSaveIdea}
+          idea={selectedIdeaId ? ideas.find(i => i.id === selectedIdeaId) || null : null}
+          mode={ideaModalType as 'create' | 'edit'}
+        />
+      )}
+
+      {/* Idea Detail Modal */}
+      <IdeaDetailModal
+        isOpen={isIdeaDetailOpen}
+        onClose={() => {
+          setIsIdeaDetailOpen(false)
+          setSelectedIdeaId(null)
+        }}
+        idea={selectedIdeaId ? ideas.find(i => i.id === selectedIdeaId) || null : null}
+        relatedTasks={relatedTasks}
+        onEditIdea={() => {
+          setIsIdeaDetailOpen(false)
+          setIdeaModalType('edit')
+        }}
+        onArchiveIdea={handleArchiveIdea}
+        onCreateTasks={handleCreateMultipleTasks}
+        onViewTask={(taskId) => {
+          setSelectedTaskId(taskId)
+          setTaskModalType('edit')
+          setIsIdeaDetailOpen(false)
+        }}
+      />
     </div>
   )
 }

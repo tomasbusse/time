@@ -13,6 +13,9 @@ export default defineSchema({
     name: v.string(),
     ownerId: v.id("users"),
     createdAt: v.number(),
+    
+    activeTimerTaskId: v.optional(v.id("tasks")),
+    activeTimerStart: v.optional(v.number()),
   }).index("by_owner", ["ownerId"]),
 
   permissions: defineTable({
@@ -52,6 +55,7 @@ export default defineSchema({
   timeLogged: defineTable({
     userId: v.id("users"),
     workspaceId: v.id("workspaces"),
+    taskId: v.optional(v.id("tasks")),
     allocationId: v.optional(v.id("timeAllocations")),
     sessionStart: v.number(),
     sessionEnd: v.number(),
@@ -61,69 +65,156 @@ export default defineSchema({
   })
     .index("by_workspace", ["workspaceId"])
     .index("by_user", ["userId"])
+    .index("by_task", ["taskId"])
     .index("by_allocation", ["allocationId"]),
 
+  // New comprehensive accounts system for proper accounting
   accounts: defineTable({
     workspaceId: v.id("workspaces"),
-    ownerId: v.id("users"),
-    name: v.string(),
-    accountType: v.union(v.literal("bank"), v.literal("loan"), v.literal("savings")),
-    currentBalance: v.number(),
-    isPrivate: v.boolean(),
-    isDeleted: v.boolean(),
+    accountCode: v.string(),
+    accountName: v.string(),
+    name: v.optional(v.string()),
+    accountType: v.union(
+      v.literal("asset"),
+      v.literal("liability"),
+      v.literal("equity"),
+      v.literal("revenue"),
+      v.literal("expense")
+    ),
+    accountCategory: v.string(),
+    isActive: v.boolean(),
+    currentBalance: v.optional(v.number()),
+    isPrivate: v.optional(v.boolean()),
+    isDeleted: v.optional(v.boolean()),
+    ownerId: v.optional(v.id("users")),
+    parentAccountId: v.optional(v.id("accounts")),
+    createdBy: v.id("users"),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("by_workspace", ["workspaceId"])
-    .index("by_owner", ["ownerId"]),
+    .index("by_code", ["accountCode"])
+    .index("by_type", ["accountType"])
+    .index("by_category", ["accountCategory"])
+    .index("by_creation", ["createdAt"]),
 
+  // Account balances - current running balance for each account
+  accountBalances: defineTable({
+    workspaceId: v.id("workspaces"),
+    accountId: v.id("accounts"),
+    currentBalance: v.number(), // Current running balance
+    lastUpdated: v.number(), // When balance was last updated
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_account", ["accountId"])
+    .index("by_last_updated", ["lastUpdated"]),
+
+  // Monthly valuations - historical snapshots for trend analysis
+  monthlyValuations: defineTable({
+    workspaceId: v.id("workspaces"),
+    accountId: v.id("accounts"),
+    year: v.number(),
+    month: v.number(), // 1-12
+    beginningBalance: v.number(), // Balance at start of month
+    endingBalance: v.number(), // Balance at end of month
+    netTransactions: v.number(), // Net change during month
+    notes: v.optional(v.string()), // Optional notes about the valuation
+    createdBy: v.id("users"),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_account", ["accountId"])
+    .index("by_period", ["year", "month"])
+    .index("by_account_period", ["accountId", "year", "month"]),
+
+  // Transactions - for tracking all financial movements with proper double-entry support
   transactions: defineTable({
     workspaceId: v.id("workspaces"),
+    date: v.number(),
+    description: v.string(),
+    amount: v.number(), // Transaction amount
     accountId: v.id("accounts"),
-    amount: v.number(),
-    date: v.string(),
-    category: v.string(),
-    notes: v.optional(v.string()),
-    isRecurring: v.boolean(),
+    transactionType: v.union(
+      v.literal("debit"),
+      v.literal("credit")
+    ), // Debit or Credit entry
+    reference: v.optional(v.string()), // Check number, invoice number, etc.
+    category: v.optional(v.string()),
+    createdBy: v.id("users"),
     createdAt: v.number(),
   })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_date", ["date"])
     .index("by_account", ["accountId"])
-    .index("by_workspace", ["workspaceId"]),
+    .index("by_category", ["category"])
+    .index("by_creation", ["createdAt"]),
 
-  monthlyProjection: defineTable({
+  // Removed monthlyProjection table - replaced by monthlyValuations system
+
+  categoryBudgets: defineTable({
     workspaceId: v.id("workspaces"),
-    accountId: v.id("accounts"),
-    month: v.string(),
-    projectedBalance: v.number(),
-    committedExpenses: v.number(),
+    classification: v.union(v.literal("business"), v.literal("private")),
+    category: v.union(
+      v.literal("ai"),
+      v.literal("software"),
+      v.literal("marketing"),
+      v.literal("productivity"),
+      v.literal("design"),
+      v.literal("communication"),
+      v.literal("development"),
+      v.literal("analytics"),
+      v.literal("security"),
+      v.literal("other")
+    ),
+    subcategory: v.optional(v.string()),
+    monthlyBudgetLimit: v.number(),
+    yearlyBudgetLimit: v.number(),
+    alertThreshold: v.union(v.literal("50"), v.literal("75"), v.literal("90"), v.literal("100")),
+    isActive: v.boolean(),
     createdAt: v.number(),
+    updatedAt: v.number(),
   })
-    .index("by_account_month", ["accountId", "month"])
-    .index("by_workspace", ["workspaceId"]),
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_category", ["workspaceId", "category"]),
 
+  // Enhanced assets table - now references account system
   assets: defineTable({
     workspaceId: v.id("workspaces"),
     ownerId: v.id("users"),
+    accountId: v.optional(v.id("accounts")),
     name: v.string(),
-    type: v.union(v.literal("property"), v.literal("vehicle"), v.literal("investment"), v.literal("other")),
-    value: v.number(),
+    type: v.string(),
+    purchaseDate: v.optional(v.string()),
+    purchasePrice: v.optional(v.number()),
+    currentValue: v.optional(v.number()),
+    isFixed: v.optional(v.boolean()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("by_workspace", ["workspaceId"])
-    .index("by_owner", ["ownerId"]),
+    .index("by_owner", ["ownerId"])
+    .index("by_account", ["accountId"]),
 
+  // Enhanced liabilities table - now references account system
   liabilities: defineTable({
     workspaceId: v.id("workspaces"),
     ownerId: v.id("users"),
+    accountId: v.optional(v.id("accounts")),
     name: v.string(),
-    amount: v.number(),
+    type: v.optional(v.string()),
     relatedAssetId: v.optional(v.id("assets")),
+    originalAmount: v.optional(v.number()),
+    currentBalance: v.optional(v.number()),
+    interestRate: v.optional(v.number()),
+    dueDate: v.optional(v.string()),
+    isFixed: v.optional(v.boolean()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("by_workspace", ["workspaceId"])
-    .index("by_owner", ["ownerId"]),
+    .index("by_owner", ["ownerId"])
+    .index("by_account", ["accountId"]),
 
   equityGoals: defineTable({
     workspaceId: v.id("workspaces"),
@@ -144,6 +235,22 @@ export default defineSchema({
     billingCycle: v.union(v.literal("monthly"), v.literal("yearly")),
     nextBillingDate: v.string(),
     isActive: v.boolean(),
+    classification: v.optional(v.union(v.literal("business"), v.literal("private"))),
+    category: v.optional(v.union(
+      v.literal("ai"),
+      v.literal("software"),
+      v.literal("marketing"),
+      v.literal("productivity"),
+      v.literal("design"),
+      v.literal("communication"),
+      v.literal("development"),
+      v.literal("analytics"),
+      v.literal("security"),
+      v.literal("other")
+    )),
+    subcategory: v.optional(v.string()),
+    isNecessary: v.optional(v.boolean()),
+    yearlyAmount: v.optional(v.number()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -155,6 +262,15 @@ export default defineSchema({
     userId: v.id("users"),
     title: v.string(),
     description: v.optional(v.string()),
+    richDescription: v.optional(v.string()),
+    category: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
+    priority: v.optional(v.union(v.literal("low"), v.literal("medium"), v.literal("high"))),
+    attachments: v.optional(v.array(v.object({
+      url: v.string(),
+      name: v.string(),
+      type: v.string(),
+    }))),
     status: v.union(v.literal("new"), v.literal("reviewing"), v.literal("converted"), v.literal("archived")),
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -172,6 +288,18 @@ export default defineSchema({
     dueDate: v.optional(v.string()),
     description: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
+    position: v.optional(v.number()),
+    isArchived: v.optional(v.boolean()),
+    estimatedHours: v.optional(v.number()),
+    
+    // Time allocation fields
+    dailyAllocation: v.optional(v.number()),
+    weeklyAllocation: v.optional(v.number()),
+    monthlyAllocation: v.optional(v.number()),
+    yearlyAllocation: v.optional(v.number()),
+    timeSpent: v.optional(v.number()),
+    currentSessionStart: v.optional(v.number()),
+    
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -241,4 +369,63 @@ export default defineSchema({
     .index("by_workspace", ["workspaceId"])
     .index("by_user", ["userId"])
     .index("by_google_event", ["googleEventId"]),
+
+  // Asset valuations - now tied to account system for better tracking
+  assetValuations: defineTable({
+    workspaceId: v.id("workspaces"),
+    assetId: v.id("assets"),
+    accountId: v.optional(v.id("accounts")),
+    ownerId: v.id("users"),
+    valuationDate: v.string(),
+    amount: v.number(),
+    valuationType: v.optional(v.union(
+      v.literal("purchase"),
+      v.literal("market"),
+      v.literal("appraisal"),
+      v.literal("book")
+    )),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_asset", ["assetId"])
+    .index("by_account", ["accountId"])
+    .index("by_asset_date", ["assetId", "valuationDate"])
+    .index("by_account_date", ["accountId", "valuationDate"]),
+
+  // Liability valuations - now tied to account system
+  liabilityValuations: defineTable({
+    workspaceId: v.id("workspaces"),
+    liabilityId: v.id("liabilities"),
+    accountId: v.optional(v.id("accounts")),
+    ownerId: v.id("users"),
+    valuationDate: v.string(),
+    amount: v.number(),
+    principalAmount: v.optional(v.number()),
+    interestAccrued: v.optional(v.number()),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_liability", ["liabilityId"])
+    .index("by_account", ["accountId"])
+    .index("by_liability_date", ["liabilityId", "valuationDate"])
+    .index("by_account_date", ["accountId", "valuationDate"]),
+
+  // Account type valuations for portfolio-level tracking
+  accountTypeValuations: defineTable({
+    workspaceId: v.id("workspaces"),
+    accountType: v.string(), // Type of account (asset, liability, etc.)
+    accountCategory: v.string(), // Sub-category
+    ownerId: v.id("users"),
+    valuationDate: v.string(), // ISO format date (YYYY-MM-DD)
+    totalValue: v.number(), // Total value of all accounts of this type
+    count: v.number(), // Number of accounts of this type
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_type", ["accountType"])
+    .index("by_category", ["accountCategory"])
+    .index("by_type_date", ["accountType", "valuationDate"])
+    .index("by_category_date", ["accountCategory", "valuationDate"]),
 });

@@ -7,9 +7,11 @@ interface Subscription {
   id: string
   name: string
   cost: number
+  yearlyAmount?: number
   billingCycle: 'monthly' | 'yearly'
   nextBillingDate: string
   isActive: boolean
+  isNecessary?: boolean
 }
 
 interface SubscriptionListProps {
@@ -17,6 +19,8 @@ interface SubscriptionListProps {
   onAddSubscription: () => void
   onEditSubscription: (subscriptionId: string) => void
   onDeleteSubscription: (subscriptionId: string) => void
+  onToggleNecessary: (subscriptionId: string, isNecessary: boolean) => void
+  onToggleActive: (subscriptionId: string, isActive: boolean) => void
 }
 
 export default function SubscriptionList({
@@ -24,6 +28,8 @@ export default function SubscriptionList({
   onAddSubscription,
   onEditSubscription,
   onDeleteSubscription,
+  onToggleNecessary,
+  onToggleActive,
 }: SubscriptionListProps) {
   const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('en-IE', {
@@ -38,11 +44,30 @@ export default function SubscriptionList({
     return sum + (sub.billingCycle === 'monthly' ? sub.cost : sub.cost / 12)
   }, 0)
 
-  const yearlyTotal = monthlyTotal * 12
+  const yearlyTotal = activeSubscriptions.reduce((sum, sub) => {
+    // Use yearlyAmount if provided, otherwise calculate from cost
+    if (sub.yearlyAmount !== undefined) {
+      return sum + sub.yearlyAmount
+    }
+    return sum + (sub.billingCycle === 'yearly' ? sub.cost : sub.cost * 12)
+  }, 0)
+  
+  // Calculate potential savings from optional subscriptions
+  const optionalSubscriptions = activeSubscriptions.filter(sub => sub.isNecessary === false)
+  const potentialMonthlySavings = optionalSubscriptions.reduce((sum, sub) => {
+    return sum + (sub.billingCycle === 'monthly' ? sub.cost : sub.cost / 12)
+  }, 0)
+  
+  const potentialYearlySavings = optionalSubscriptions.reduce((sum, sub) => {
+    if (sub.yearlyAmount !== undefined) {
+      return sum + sub.yearlyAmount
+    }
+    return sum + (sub.billingCycle === 'yearly' ? sub.cost : sub.cost * 12)
+  }, 0)
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm text-neutral-500">Monthly Cost</div>
@@ -63,6 +88,30 @@ export default function SubscriptionList({
             </div>
             <p className="text-xs text-neutral-500 mt-1">
               Annual total across all subscriptions
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-sm text-neutral-500">Potential Monthly Savings</div>
+            <div className="text-2xl font-semibold text-green-600">
+              {formatCurrency(potentialMonthlySavings)}
+            </div>
+            <p className="text-xs text-neutral-500 mt-1">
+              By canceling {optionalSubscriptions.length} optional subscription{optionalSubscriptions.length !== 1 ? 's' : ''}
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-sm text-neutral-500">Potential Yearly Savings</div>
+            <div className="text-2xl font-semibold text-green-600">
+              {formatCurrency(potentialYearlySavings)}
+            </div>
+            <p className="text-xs text-neutral-500 mt-1">
+              Annual savings potential
             </p>
           </CardContent>
         </Card>
@@ -104,7 +153,7 @@ export default function SubscriptionList({
                       )}
                     </div>
                     
-                    <div className="flex items-center gap-4 text-sm text-neutral-600">
+                    <div className="flex items-center gap-4 text-sm text-neutral-600 mb-3">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         <span>
@@ -115,8 +164,44 @@ export default function SubscriptionList({
                         {subscription.billingCycle}
                       </span>
                     </div>
-                  </div>
 
+                    {/* Quick Toggle Controls */}
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={subscription.isNecessary !== false}
+                          onChange={(e) => onToggleNecessary(subscription.id, e.target.checked)}
+                          className="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500"
+                        />
+                        <span className="text-xs text-neutral-600">Necessary</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={subscription.isActive}
+                          onChange={(e) => onToggleActive(subscription.id, e.target.checked)}
+                          className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                        />
+                        <span className="text-xs text-neutral-600">Active</span>
+                      </div>
+                      <div className="text-xs text-neutral-500">
+                        <div>Monthly: {formatCurrency(
+                          subscription.billingCycle === 'monthly' 
+                            ? subscription.cost 
+                            : subscription.cost / 12
+                        )}</div>
+                        <div>Yearly: {formatCurrency(
+                          subscription.yearlyAmount !== undefined 
+                            ? subscription.yearlyAmount 
+                            : subscription.billingCycle === 'yearly' 
+                              ? subscription.cost 
+                              : subscription.cost * 12
+                        )}</div>
+                      </div>
+                    </div>
+                  </div>
+                  
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <div className="text-2xl font-semibold text-neutral-800">
@@ -125,6 +210,11 @@ export default function SubscriptionList({
                       <div className="text-xs text-neutral-500">
                         / {subscription.billingCycle === 'monthly' ? 'month' : 'year'}
                       </div>
+                      {subscription.yearlyAmount !== undefined && (
+                        <div className="text-xs text-neutral-500">
+                          Yearly: {formatCurrency(subscription.yearlyAmount)}
+                        </div>
+                      )}
                     </div>
                     <div className="flex gap-1">
                       <button
@@ -143,6 +233,15 @@ export default function SubscriptionList({
                   </div>
                 </div>
 
+                {subscription.yearlyAmount !== undefined && subscription.billingCycle === 'monthly' && (
+                  <div className="mt-3 pt-3 border-t border-neutral-200">
+                    <p className="text-xs text-neutral-500">
+                      Yearly amount: {formatCurrency(subscription.yearlyAmount)} 
+                      (Monthly: {formatCurrency(subscription.yearlyAmount / 12)}/month)
+                    </p>
+                  </div>
+                )}
+                
                 {subscription.billingCycle === 'yearly' && (
                   <div className="mt-3 pt-3 border-t border-neutral-200">
                     <p className="text-xs text-neutral-500">
