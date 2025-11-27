@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { TaskDetailModal } from '../components/TaskDetailModal';
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -22,23 +22,22 @@ export function Todos() {
   const [editingTask, setEditingTask] = useState<Task | undefined>();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Mock user ID - in a real app this would come from authentication
-  const userId = "user-123";
+  // Mock workspace ID - in a real app this would come from authentication
+  const workspaceId = "workspace-123" as any;
 
   // Convex queries and mutations
-  const tasks = useQuery(api.flow.getTasks, { userId });
-  const timeSummary = useQuery(api.flow.getTimeAllocationSummary, { userId });
+  const tasks = useQuery(api.flow.listTasks, workspaceId ? { workspaceId } : "skip");
+  const timeSummary = useQuery(api.flow.getTimeAllocationSummary, workspaceId ? { workspaceId } : "skip");
   const createTaskMutation = useMutation(api.flow.createTask);
   const updateTaskMutation = useMutation(api.flow.updateTask);
   const deleteTaskMutation = useMutation(api.flow.deleteTask);
-  const toggleTaskMutation = useMutation(api.flow.toggleTaskCompletion);
 
   const handleCreateTask = async (taskData: any) => {
     setIsLoading(true);
     try {
       await createTaskMutation({
         ...taskData,
-        userId,
+        workspaceId,
       });
     } catch (error) {
       console.error('Error creating task:', error);
@@ -49,12 +48,12 @@ export function Todos() {
 
   const handleUpdateTask = async (taskData: any) => {
     if (!editingTask) return;
-    
+
     setIsLoading(true);
     try {
       await updateTaskMutation({
-        taskId: editingTask._id,
-        userId,
+        taskId: editingTask._id as any,
+        workspaceId,
         ...taskData,
       });
     } catch (error) {
@@ -67,7 +66,7 @@ export function Todos() {
   const handleDeleteTask = async (taskId: string) => {
     if (window.confirm('Are you sure you want to delete this task?')) {
       try {
-        await deleteTaskMutation({ taskId, userId });
+        await deleteTaskMutation({ taskId: taskId as any });
       } catch (error) {
         console.error('Error deleting task:', error);
       }
@@ -76,10 +75,9 @@ export function Todos() {
 
   const handleToggleCompletion = async (task: Task) => {
     try {
-      await toggleTaskMutation({
-        taskId: task._id,
-        userId,
-        completed: !task.completed,
+      await updateTaskMutation({
+        taskId: task._id as any,
+        status: task.completed ? "todo" : "completed",
       });
     } catch (error) {
       console.error('Error toggling task completion:', error);
@@ -127,10 +125,10 @@ export function Todos() {
     );
   }
 
-  const completedTasks = tasks.filter(task => task.completed).length;
+  const completedTasks = tasks.filter((task: any) => task.status === "completed").length;
   const totalTasks = tasks.length;
-  const inProgressTasks = tasks.filter(task => !task.completed).length;
-  const pendingTasks = tasks.filter(task => !task.completed && !task.timeSpent).length;
+  const inProgressTasks = tasks.filter((task: any) => task.status !== "completed").length;
+  const pendingTasks = tasks.filter((task: any) => task.status !== "completed" && !task.timeSpent).length;
 
   return (
     <div className="space-y-8">
@@ -140,7 +138,7 @@ export function Todos() {
           <h1 className="text-3xl font-bold text-dark-blue">Tasks</h1>
           <p className="text-gray mt-1">Manage your daily tasks and time allocation</p>
         </div>
-        <button 
+        <button
           onClick={openCreateModal}
           className="bg-dark-blue hover:bg-dark-blue text-off-white px-6 py-3 rounded-xl font-medium transition-colors duration-200 flex items-center gap-2 shadow-sm"
         >
@@ -162,7 +160,7 @@ export function Todos() {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-off-white-light rounded-xl p-6 border border-gray-light shadow-sm">
           <div className="flex items-center gap-4">
             <div className="bg-yellow-500/10 p-3 rounded-lg">
@@ -174,7 +172,7 @@ export function Todos() {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-off-white-light rounded-xl p-6 border border-gray-light shadow-sm">
           <div className="flex items-center gap-4">
             <div className="bg-brown/10 p-3 rounded-lg">
@@ -244,7 +242,7 @@ export function Todos() {
               <div className="text-6xl text-gray mb-4">📝</div>
               <h3 className="text-xl font-semibold text-dark-blue mb-2">No tasks yet</h3>
               <p className="text-gray mb-6">Create your first task to get started with time allocation</p>
-              <button 
+              <button
                 onClick={openCreateModal}
                 className="bg-dark-blue hover:bg-dark-blue text-off-white px-6 py-3 rounded-xl font-medium transition-colors duration-200 flex items-center gap-2 mx-auto"
               >
@@ -254,44 +252,42 @@ export function Todos() {
             </div>
           ) : (
             <div className="space-y-4">
-              {tasks.map((task) => (
-                <div 
-                  key={task._id} 
+              {tasks.map((task: any) => (
+                <div
+                  key={task._id}
                   className="flex items-center gap-4 p-4 rounded-lg hover:bg-off-white transition-colors duration-200 border border-gray-light/50"
                 >
                   {/* Checkbox */}
-                  <input 
-                    type="checkbox" 
-                    checked={task.completed}
+                  <input
+                    type="checkbox"
+                    checked={task.status === "completed"}
                     onChange={() => handleToggleCompletion(task)}
-                    className="form-checkbox size-5 rounded text-dark-blue border-gray-light focus:ring-dark-blue" 
+                    className="form-checkbox size-5 rounded text-dark-blue border-gray-light focus:ring-dark-blue"
                   />
 
                   {/* Task Content */}
-                  <div 
-                    className="flex-1 cursor-pointer" 
+                  <div
+                    className="flex-1 cursor-pointer"
                     onClick={() => openEditModal(task)}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <p className={`text-sm font-medium ${
-                          task.completed ? 'line-through text-gray' : 'text-dark-blue'
-                        }`}>
+                        <p className={`text-sm font-medium ${task.status === "completed" ? 'line-through text-gray' : 'text-dark-blue'
+                          }`}>
                           {task.title}
                         </p>
                         {task.description && (
-                          <p className={`text-xs mt-1 ${
-                            task.completed ? 'line-through text-gray' : 'text-gray'
-                          }`}>
+                          <p className={`text-xs mt-1 ${task.status === "completed" ? 'line-through text-gray' : 'text-gray'
+                            }`}>
                             {task.description}
                           </p>
                         )}
-                        
+
                         {/* Time Allocation Badges */}
                         {formatTimeAllocation(task).length > 0 && (
                           <div className="flex flex-wrap gap-2 mt-2">
                             {formatTimeAllocation(task).map((allocation, index) => (
-                              <span 
+                              <span
                                 key={index}
                                 className="px-2 py-1 bg-light-gray text-dark-blue text-xs rounded-full"
                               >
@@ -309,14 +305,13 @@ export function Todos() {
                               <span>{getProgressPercentage(task).toFixed(0)}%</span>
                             </div>
                             <div className="w-full bg-off-white rounded-full h-2">
-                              <div 
-                                className={`h-2 rounded-full transition-all duration-300 ${
-                                  getProgressPercentage(task) >= 100 
-                                    ? 'bg-green-500' 
-                                    : getProgressPercentage(task) >= 75 
-                                    ? 'bg-yellow-500' 
+                              <div
+                                className={`h-2 rounded-full transition-all duration-300 ${getProgressPercentage(task) >= 100
+                                  ? 'bg-green-500'
+                                  : getProgressPercentage(task) >= 75
+                                    ? 'bg-yellow-500'
                                     : 'bg-off-white0'
-                                }`}
+                                  }`}
                                 style={{ width: `${getProgressPercentage(task)}%` }}
                               />
                             </div>
@@ -332,11 +327,10 @@ export function Todos() {
                   </div>
 
                   {/* Priority Badge */}
-                  <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    task.priority === 'high' ? 'bg-off-white0/10 text-red-500' :
+                  <div className={`px-3 py-1 rounded-full text-xs font-medium ${task.priority === 'high' ? 'bg-off-white0/10 text-red-500' :
                     task.priority === 'medium' ? 'bg-yellow-500/10 text-yellow-500' :
-                    'bg-green-500/10 text-green-500'
-                  }`}>
+                      'bg-green-500/10 text-green-500'
+                    }`}>
                     {task.priority}
                   </div>
 

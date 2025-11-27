@@ -3,15 +3,15 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export function Home() {
-  // Mock user ID - in a real app this would come from authentication
-  const userId = "user-123";
+  // Mock workspace ID - in a real app this would come from authentication
+  const workspaceId = "workspace-123" as any;
 
-  // Get Flow time allocation summary
-  const timeSummary = useQuery(api.flow.getTimeAllocationSummary, { userId });
-  const recentTasks = useQuery(api.flow.getTasks, { userId });
+  // Get Flow time allocation summary  
+  const timeSummary = useQuery(api.flow.getTimeAllocationSummary, workspaceId ? { workspaceId } : "skip");
+  const recentTasks = useQuery(api.flow.listTasks, workspaceId ? { workspaceId } : "skip");
 
   // Calculate completion rate
-  const completedTasks = recentTasks?.filter(task => task.completed).length || 0;
+  const completedTasks = recentTasks?.filter((task: any) => task.status === "completed").length || 0;
   const totalTasks = recentTasks?.length || 0;
   const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
@@ -94,7 +94,7 @@ export function Home() {
               </h2>
               <p className="text-gray mt-1">Your time investment overview</p>
             </div>
-            <Link 
+            <Link
               to="/todos"
               className="bg-dark-blue hover:bg-dark-blue text-off-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center gap-2"
             >
@@ -102,7 +102,7 @@ export function Home() {
               View Flow
             </Link>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {timeSummary.totalDailyAllocation > 0 && (
               <div className="bg-white/50 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20">
@@ -111,7 +111,7 @@ export function Home() {
                 <div className="text-xs text-gray mt-1">Daily commitment</div>
               </div>
             )}
-            
+
             {timeSummary.totalWeeklyAllocation > 0 && (
               <div className="bg-white/50 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20">
                 <div className="text-3xl font-bold text-brown-600 mb-1">{timeSummary.totalWeeklyAllocation.toFixed(1)}</div>
@@ -119,7 +119,7 @@ export function Home() {
                 <div className="text-xs text-gray mt-1">Weekly target</div>
               </div>
             )}
-            
+
             {timeSummary.totalMonthlyAllocation > 0 && (
               <div className="bg-white/50 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20">
                 <div className="text-3xl font-bold text-blue-500-600 mb-1">{timeSummary.totalMonthlyAllocation.toFixed(1)}</div>
@@ -127,7 +127,7 @@ export function Home() {
                 <div className="text-xs text-gray mt-1">Monthly scope</div>
               </div>
             )}
-            
+
             {timeSummary.totalTimeSpent > 0 && (
               <div className="bg-white/50 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20">
                 <div className="text-3xl font-bold text-green-500-600 mb-1">{timeSummary.totalTimeSpent.toFixed(1)}</div>
@@ -145,30 +145,30 @@ export function Home() {
                 <span className="text-sm font-bold text-dark-blue">{completionRate}%</span>
               </div>
               <div className="w-full bg-white/50 rounded-full h-2">
-                <div 
+                <div
                   className="h-2 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full transition-all duration-300"
                   style={{ width: `${completionRate}%` }}
                 />
               </div>
             </div>
-            
+
             <div className="bg-white/30 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-dark-blue">Time Utilization</span>
                 <span className="text-sm font-bold text-green-500-600">
-                  {timeSummary.totalDailyAllocation > 0 && timeSummary.totalTimeSpent > 0 
+                  {timeSummary.totalDailyAllocation > 0 && timeSummary.totalTimeSpent > 0
                     ? `${Math.round((timeSummary.totalTimeSpent / (timeSummary.totalDailyAllocation * 7)) * 100)}%`
                     : '0%'
                   }
                 </span>
               </div>
               <div className="w-full bg-white/50 rounded-full h-2">
-                <div 
+                <div
                   className="h-2 bg-gradient-to-r from-success-500 to-primary-500 rounded-full transition-all duration-300"
-                  style={{ 
-                    width: `${timeSummary.totalDailyAllocation > 0 && timeSummary.totalTimeSpent > 0 
+                  style={{
+                    width: `${timeSummary.totalDailyAllocation > 0 && timeSummary.totalTimeSpent > 0
                       ? Math.min((timeSummary.totalTimeSpent / (timeSummary.totalDailyAllocation * 7)) * 100, 100)
-                      : 0}%` 
+                      : 0}%`
                   }}
                 />
               </div>
@@ -253,7 +253,7 @@ export function Home() {
                   <span className="material-symbols-outlined text-dark-blue">psychology</span>
                 </div>
                 <p className="text-sm">No Flow tasks yet</p>
-                <Link 
+                <Link
                   to="/todos"
                   className="text-xs text-dark-blue hover:text-dark-blue font-medium mt-2 inline-block"
                 >
@@ -261,24 +261,23 @@ export function Home() {
                 </Link>
               </div>
             ) : (
-              recentTasksToShow.map((task) => (
+              recentTasksToShow.map((task: any) => (
                 <div key={task._id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-off-white transition-colors duration-200">
-                  <input 
-                    type="checkbox" 
-                    checked={task.completed}
-                    className="form-checkbox size-5 rounded text-dark-blue border-gray-light focus:ring-dark-blue" 
+                  <input
+                    type="checkbox"
+                    checked={task.status === "completed"}
+                    className="form-checkbox size-5 rounded text-dark-blue border-gray-light focus:ring-dark-blue"
                     readOnly
                   />
                   <div className="flex-1 min-w-0">
-                    <span className={`text-sm truncate block ${task.completed ? 'line-through text-gray' : 'text-dark-blue'}`}>
+                    <p className={`text-sm font-medium ${task.status === "completed" ? 'line-through text-gray' : 'text-dark-blue'}`}>
                       {task.title}
-                    </span>
+                    </p>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        task.priority === 'high' ? 'bg-off-white0/10 text-red-500' :
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${task.priority === 'high' ? 'bg-off-white0/10 text-red-500' :
                         task.priority === 'medium' ? 'bg-yellow-500/10 text-yellow-500' :
-                        'bg-green-500/10 text-green-500'
-                      }`}>
+                          'bg-green-500/10 text-green-500'
+                        }`}>
                         {task.priority}
                       </span>
                       {(task.dailyAllocation || task.weeklyAllocation) && (
