@@ -87,19 +87,20 @@ export const seedAdminUser = mutation({
             .withIndex("by_email", (q) => q.eq("email", adminEmail))
             .first();
 
+        let userId;
         if (existingUser) {
             console.log("Admin user already exists");
-            return existingUser._id;
+            userId = existingUser._id;
+        } else {
+            // Create admin user
+            userId = await ctx.db.insert("users", {
+                email: adminEmail,
+                name: "Tomas",
+                isAdmin: true,
+                role: "admin",
+                createdAt: Date.now(),
+            });
         }
-
-        // Create admin user
-        const userId = await ctx.db.insert("users", {
-            email: adminEmail,
-            name: "Tomas",
-            isAdmin: true,
-            role: "admin",
-            createdAt: Date.now(),
-        });
 
         // Add to authorized emails
         const existingAuth = await ctx.db

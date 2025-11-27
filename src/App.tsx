@@ -34,26 +34,6 @@ function AppContent() {
     );
   }
 
-  // Check if user's email is allowed
-  const userEmail = user?.primaryEmailAddress?.emailAddress?.toLowerCase();
-  const isAllowed = authorizedEmails.some(ae => ae.email.toLowerCase() === userEmail);
-
-  if (!isAllowed) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-off-white">
-        <div className="max-w-md text-center p-8 bg-white rounded-lg shadow-lg">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h1>
-          <p className="text-gray-700 mb-4">
-            Your email <strong>{userEmail}</strong> is not authorized to access this application.
-          </p>
-          <p className="text-gray-600 text-sm">
-            Please contact the administrator if you believe this is an error.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <Router>
       <div className="flex min-h-screen bg-off-white">
