@@ -120,8 +120,8 @@ export default function TeacherDashboard() {
                                                                 {customer?.name || 'Unknown Student'}
                                                             </div>
                                                             <div className="flex items-center gap-1.5">
-                                                                {lesson.type === 'online' ? <Video className="w-4 h-4" /> : <MapPin className="w-4 h-4" />}
-                                                                <span className="capitalize">{lesson.type.replace(/_/g, ' ')}</span>
+                                                                {(lesson.type || "online") === 'online' ? <Video className="w-4 h-4" /> : <MapPin className="w-4 h-4" />}
+                                                                <span className="capitalize">{((lesson.type || "online") as string).replace(/_/g, ' ')}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -135,7 +135,7 @@ export default function TeacherDashboard() {
                                                                     title: lesson.title,
                                                                     start: lesson.start,
                                                                     end: lesson.end,
-                                                                    type: lesson.type,
+                                                                    type: (lesson.type || "online") as "online" | "in_person_office" | "in_person_company",
                                                                     meetingLink: lesson.meetingLink,
                                                                 },
                                                                 {

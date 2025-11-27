@@ -54,8 +54,8 @@ export default function CalendarApp() {
   const handleAuthCode = async (code: string) => {
     try {
       const tokens = await getAccessTokenAction({ code });
-      if (tokens) {
-        saveTokens(tokens.access_token, tokens.refresh_token, tokens.expires_in);
+      if (tokens && tokens.access_token) {
+        saveTokens(tokens.access_token, tokens.refresh_token || "", tokens.expiry_date);
         window.history.replaceState({}, '', window.location.pathname);
         await fetchGoogleEvents();
       }
@@ -64,14 +64,14 @@ export default function CalendarApp() {
     }
   };
 
-  const saveTokens = (access: string, refresh: string, expiresIn: number) => {
-    const expiresAt = Date.now() + expiresIn * 1000;
+  const saveTokens = (access: string, refresh: string, expiresAt: number | null | undefined) => {
+    const expiry = expiresAt || (Date.now() + 3600 * 1000);
     setAccessToken(access);
     setRefreshToken(refresh);
-    setTokenExpiresAt(expiresAt);
+    setTokenExpiresAt(expiry);
     localStorage.setItem('google_access_token', access);
     localStorage.setItem('google_refresh_token', refresh);
-    localStorage.setItem('google_token_expires_at', expiresAt.toString());
+    localStorage.setItem('google_token_expires_at', expiry.toString());
   };
 
   const refreshTokens = async () => {
@@ -80,7 +80,7 @@ export default function CalendarApp() {
     try {
       const tokens = await refreshAccessTokenAction({ refreshToken });
       if (tokens) {
-        saveTokens(tokens.access_token, tokens.refresh_token || refreshToken, tokens.expires_in);
+        saveTokens(tokens.access_token, tokens.refresh_token || refreshToken, tokens.expiry_date);
         return true;
       }
     } catch (error) {
@@ -162,16 +162,16 @@ export default function CalendarApp() {
         await updateEventAction({
           accessToken,
           eventId: event.googleEventId,
-          summary: event.title,
-          start: new Date(event.startTime).toISOString(),
-          end: new Date(event.endTime).toISOString(),
+          title: event.title,
+          startTime: new Date(event.startTime).toISOString(),
+          endTime: new Date(event.endTime).toISOString(),
         });
       } else {
         await createEventAction({
           accessToken,
-          summary: event.title,
-          start: new Date(event.startTime).toISOString(),
-          end: new Date(event.endTime).toISOString(),
+          title: event.title,
+          startTime: new Date(event.startTime).toISOString(),
+          endTime: new Date(event.endTime).toISOString(),
         });
       }
       await fetchGoogleEvents();

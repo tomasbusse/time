@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 import { useState, useEffect } from "react";
 import { useWorkspace } from "../../lib/WorkspaceContext";
 import { Building2, Save, Upload, Mail, CreditCard, FileText, ArrowLeft, Image as ImageIcon } from "lucide-react";
@@ -53,7 +54,7 @@ export default function CompanySettingsPage({ onBack }: { onBack?: () => void })
                 accountHolder: settings.accountHolder || "",
                 emailBodyTemplate: settings.emailBodyTemplate || formData.emailBodyTemplate,
                 logoStorageId: settings.logoStorageId,
-                logoUrl: settings.logoUrl,
+                logoUrl: settings.logoUrl ?? undefined,
             });
             if (settings.logoUrl) {
                 setLogoPreview(settings.logoUrl);
@@ -103,7 +104,7 @@ export default function CompanySettingsPage({ onBack }: { onBack?: () => void })
             await updateSettings({
                 workspaceId,
                 ...formData,
-                logoStorageId: newLogoStorageId,
+                logoStorageId: newLogoStorageId as Id<"_storage"> | undefined,
             });
 
             alert("Settings saved successfully!");

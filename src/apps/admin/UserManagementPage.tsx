@@ -8,7 +8,7 @@ import { Id } from "../../../convex/_generated/dataModel";
 export default function UserManagementPage() {
     const users = useQuery(api.users.listUsers);
     const updateUserRole = useMutation(api.users.updateUserRole);
-    const setUserPassword = useMutation(api.users.setUserPassword);
+    // const setUserPassword = useMutation(api.users.setUserPassword);
     const { userId } = useWorkspace();
     const currentUser = useQuery(api.users.getUser, userId ? { userId } : "skip");
     const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -55,11 +55,11 @@ export default function UserManagementPage() {
 
         setSettingPassword(true);
         try {
-            await setUserPassword({
-                userId: passwordModalUserId,
-                password: newPassword,
-                adminUserId: currentUser._id,
-            });
+            // await setUserPassword({
+            //     userId: passwordModalUserId,
+            //     password: newPassword,
+            //     adminUserId: currentUser._id,
+            // });
             alert("Password set successfully!");
             setPasswordModalUserId(null);
             setNewPassword("");

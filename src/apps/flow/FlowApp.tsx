@@ -28,24 +28,24 @@ export default function FlowApp() {
   const tasksData = useQuery(api.flow.listTasks, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
   const tasks: Task[] = Array.isArray(tasksData) ? tasksData : []
   const ideasData = useQuery(api.flow.listIdeas, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
-  const ideas: Idea[] = Array.isArray(ideasData) ? ideasData.map((i: any) => ({ 
-    id: i._id, 
-    title: i.title, 
+  const ideas: Idea[] = Array.isArray(ideasData) ? ideasData.map((i: any) => ({
+    id: i._id,
+    title: i.title,
     description: i.description,
     richDescription: i.richDescription,
     category: i.category,
     tags: i.tags,
     priority: i.priority,
     attachments: i.attachments,
-    status: i.status 
+    status: i.status
   })) : []
-  
+
   // Fetch related tasks for the selected idea
   const relatedTasksData = useQuery(
-    selectedIdeaId ? api.flow.getTasksByIdea : 'skip',
+    api.flow.getTasksByIdea,
     selectedIdeaId ? { ideaId: selectedIdeaId as any } : 'skip'
   ) as any[] | 'skip' | undefined
-  
+
   const relatedTasks = Array.isArray(relatedTasksData) ? relatedTasksData.map((t: any) => ({
     id: t._id,
     title: t.title,
@@ -53,7 +53,7 @@ export default function FlowApp() {
     priority: t.priority,
     createdAt: t.createdAt
   })) : []
-  
+
   const createTask = useMutation(api.flow.createTask)
   const updateTask = useMutation(api.flow.updateTask)
   // const updateTaskStatus = useMutation(api.flow.updateTaskStatus)
@@ -141,7 +141,7 @@ export default function FlowApp() {
 
   const handleCreateMultipleTasks = async (taskTitles: string[]) => {
     if (!workspaceId || !userId || !selectedIdeaId) return
-    
+
     for (const title of taskTitles) {
       if (title.trim()) {
         await createTask({
@@ -155,19 +155,19 @@ export default function FlowApp() {
         })
       }
     }
-    
+
     // Update idea status to converted
-    await updateIdeaStatus({ 
-      ideaId: selectedIdeaId as any, 
-      status: 'converted' 
+    await updateIdeaStatus({
+      ideaId: selectedIdeaId as any,
+      status: 'converted'
     })
   }
 
   const handleArchiveIdea = async () => {
     if (!selectedIdeaId) return
-    await updateIdeaStatus({ 
-      ideaId: selectedIdeaId as any, 
-      status: 'archived' 
+    await updateIdeaStatus({
+      ideaId: selectedIdeaId as any,
+      status: 'archived'
     })
     setIsIdeaDetailOpen(false)
     setSelectedIdeaId(null)
@@ -176,12 +176,12 @@ export default function FlowApp() {
   const handleConvertToTask = async (ideaId: string) => {
     const idea = ideas.find((i) => i.id === ideaId)
     if (!idea || !workspaceId || !userId) return
-    await createTask({ 
-      workspaceId: workspaceId as any, 
-      userId: userId as any, 
-      title: idea.title, 
+    await createTask({
+      workspaceId: workspaceId as any,
+      userId: userId as any,
+      title: idea.title,
       description: idea.description,
-      status: 'todo', 
+      status: 'todo',
       priority: 'medium'
     })
     await updateIdeaStatus({ ideaId: ideaId as any, status: 'converted' })
@@ -229,7 +229,7 @@ export default function FlowApp() {
                 <div className="text-sm text-gray">
                   {taskStats.completed} / {taskStats.total} completed
                 </div>
-                <Button 
+                <Button
                   onClick={() => handleCreateTask('todo')}
                   className="bg-dark-blue hover:bg-dark-blue"
                 >
@@ -245,11 +245,10 @@ export default function FlowApp() {
             <nav className="flex space-x-8">
               <button
                 onClick={() => setActiveTab('tasks')}
-                className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${
-                  activeTab === 'tasks'
+                className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'tasks'
                     ? 'border-custom-brown text-custom-brown'
                     : 'border-transparent text-gray hover:text-gray hover:border-light-gray'
-                }`}
+                  }`}
               >
                 Tasks
                 <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-light-gray text-dark-blue">
@@ -258,11 +257,10 @@ export default function FlowApp() {
               </button>
               <button
                 onClick={() => setActiveTab('ideas')}
-                className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${
-                  activeTab === 'ideas'
+                className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'ideas'
                     ? 'border-custom-brown text-custom-brown'
                     : 'border-transparent text-gray hover:text-gray hover:border-light-gray'
-                }`}
+                  }`}
               >
                 Ideas
                 <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-light-gray text-dark-blue">

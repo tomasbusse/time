@@ -4,7 +4,7 @@ import { v } from "convex/values";
 // ========== ACCOUNT MANAGEMENT ==========
 
 export const listAccounts = query({
-  args: { 
+  args: {
     workspaceId: v.id("workspaces"),
     accountType: v.optional(v.union(
       v.literal("asset"),
@@ -19,11 +19,11 @@ export const listAccounts = query({
       .query("accounts")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-    
+
     const filtered = args.accountType
       ? accounts.filter((account: any) => account.accountType === args.accountType)
       : accounts;
-    
+
     return filtered.sort((a: any, b: any) => a.accountCode.localeCompare(b.accountCode));
   },
 });
@@ -58,11 +58,11 @@ export const createAccount = mutation({
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .filter((q) => q.eq(q.field("accountCode"), args.accountCode))
       .first();
-    
+
     if (existing) {
       throw new Error("Account code already exists in this workspace");
     }
-    
+
     const accountId = await ctx.db.insert("accounts", {
       workspaceId: args.workspaceId,
       accountCode: args.accountCode,
@@ -75,7 +75,7 @@ export const createAccount = mutation({
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
-    
+
     // Create initial balance record
     await ctx.db.insert("accountBalances", {
       workspaceId: args.workspaceId,
@@ -84,7 +84,7 @@ export const createAccount = mutation({
       lastUpdated: Date.now(),
       createdAt: Date.now(),
     });
-    
+
     return accountId;
   },
 });
@@ -99,7 +99,7 @@ export const updateAccount = mutation({
   handler: async (ctx, args) => {
     const account = await ctx.db.get(args.accountId);
     if (!account) throw new Error("Account not found");
-    
+
     await ctx.db.patch(args.accountId, {
       accountName: args.accountName ?? account.accountName,
       accountCategory: args.accountCategory ?? account.accountCategory,
@@ -117,16 +117,16 @@ export const deleteAccount = mutation({
       .query("transactions")
       .withIndex("by_account", (q) => q.eq("accountId", args.accountId))
       .collect();
-    
+
     const balances = await ctx.db
       .query("accountBalances")
       .withIndex("by_account", (q) => q.eq("accountId", args.accountId))
       .collect();
-    
+
     if (transactions.length > 0 || balances.length > 0) {
       throw new Error("Cannot delete account with existing transactions or balances");
     }
-    
+
     await ctx.db.delete(args.accountId);
   },
 });
@@ -143,11 +143,11 @@ export const initializeDefaultAccounts = mutation({
       .query("accounts")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-    
+
     if (existingAccounts.length > 0) {
       return; // Accounts already initialized
     }
-    
+
     // Create default chart of accounts
     const defaultAccounts = [
       // Assets (1000-1999)
@@ -161,7 +161,7 @@ export const initializeDefaultAccounts = mutation({
       { code: "1700", name: "Equipment", type: "asset", category: "fixed_asset" },
       { code: "1800", name: "Furniture & Fixtures", type: "asset", category: "fixed_asset" },
       { code: "1900", name: "Real Estate", type: "asset", category: "fixed_asset" },
-      
+
       // Liabilities (2000-2999)
       { code: "2000", name: "Accounts Payable", type: "liability", category: "current_liability" },
       { code: "2100", name: "Credit Cards", type: "liability", category: "current_liability" },
@@ -169,16 +169,16 @@ export const initializeDefaultAccounts = mutation({
       { code: "2300", name: "Accrued Expenses", type: "liability", category: "current_liability" },
       { code: "2400", name: "Long-term Debt", type: "liability", category: "long_term_liability" },
       { code: "2500", name: "Mortgage Payable", type: "liability", category: "long_term_liability" },
-      
+
       // Equity (3000-3999)
       { code: "3000", name: "Owner's Equity", type: "equity", category: "equity" },
       { code: "3100", name: "Retained Earnings", type: "equity", category: "equity" },
-      
+
       // Revenue (4000-4999)
       { code: "4000", name: "Sales Revenue", type: "revenue", category: "revenue" },
       { code: "4100", name: "Service Revenue", type: "revenue", category: "revenue" },
       { code: "4200", name: "Investment Income", type: "revenue", category: "revenue" },
-      
+
       // Expenses (5000-5999)
       { code: "5000", name: "Cost of Goods Sold", type: "expense", category: "expense" },
       { code: "5100", name: "Salaries & Wages", type: "expense", category: "expense" },
@@ -191,7 +191,7 @@ export const initializeDefaultAccounts = mutation({
       { code: "5800", name: "Professional Services", type: "expense", category: "expense" },
       { code: "5900", name: "Other Expenses", type: "expense", category: "expense" },
     ];
-    
+
     for (const account of defaultAccounts) {
       const accountId = await ctx.db.insert("accounts", {
         workspaceId: args.workspaceId,
@@ -204,7 +204,7 @@ export const initializeDefaultAccounts = mutation({
         createdAt: Date.now(),
         updatedAt: Date.now(),
       });
-      
+
       // Create initial balance record
       await ctx.db.insert("accountBalances", {
         workspaceId: args.workspaceId,
@@ -245,10 +245,10 @@ export const addTransaction = mutation({
       createdBy: args.createdBy,
       createdAt: Date.now(),
     });
-    
+
     // Update account balance
     await updateAccountBalance(ctx, args.accountId);
-    
+
     return transactionId;
   },
 });
@@ -266,7 +266,7 @@ export const listTransactions = query({
       .query("transactions")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-    
+
     return transactions
       .filter((transaction) => {
         if (args.accountId && transaction.accountId !== args.accountId) return false;
@@ -288,18 +288,18 @@ export const getAccountBalances = query({
       .query("accounts")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-    
+
     const balances = await ctx.db
       .query("accountBalances")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-    
+
     // Create a map for quick balance lookup
     const balanceMap = new Map();
     balances.forEach(balance => {
       balanceMap.set(balance.accountId.toString(), balance.currentBalance);
     });
-    
+
     return accounts.map(account => ({
       ...account,
       currentBalance: balanceMap.get(account._id.toString()) || 0,
@@ -314,29 +314,29 @@ export const getNetWorth = query({
       .query("accounts")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-    
+
     const balances = await ctx.db
       .query("accountBalances")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-    
+
     const balanceMap = new Map();
     balances.forEach(balance => {
       balanceMap.set(balance.accountId.toString(), balance.currentBalance);
     });
-    
+
     const totalAssets = accounts
       .filter((account: any) => account.accountType === "asset")
       .reduce((sum: number, account: any) => sum + (balanceMap.get(account._id.toString()) || 0), 0);
-    
+
     const totalLiabilities = accounts
       .filter((account: any) => account.accountType === "liability")
       .reduce((sum: number, account: any) => sum + (balanceMap.get(account._id.toString()) || 0), 0);
-    
+
     const totalEquity = accounts
       .filter((account: any) => account.accountType === "equity")
       .reduce((sum: number, account: any) => sum + (balanceMap.get(account._id.toString()) || 0), 0);
-    
+
     return {
       totalAssets,
       totalLiabilities,
@@ -364,17 +364,17 @@ export const createMonthlyValuation = mutation({
     // Check if valuation already exists for this period
     const existing = await ctx.db
       .query("monthlyValuations")
-      .withIndex("by_account_period", (q) => 
+      .withIndex("by_account_period", (q) =>
         q.eq("accountId", args.accountId)
-         .eq("year", args.year)
-         .eq("month", args.month)
+          .eq("year", args.year)
+          .eq("month", args.month)
       )
       .first();
-    
+
     if (existing) {
       throw new Error("Monthly valuation already exists for this period");
     }
-    
+
     const valuationId = await ctx.db.insert("monthlyValuations", {
       workspaceId: args.workspaceId,
       accountId: args.accountId,
@@ -387,7 +387,7 @@ export const createMonthlyValuation = mutation({
       createdBy: args.createdBy,
       createdAt: Date.now(),
     });
-    
+
     return valuationId;
   },
 });
@@ -404,7 +404,7 @@ export const listMonthlyValuations = query({
       .query("monthlyValuations")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-    
+
     return valuations
       .filter((valuation) => {
         if (args.accountId && valuation.accountId !== args.accountId) return false;
@@ -434,10 +434,10 @@ export const getValuationHistory = query({
       .query("monthlyValuations")
       .withIndex("by_account", (q) => q.eq("accountId", args.accountId))
       .collect();
-    
+
     const startDate = args.startYear * 12 + args.startMonth;
     const endDate = args.endYear * 12 + args.endMonth;
-    
+
     return valuations
       .filter((valuation) => {
         const valuationDate = valuation.year * 12 + valuation.month;
@@ -463,28 +463,28 @@ export const getBalanceSheet = query({
       .query("accounts")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-    
+
     const balances = await ctx.db
       .query("accountBalances")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
-    
+
     const balanceMap = new Map();
     balances.forEach((balance: any) => {
       balanceMap.set(balance.accountId.toString(), balance.currentBalance);
     });
-    
+
     const accountsWithBalances = accounts.map((account: any) => ({
       ...account,
       currentBalance: balanceMap.get(account._id.toString()) || 0,
     }));
-    
+
     const asOfDate = args.asOfDate || Date.now();
-    
+
     const assets = accountsWithBalances.filter((account: any) => account.accountType === "asset");
     const liabilities = accountsWithBalances.filter((account: any) => account.accountType === "liability");
     const equity = accountsWithBalances.filter((account: any) => account.accountType === "equity");
-    
+
     return {
       assets: {
         current: assets.filter((acc: any) => acc.accountCategory === "current_asset"),
@@ -511,7 +511,7 @@ async function updateAccountBalance(ctx: any, accountId: any) {
     .query("transactions")
     .withIndex("by_account", (q: any) => q.eq("accountId", accountId))
     .collect();
-  
+
   const account = await ctx.db.get(accountId);
   if (!account) return;
 
@@ -530,12 +530,12 @@ async function updateAccountBalance(ctx: any, accountId: any) {
       }
     }
   }, 0);
-  
+
   const existingBalance = await ctx.db
     .query("accountBalances")
     .withIndex("by_account", (q: any) => q.eq("accountId", accountId))
     .first();
-  
+
   if (existingBalance) {
     await ctx.db.patch(existingBalance._id, {
       currentBalance,
@@ -583,6 +583,42 @@ export const createAsset = mutation({
   },
 });
 
+
+export const updateAsset = mutation({
+  args: {
+    id: v.id("assets"),
+    name: v.optional(v.string()),
+    type: v.optional(v.string()),
+    purchaseDate: v.optional(v.string()),
+    purchasePrice: v.optional(v.number()),
+    currentValue: v.optional(v.number()),
+    isFixed: v.optional(v.boolean()),
+    ownerId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const asset = await ctx.db.get(args.id);
+    if (!asset) throw new Error("Asset not found");
+    if (asset.ownerId !== args.ownerId) throw new Error("Unauthorized");
+
+    const { id, ownerId, ...updates } = args;
+    await ctx.db.patch(id, { ...updates, updatedAt: Date.now() });
+  },
+});
+
+export const deleteAsset = mutation({
+  args: {
+    id: v.id("assets"),
+    ownerId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const asset = await ctx.db.get(args.id);
+    if (!asset) throw new Error("Asset not found");
+    if (asset.ownerId !== args.ownerId) throw new Error("Unauthorized");
+
+    await ctx.db.delete(args.id);
+  },
+});
+
 export const listAssets = query({
   args: { workspaceId: v.id("workspaces") },
   handler: async (ctx, args) => {
@@ -623,6 +659,43 @@ export const createLiability = mutation({
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
+  },
+});
+
+
+export const updateLiability = mutation({
+  args: {
+    id: v.id("liabilities"),
+    name: v.optional(v.string()),
+    type: v.optional(v.string()),
+    originalAmount: v.optional(v.number()),
+    currentBalance: v.optional(v.number()),
+    interestRate: v.optional(v.number()),
+    dueDate: v.optional(v.string()),
+    isFixed: v.optional(v.boolean()),
+    ownerId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const liability = await ctx.db.get(args.id);
+    if (!liability) throw new Error("Liability not found");
+    if (liability.ownerId !== args.ownerId) throw new Error("Unauthorized");
+
+    const { id, ownerId, ...updates } = args;
+    await ctx.db.patch(id, { ...updates, updatedAt: Date.now() });
+  },
+});
+
+export const deleteLiability = mutation({
+  args: {
+    id: v.id("liabilities"),
+    ownerId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const liability = await ctx.db.get(args.id);
+    if (!liability) throw new Error("Liability not found");
+    if (liability.ownerId !== args.ownerId) throw new Error("Unauthorized");
+
+    await ctx.db.delete(args.id);
   },
 });
 
@@ -708,7 +781,7 @@ export const createSubscription = mutation({
     billingCycle: v.union(v.literal("monthly"), v.literal("yearly")),
     nextBillingDate: v.string(),
     isActive: v.boolean(),
-    type: v.optional(v.union(v.literal("subscription"), v.literal("bill"), v.literal("rent"), v.literal("utility"), v.literal("insurance"), v.literal("other"))),
+    type: v.optional(v.union(v.literal("subscription"), v.literal("bill"), v.literal("rent"), v.literal("utility"), v.literal("insurance"), v.literal("loan"), v.literal("other"))),
     isNecessary: v.optional(v.boolean()),
     classification: v.union(v.literal("business"), v.literal("private")),
     category: v.union(
@@ -773,7 +846,7 @@ export const updateSubscription = mutation({
     billingCycle: v.optional(v.union(v.literal("monthly"), v.literal("yearly"))),
     nextBillingDate: v.optional(v.string()),
     isActive: v.optional(v.boolean()),
-    type: v.optional(v.union(v.literal("subscription"), v.literal("bill"), v.literal("rent"), v.literal("utility"), v.literal("insurance"), v.literal("other"))),
+    type: v.optional(v.union(v.literal("subscription"), v.literal("bill"), v.literal("rent"), v.literal("utility"), v.literal("insurance"), v.literal("loan"), v.literal("other"))),
     isNecessary: v.optional(v.boolean()),
     classification: v.optional(v.union(v.literal("business"), v.literal("private"))),
     category: v.optional(v.union(
@@ -847,13 +920,13 @@ export const subscriptionTotals = query({
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
     const active = subs.filter((s) => s.isActive);
-    
+
     // Calculate totals using both cost and yearlyAmount fields
     const monthlyTotal = active.reduce((sum, s) => {
       const monthlyCost = s.billingCycle === "monthly" ? s.cost : s.cost / 12;
       return sum + monthlyCost;
     }, 0);
-    
+
     const yearlyTotal = active.reduce((sum, s) => {
       const yearlyCost = s.billingCycle === "yearly" ? s.cost : s.cost * 12;
       // If yearlyAmount is provided, use it instead
@@ -862,14 +935,14 @@ export const subscriptionTotals = query({
       }
       return sum + yearlyCost;
     }, 0);
-    
+
     // Calculate potential savings from optional subscriptions
     const optionalSubscriptions = active.filter(s => s.isNecessary === false);
     const potentialMonthlySavings = optionalSubscriptions.reduce((sum, s) => {
       const monthlyCost = s.billingCycle === "monthly" ? s.cost : s.cost / 12;
       return sum + monthlyCost;
     }, 0);
-    
+
     const potentialYearlySavings = optionalSubscriptions.reduce((sum, s) => {
       // If yearlyAmount is provided, use it instead
       if (s.yearlyAmount !== undefined) {
@@ -878,9 +951,9 @@ export const subscriptionTotals = query({
       const yearlyCost = s.billingCycle === "yearly" ? s.cost : s.cost * 12;
       return sum + yearlyCost;
     }, 0);
-    
-    return { 
-      monthlyTotal, 
+
+    return {
+      monthlyTotal,
       yearlyTotal,
       potentialMonthlySavings,
       potentialYearlySavings,
@@ -926,7 +999,7 @@ export const getBudgetAnalytics = query({
       .collect();
 
     const activeSubs = subscriptions.filter((s: any) => s.isActive);
-    
+
     const spendingByCategory = activeSubs.reduce((acc: any, sub: any) => {
       const key = `${sub.classification}-${sub.category}`;
       if (!acc[key]) {
@@ -946,8 +1019,8 @@ export const getBudgetAnalytics = query({
     }, {} as Record<string, any>);
 
     const categoryAnalytics = Object.values(spendingByCategory).map((spending: any) => {
-      const budget = budgets.find((b: any) => 
-        b.classification === spending.classification && 
+      const budget = budgets.find((b: any) =>
+        b.classification === spending.classification &&
         b.category === spending.category
       );
 
@@ -956,7 +1029,7 @@ export const getBudgetAnalytics = query({
 
       if (budget) {
         usagePercentage = budget.monthlyBudgetLimit > 0 ? (spending.monthlyTotal / budget.monthlyBudgetLimit) * 100 : 0;
-        
+
         if (spending.monthlyTotal > budget.monthlyBudgetLimit) {
           status = "over";
         } else if (usagePercentage >= parseInt(budget.alertThreshold)) {
@@ -979,7 +1052,7 @@ export const getBudgetAnalytics = query({
       };
     });
 
-    const totalMonthlySpending = activeSubs.reduce((sum: number, sub: any) => 
+    const totalMonthlySpending = activeSubs.reduce((sum: number, sub: any) =>
       sum + (sub.billingCycle === "monthly" ? sub.cost : sub.cost / 12), 0
     );
 

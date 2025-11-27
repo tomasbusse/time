@@ -40,8 +40,8 @@ export default function AttendanceReportModal({ isOpen, onClose, lessonId }: Att
     }
 
     // Prepare data for display
-    const presentStudents = context.students.filter(s => report.studentsPresent.includes(s._id));
-    const absentStudents = context.students.filter(s => report.studentsAbsent.includes(s._id));
+    const presentStudents = context.students.filter(s => s && report.studentsPresent.includes(s._id));
+    const absentStudents = context.students.filter(s => s && report.studentsAbsent.includes(s._id));
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 print:p-0 print:bg-white print:static">
@@ -100,9 +100,9 @@ export default function AttendanceReportModal({ isOpen, onClose, lessonId }: Att
                             </h3>
                             <ul className="space-y-2">
                                 {presentStudents.map(s => (
-                                    <li key={s._id} className="flex items-center gap-2 text-slate-700">
+                                    <li key={s!._id} className="flex items-center gap-2 text-slate-700">
                                         <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                                        {s.firstName} {s.lastName}
+                                        {s!.firstName} {s!.lastName}
                                     </li>
                                 ))}
                             </ul>
@@ -113,9 +113,9 @@ export default function AttendanceReportModal({ isOpen, onClose, lessonId }: Att
                             </h3>
                             <ul className="space-y-2">
                                 {absentStudents.length > 0 ? absentStudents.map(s => (
-                                    <li key={s._id} className="flex items-center gap-2 text-slate-500">
+                                    <li key={s!._id} className="flex items-center gap-2 text-slate-500">
                                         <div className="w-1.5 h-1.5 rounded-full bg-red-300"></div>
-                                        {s.firstName} {s.lastName}
+                                        {s!.firstName} {s!.lastName}
                                     </li>
                                 )) : (
                                     <li className="text-slate-400 italic text-sm">None</li>
@@ -132,7 +132,7 @@ export default function AttendanceReportModal({ isOpen, onClose, lessonId }: Att
                             </h3>
                             <div className="grid grid-cols-1 gap-4">
                                 {report.studentProgress.map((prog: any, idx: number) => {
-                                    const student = context.students.find(s => s._id === prog.studentId);
+                                    const student = context.students.find(s => s && s._id === prog.studentId);
                                     if (!student) return null;
                                     return (
                                         <div key={idx} className="p-4 border border-slate-200 rounded-xl break-inside-avoid">

@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Plus, X } from 'lucide-react'
-import { useMutation, useQuery } from 'convex/react'
-import { api } from '../../../../convex/_generated/api'
 import { useWorkspace } from '@/lib/WorkspaceContext'
 
 interface AssetFormData {
@@ -30,7 +28,7 @@ export function AssetForm({
   availableAccounts = []
 }: AssetFormProps) {
   const { workspaceId, userId } = useWorkspace()
-  
+
   // Standard asset types
   const standardTypes = [
     { value: 'property', label: 'Property' },
@@ -38,15 +36,6 @@ export function AssetForm({
     { value: 'investment', label: 'Investment' },
     { value: 'other', label: 'Other' },
   ] as const
-
-  // Query custom asset types
-  const customTypes = useQuery(
-    api.finance.listAssetTypes,
-    workspaceId ? { workspaceId } : 'skip'
-  ) || []
-
-  // Mutations
-  const createAssetTypeMutation = useMutation(api.finance.createAssetType)
 
   const [formData, setFormData] = useState<AssetFormData>({
     name: initialData?.name || '',
@@ -57,7 +46,6 @@ export function AssetForm({
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [showNewTypeInput, setShowNewTypeInput] = useState(false)
   const [newTypeName, setNewTypeName] = useState('')
-  const [isCreatingType, setIsCreatingType] = useState(false)
 
   // Combine standard and custom types
   const allTypes: { value: string; label: string }[] = [];
@@ -70,17 +58,13 @@ export function AssetForm({
     }
   }
 
-  if (Array.isArray(customTypes)) {
-    for (const type of customTypes) {
-      const val = String(type.name ?? "").toLowerCase();
-      if (val && !seen.has(val)) {
-        allTypes.push({
-          value: val,
-          label: val.charAt(0).toUpperCase() + val.slice(1),
-        });
-        seen.add(val);
-      }
-    }
+  // Add current type if not in standard types
+  if (formData.type && !seen.has(formData.type)) {
+    allTypes.push({
+      value: formData.type,
+      label: formData.type.charAt(0).toUpperCase() + formData.type.slice(1),
+    });
+    seen.add(formData.type);
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -119,25 +103,12 @@ export function AssetForm({
     }
   }
 
-  const handleCreateNewType = async () => {
-    if (!newTypeName.trim() || !workspaceId || !userId) return
+  const handleCreateNewType = () => {
+    if (!newTypeName.trim()) return
 
-    setIsCreatingType(true)
-    try {
-      await createAssetTypeMutation({
-        workspaceId: workspaceId as any,
-        createdBy: userId as any,
-        name: newTypeName.trim(),
-      })
-      setFormData(prev => ({ ...prev, type: newTypeName.trim().toLowerCase() }))
-      setNewTypeName('')
-      setShowNewTypeInput(false)
-    } catch (error) {
-      console.error('Error creating asset type:', error)
-      setErrors({ type: 'Failed to create asset type. Please try again.' })
-    } finally {
-      setIsCreatingType(false)
-    }
+    setFormData(prev => ({ ...prev, type: newTypeName.trim().toLowerCase() }))
+    setNewTypeName('')
+    setShowNewTypeInput(false)
   }
 
   return (
@@ -178,7 +149,6 @@ export function AssetForm({
                   value={newTypeName}
                   onChange={(e) => setNewTypeName(e.target.value)}
                   placeholder="Enter new type name..."
-                  disabled={isCreatingType}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault()
@@ -189,10 +159,10 @@ export function AssetForm({
                 <Button
                   type="button"
                   onClick={handleCreateNewType}
-                  disabled={isCreatingType || !newTypeName.trim()}
+                  disabled={!newTypeName.trim()}
                   size="sm"
                 >
-                  {isCreatingType ? 'Creating...' : 'Add'}
+                  Add
                 </Button>
                 <Button
                   type="button"

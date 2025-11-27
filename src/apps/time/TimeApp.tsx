@@ -50,14 +50,18 @@ export default function TimeApp() {
       taskId: data.taskId,
       allocatedDuration: data.allocatedDuration,
       isRecurring: data.isRecurring,
-      recurrenceType: data.recurrenceType,
+      recurrenceType: data.recurrenceType as "daily" | "weekly" | "monthly" | "yearly" | undefined,
       recurrenceInterval: data.recurrenceInterval,
       recurrenceEndDate: data.recurrenceEndDate,
     });
   };
 
   const handleUpdateAllocation = (id: string, data: Partial<Doc<'timeAllocations'>>) => {
-    updateAllocation({ id: id as Id<'timeAllocations'>, ...data });
+    updateAllocation({
+      id: id as Id<'timeAllocations'>,
+      ...data,
+      recurrenceType: data.recurrenceType as "daily" | "weekly" | "monthly" | "yearly" | undefined
+    });
   };
 
   const handleDeleteAllocation = (id: string) => {
@@ -89,7 +93,7 @@ export default function TimeApp() {
       date: a.date,
       taskName: a.taskName,
       duration: a.allocatedDuration,
-      category: a.category,
+      category: undefined,
     })) ?? [];
 
   return (
@@ -118,31 +122,28 @@ export default function TimeApp() {
             <div className="flex">
               <button
                 onClick={() => setActiveTab('daily')}
-                className={`px-6 py-3 font-medium transition-colors ${
-                  activeTab === 'daily'
+                className={`px-6 py-3 font-medium transition-colors ${activeTab === 'daily'
                     ? 'text-custom-brown border-b-2 border-custom-brown'
                     : 'text-gray hover:text-dark-blue'
-                }`}
+                  }`}
               >
                 Daily
               </button>
               <button
                 onClick={() => setActiveTab('weekly')}
-                className={`px-6 py-3 font-medium transition-colors ${
-                  activeTab === 'weekly'
+                className={`px-6 py-3 font-medium transition-colors ${activeTab === 'weekly'
                     ? 'text-custom-brown border-b-2 border-custom-brown'
                     : 'text-gray hover:text-dark-blue'
-                }`}
+                  }`}
               >
                 Weekly
               </button>
               <button
                 onClick={() => setActiveTab('history')}
-                className={`px-6 py-3 font-medium transition-colors ${
-                  activeTab === 'history'
+                className={`px-6 py-3 font-medium transition-colors ${activeTab === 'history'
                     ? 'text-custom-brown border-b-2 border-custom-brown'
                     : 'text-gray hover:text-dark-blue'
-                }`}
+                  }`}
               >
                 History
               </button>
@@ -187,7 +188,7 @@ export default function TimeApp() {
                   taskName={allocation.taskName}
                   allocatedDuration={allocation.allocatedDuration}
                   timeSpent={allocation.timeSpent ?? 0}
-                  category={allocation.category}
+                  category={undefined}
                   isRecurring={allocation.isRecurring}
                   onStartTimer={() => handleStartTimer(allocation)}
                   onEdit={() => setEditingAllocation(allocation)}

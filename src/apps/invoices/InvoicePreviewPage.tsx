@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
 import { useState } from "react";
@@ -20,7 +20,7 @@ export default function InvoicePreviewPage({ onBack }: { onBack?: () => void }) 
     const [emailBody, setEmailBody] = useState("");
     const [isSending, setIsSending] = useState(false);
 
-    const sendInvoiceEmail = useMutation(api.invoices.sendInvoiceEmail);
+    const sendInvoiceEmail = useAction(api.email.sendInvoiceEmail);
 
     if (!invoice || !customer || !settings) {
         return <div className="p-8 text-center text-gray-500">Loading invoice preview...</div>;
@@ -28,13 +28,13 @@ export default function InvoicePreviewPage({ onBack }: { onBack?: () => void }) 
 
     const handleOpenEmailModal = () => {
         const subject = `Rechnung ${invoice.invoiceNumber} von ${settings.companyName}`;
-        let body = settings.defaultEmailTemplate || "Sehr geehrte Damen und Herren,\n\nanbei erhalten Sie Ihre Rechnung.\n\nMit freundlichen Grüßen";
+        let body = settings.emailBodyTemplate || "Sehr geehrte Damen und Herren,\n\nanbei erhalten Sie Ihre Rechnung.\n\nMit freundlichen Grüßen";
 
         // Simple placeholder replacement
         body = body.replace("{invoiceNumber}", invoice.invoiceNumber);
         body = body.replace("{date}", new Date(invoice.date).toLocaleDateString("de-DE"));
         body = body.replace("{dueDate}", new Date(invoice.dueDate).toLocaleDateString("de-DE"));
-        body = body.replace("{totalAmount}", (invoice.totalAmount / 100).toFixed(2) + " €");
+        body = body.replace("{totalAmount}", (invoice.total / 100).toFixed(2) + " €");
         body = body.replace("{companyName}", settings.companyName || "");
 
         setEmailSubject(subject);
@@ -49,7 +49,6 @@ export default function InvoicePreviewPage({ onBack }: { onBack?: () => void }) 
             const blob = await pdf(
                 <InvoicePDF
                     invoice={invoice}
-                    customer={customer}
                     settings={settings}
                 />
             ).toBlob();
@@ -66,8 +65,9 @@ export default function InvoicePreviewPage({ onBack }: { onBack?: () => void }) 
 
             await sendInvoiceEmail({
                 invoiceId: invoice._id,
+                to: customer.email || "",
                 subject: emailSubject,
-                body: emailBody,
+                message: emailBody,
             });
 
             alert("Email sent successfully!");
@@ -84,7 +84,6 @@ export default function InvoicePreviewPage({ onBack }: { onBack?: () => void }) 
         const blob = await pdf(
             <InvoicePDF
                 invoice={invoice}
-                customer={customer}
                 settings={settings}
             />
         ).toBlob();
@@ -96,6 +95,8 @@ export default function InvoicePreviewPage({ onBack }: { onBack?: () => void }) 
         link.click();
         document.body.removeChild(link);
     };
+
+    const isOverdue = invoice.status === 'sent' && invoice.dueDate < Date.now();
 
     return (
         <div className="min-h-screen bg-[#DDDEE3] flex flex-col font-sans text-[#384C5A]">
@@ -114,10 +115,10 @@ export default function InvoicePreviewPage({ onBack }: { onBack?: () => void }) 
                     </h1>
                     <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-wide ${invoice.status === 'paid' ? 'bg-green-100 text-green-700' :
                         invoice.status === 'sent' ? 'bg-blue-100 text-blue-700' :
-                            invoice.status === 'overdue' ? 'bg-red-100 text-red-700' :
+                            isOverdue ? 'bg-red-100 text-red-700' :
                                 'bg-gray-200 text-gray-600'
                         }`}>
-                        {invoice.status}
+                        {isOverdue ? 'Overdue' : invoice.status}
                     </span>
                 </div>
 
@@ -157,7 +158,6 @@ export default function InvoicePreviewPage({ onBack }: { onBack?: () => void }) 
                     <PDFViewer width="100%" height="1200px" className="border-none" showToolbar={false}>
                         <InvoicePDF
                             invoice={invoice}
-                            customer={customer}
                             settings={settings}
                         />
                     </PDFViewer>

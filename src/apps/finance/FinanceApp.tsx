@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
+import { Id } from '../../../convex/_generated/dataModel'
 import { useWorkspace } from '@/lib/WorkspaceContext'
 import AccountList from './components/AccountList'
 import AccountForm from './components/AccountForm'
@@ -109,14 +110,14 @@ export default function FinanceApp() {
   const deleteAccountMutation = useMutation(api.finance.deleteAccount)
 
   // Equity goal (Convex)
-  const goal = useQuery(
-    api.finance.getLiquidityGoal,
+  const equityGoal = useQuery(
+    api.finance.getEquityGoal,
     workspaceId ? { workspaceId } : 'skip'
   )
-  const upsertGoal = useMutation(api.finance.upsertLiquidityGoal)
+  const upsertEquityGoal = useMutation(api.finance.upsertEquityGoal)
   const [showGoalModal, setShowGoalModal] = useState(false)
-  const [goalAmount, setGoalAmount] = useState<number>(goal?.targetEquity ?? 0)
-  const [goalDate, setGoalDate] = useState<string>(goal?.targetDate ?? '')
+  const [goalAmount, setGoalAmount] = useState<number>(equityGoal?.targetEquity ?? 0)
+  const [goalDate, setGoalDate] = useState<string>(equityGoal?.targetDate ?? '')
 
   // New Account-based Assets & Liabilities System
   const accountsForAssets = useQuery(
@@ -532,8 +533,8 @@ export default function FinanceApp() {
               <button
                 onClick={() => setActiveTab('liquidity')}
                 className={`px-4 md:px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'liquidity'
-                    ? 'text-custom-brown border-b-2 border-custom-brown'
-                    : 'text-gray hover:text-dark-blue'
+                  ? 'text-custom-brown border-b-2 border-custom-brown'
+                  : 'text-gray hover:text-dark-blue'
                   }`}
               >
                 Liquidity
@@ -541,8 +542,8 @@ export default function FinanceApp() {
               <button
                 onClick={() => setActiveTab('assets')}
                 className={`px-4 md:px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'assets'
-                    ? 'text-custom-brown border-b-2 border-custom-brown'
-                    : 'text-gray hover:text-dark-blue'
+                  ? 'text-custom-brown border-b-2 border-custom-brown'
+                  : 'text-gray hover:text-dark-blue'
                   }`}
               >
                 Assets & Liabilities
@@ -550,8 +551,8 @@ export default function FinanceApp() {
               <button
                 onClick={() => setActiveTab('subscriptions')}
                 className={`px-4 md:px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'subscriptions'
-                    ? 'text-custom-brown border-b-2 border-custom-brown'
-                    : 'text-gray hover:text-dark-blue'
+                  ? 'text-custom-brown border-b-2 border-custom-brown'
+                  : 'text-gray hover:text-dark-blue'
                   }`}
               >
                 Subscriptions
@@ -577,8 +578,8 @@ export default function FinanceApp() {
           <div className="space-y-6">
             <EquityGoal
               currentEquity={currentEquity}
-              targetEquity={goal?.targetEquity ?? 0}
-              targetDate={goal?.targetDate}
+              targetEquity={equityGoal?.targetEquity ?? 0}
+              targetDate={equityGoal?.targetDate}
               canEdit={Boolean(userId)}
               onEdit={() => setShowGoalModal(true)}
             />
@@ -617,14 +618,14 @@ export default function FinanceApp() {
                 if (editingSub) {
                   await updateSubscription({
                     id: editingSub.id as any,
-                    ...(data as any),
-                    ownerId: userId as any,
+                    ...data,
+                    ownerId: userId,
                   })
                 } else {
                   await createSubscription({
-                    workspaceId: workspaceId as any,
-                    ownerId: userId as any,
-                    ...(data as any),
+                    workspaceId: workspaceId,
+                    ownerId: userId,
+                    ...data,
                   })
                 }
                 setShowSubModal(false)
@@ -1056,7 +1057,7 @@ export default function FinanceApp() {
                 <button
                   onClick={async () => {
                     if (!workspaceId || !userId || goalAmount <= 0) return
-                    await upsertGoal({
+                    await upsertEquityGoal({
                       workspaceId: workspaceId as any,
                       ownerId: userId as any,
                       targetEquity: goalAmount,

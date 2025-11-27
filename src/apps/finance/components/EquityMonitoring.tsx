@@ -79,7 +79,7 @@ export default function EquityMonitoring() {
 
   const handleCreateSnapshot = async () => {
     if (!workspaceId) return
-    
+
     const now = new Date()
     const currentYear = now.getFullYear()
     const currentMonth = now.getMonth() + 1
@@ -168,7 +168,7 @@ export default function EquityMonitoring() {
               {formatCurrency(equityData.currentNetWorth)}
             </div>
             <div className="text-sm text-gray mt-1">
-              Assets: {formatCurrency(equityData.currentAssets)} | 
+              Assets: {formatCurrency(equityData.currentAssets)} |
               Liabilities: {formatCurrency(equityData.currentLiabilities)}
             </div>
           </CardContent>
@@ -200,9 +200,9 @@ export default function EquityMonitoring() {
             ) : (
               <div className="text-center py-2">
                 <div className="text-sm text-gray">No goal set</div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="mt-2"
                   onClick={() => setShowSnapshotModal(true)}
                 >
@@ -217,9 +217,9 @@ export default function EquityMonitoring() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
-              {equityData.history.length >= 2 && 
-               equityData.history[equityData.history.length - 1].netWorth >= 
-               equityData.history[equityData.history.length - 2].netWorth ? (
+              {equityData.history.length >= 2 &&
+                equityData.history[equityData.history.length - 1].netWorth >=
+                equityData.history[equityData.history.length - 2].netWorth ? (
                 <TrendingUp className="w-5 h-5 text-green-600" />
               ) : (
                 <TrendingDown className="w-5 h-5 text-red-600" />
@@ -264,7 +264,7 @@ export default function EquityMonitoring() {
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-medium text-gray">Progress to Goal</span>
               <span className="text-sm text-gray">
-                {formatCurrency(goalProgress.currentNetWorth)} / {formatCurrency(goalProgress.targetEquity)}
+                {formatCurrency(goalProgress.currentEquity)} / {formatCurrency(goalProgress.targetEquity)}
               </span>
             </div>
             <div className="w-full bg-light-gray rounded-full h-3">
@@ -296,16 +296,16 @@ export default function EquityMonitoring() {
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={equityData.history}>
                   <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                  <XAxis 
-                    dataKey="month" 
+                  <XAxis
+                    dataKey="month"
                     tickFormatter={formatMonth}
                     className="text-xs"
                   />
-                  <YAxis 
+                  <YAxis
                     tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
                     className="text-xs"
                   />
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value: number, name: string) => [
                       formatCurrency(value),
                       name === 'netWorth' ? 'Net Worth' : name === 'assets' ? 'Assets' : 'Liabilities'
@@ -429,8 +429,8 @@ export default function EquityMonitoring() {
               </div>
             </div>
             <div className="p-6 border-t flex gap-3">
-              <button 
-                onClick={() => setShowSnapshotModal(false)} 
+              <button
+                onClick={() => setShowSnapshotModal(false)}
                 className="flex-1 h-10 px-4 rounded-md border border-light-gray"
               >
                 Cancel

@@ -382,7 +382,7 @@ export default function BudgetPage() {
                                                 key={outgoing._id}
                                                 outgoing={outgoing}
                                                 monthlyAmount={monthlyAmounts[outgoing._id]}
-                                                onAmountChange={(val) => {
+                                                onAmountChange={(val: number) => {
                                                     setMonthlyAmounts(prev => ({ ...prev, [outgoing._id]: val }))
                                                     setHasChanges(true)
                                                 }}
@@ -405,7 +405,7 @@ export default function BudgetPage() {
                                                 key={outgoing._id}
                                                 outgoing={outgoing}
                                                 monthlyAmount={monthlyAmounts[outgoing._id]}
-                                                onAmountChange={(val) => {
+                                                onAmountChange={(val: number) => {
                                                     setMonthlyAmounts(prev => ({ ...prev, [outgoing._id]: val }))
                                                     setHasChanges(true)
                                                 }}

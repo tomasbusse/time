@@ -65,7 +65,7 @@ export default function ProductivityApp() {
         : [];
 
     const relatedTasksData = useQuery(
-        selectedIdeaId ? api.flow.getTasksByIdea : 'skip',
+        api.flow.getTasksByIdea,
         selectedIdeaId ? { ideaId: selectedIdeaId as any } : 'skip'
     ) as any[] | 'skip' | undefined;
 
@@ -105,7 +105,7 @@ export default function ProductivityApp() {
             taskId: data.taskId,
             allocatedDuration: data.allocatedDuration,
             isRecurring: data.isRecurring,
-            recurrenceType: data.recurrenceType,
+            recurrenceType: data.recurrenceType as "daily" | "weekly" | "monthly" | "yearly" | undefined,
             recurrenceInterval: data.recurrenceInterval,
             recurrenceEndDate: data.recurrenceEndDate,
         });
@@ -425,7 +425,7 @@ export default function ProductivityApp() {
                                         taskName={allocation.taskName}
                                         allocatedDuration={allocation.allocatedDuration}
                                         timeSpent={allocation.timeSpent ?? 0}
-                                        category={allocation.category}
+                                        category={undefined}
                                         isRecurring={allocation.isRecurring}
                                         onStartTimer={() => handleStartTimer(allocation)}
                                         onEdit={() => { }}

@@ -44,8 +44,7 @@ export default function TaskSelector({
   const filteredTasks =
     tasks?.filter(
       (task) =>
-        task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        task.category?.toLowerCase().includes(searchQuery.toLowerCase())
+        task.title.toLowerCase().includes(searchQuery.toLowerCase())
     ) ?? [];
 
   const handleCreateTask = async () => {
@@ -142,11 +141,10 @@ export default function TaskSelector({
                 filteredTasks.map((task) => (
                   <div
                     key={task._id}
-                    className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors ${
-                      selectedTaskId === task._id
+                    className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors ${selectedTaskId === task._id
                         ? 'border-custom-brown bg-custom-brown/10'
                         : 'border-transparent hover:bg-off-white'
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"
@@ -158,11 +156,7 @@ export default function TaskSelector({
                     />
                     <div className="flex-1">
                       <p className="font-medium text-dark-blue">{task.title}</p>
-                      {task.category && (
-                        <p className="text-xs text-gray">
-                          {task.category}
-                        </p>
-                      )}
+
                     </div>
                     <div className="flex gap-2">
                       <Button

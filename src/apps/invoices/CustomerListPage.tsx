@@ -626,6 +626,8 @@ export default function CustomerListPage({ onBack }: { onBack?: () => void }) {
             <CustomerImportModal
                 isOpen={isImportModalOpen}
                 onClose={() => setIsImportModalOpen(false)}
+                workspaceId={workspaceId!}
+                onImportComplete={() => setIsImportModalOpen(false)}
             />
         </div>
     );

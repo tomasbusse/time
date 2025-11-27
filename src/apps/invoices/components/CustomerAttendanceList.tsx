@@ -206,7 +206,7 @@ export default function CustomerAttendanceList({ customerId }: { customerId: Id<
                                                             lesson.status === 'missed' ? 'bg-red-100 text-red-700' :
                                                                 'bg-blue-50 text-blue-600'
                                                 }`}>
-                                                {lesson.status.replace(/_/g, " ")}
+                                                {(lesson.status || "scheduled").replace(/_/g, " ")}
                                             </span>
                                         </td>
                                         <td className="px-6 py-3 text-right font-mono text-gray-600">
