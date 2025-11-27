@@ -33,7 +33,7 @@ export default function RecipeList({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-neutral-800">Recipes</h2>
+        <h2 className="text-xl font-semibold text-dark-blue">Recipes</h2>
         <Button onClick={onAddRecipe}>
           <Plus className="w-4 h-4 mr-2" />
           Add Recipe
@@ -43,7 +43,7 @@ export default function RecipeList({
       {recipes.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-neutral-600 mb-4">No recipes yet</p>
+            <p className="text-gray mb-4">No recipes yet</p>
             <Button onClick={onAddRecipe}>
               <Plus className="w-4 h-4 mr-2" />
               Add Your First Recipe
@@ -60,14 +60,14 @@ export default function RecipeList({
                   <div className="flex gap-1">
                     <button
                       onClick={() => onEditRecipe(recipe.id)}
-                      className="p-1 hover:bg-neutral-100 rounded"
+                      className="p-1 hover:bg-light-gray rounded"
                       title="Edit recipe"
                     >
-                      <Edit2 className="w-4 h-4 text-neutral-500" />
+                      <Edit2 className="w-4 h-4 text-gray" />
                     </button>
                     <button
                       onClick={() => onDeleteRecipe(recipe.id)}
-                      className="p-1 hover:bg-neutral-100 rounded"
+                      className="p-1 hover:bg-light-gray rounded"
                       title="Delete recipe"
                     >
                       <Trash2 className="w-4 h-4 text-red-500" />
@@ -77,10 +77,10 @@ export default function RecipeList({
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
-                  <h4 className="text-sm font-medium text-neutral-700 mb-2">
+                  <h4 className="text-sm font-medium text-gray mb-2">
                     Ingredients ({recipe.ingredients.length})
                   </h4>
-                  <ul className="text-sm text-neutral-600 space-y-1">
+                  <ul className="text-sm text-gray space-y-1">
                     {recipe.ingredients.slice(0, 3).map((ing, idx) => (
                       <li key={idx}>
                         {ing.quantity && `${ing.quantity} `}
@@ -89,7 +89,7 @@ export default function RecipeList({
                       </li>
                     ))}
                     {recipe.ingredients.length > 3 && (
-                      <li className="text-neutral-500 italic">
+                      <li className="text-gray italic">
                         +{recipe.ingredients.length - 3} more
                       </li>
                     )}
@@ -98,23 +98,23 @@ export default function RecipeList({
 
                 {recipe.instructions && (
                   <div className="mb-4">
-                    <h4 className="text-sm font-medium text-neutral-700 mb-2">
+                    <h4 className="text-sm font-medium text-gray mb-2">
                       Instructions
                     </h4>
-                    <p className="text-sm text-neutral-600 line-clamp-2">
+                    <p className="text-sm text-gray line-clamp-2">
                       {recipe.instructions}
                     </p>
                   </div>
                 )}
 
                 {/* Add ingredient form */}
-                <div className="mb-4 p-3 border border-neutral-200 rounded-lg">
+                <div className="mb-4 p-3 border border-light-gray rounded-lg">
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-                    <input id={`rname-${recipe.id}`} placeholder="Ingredient" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
-                    <input id={`rqty-${recipe.id}`} placeholder="Qty" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
-                    <input id={`runit-${recipe.id}`} placeholder="Unit" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
+                    <input id={`rname-${recipe.id}`} placeholder="Ingredient" className="h-10 rounded-md border border-light-gray px-3 text-sm" />
+                    <input id={`rqty-${recipe.id}`} placeholder="Qty" className="h-10 rounded-md border border-light-gray px-3 text-sm" />
+                    <input id={`runit-${recipe.id}`} placeholder="Unit" className="h-10 rounded-md border border-light-gray px-3 text-sm" />
                     <button
-                      className="h-10 rounded-md bg-neutral-900 text-white px-4 text-sm"
+                      className="h-10 rounded-md bg-dark-blue text-off-white px-4 text-sm"
                       onClick={() => {
                         const nameEl = document.getElementById(`rname-${recipe.id}`) as HTMLInputElement
                         const qtyEl = document.getElementById(`rqty-${recipe.id}`) as HTMLInputElement

@@ -44,20 +44,20 @@ export default function IdeaList({
 
   const getStatusColor = (status: string): string => {
     const colors = {
-      new: 'bg-green-100 text-green-700',
+      new: 'bg-light-gray text-green-700',
       reviewing: 'bg-yellow-100 text-yellow-700',
-      converted: 'bg-blue-100 text-blue-700',
-      archived: 'bg-neutral-100 text-neutral-700',
+      converted: 'bg-light-gray text-custom-brown',
+      archived: 'bg-light-gray text-gray',
     }
     return colors[status as keyof typeof colors] || colors.new
   }
 
   const getPriorityColor = (priority?: string): string => {
     switch (priority) {
-      case 'high': return 'bg-red-100 text-red-700 border-red-200'
+      case 'high': return 'bg-light-gray text-red-700 border-light-gray'
       case 'medium': return 'bg-yellow-100 text-yellow-700 border-yellow-200'
-      case 'low': return 'bg-green-100 text-green-700 border-green-200'
-      default: return 'bg-gray-100 text-gray-700 border-gray-200'
+      case 'low': return 'bg-light-gray text-green-700 border-light-gray'
+      default: return 'bg-light-gray text-gray border-light-gray'
     }
   }
 
@@ -115,7 +115,7 @@ export default function IdeaList({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-neutral-800">Ideas</h2>
+        <h2 className="text-xl font-semibold text-dark-blue">Ideas</h2>
         <Button onClick={onAddIdea}>
           <Lightbulb className="w-4 h-4 mr-2" />
           New Idea
@@ -126,7 +126,7 @@ export default function IdeaList({
       <div className="bg-white rounded-lg shadow-md p-6 space-y-4">
         {/* Search Bar */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray" />
           <Input
             type="text"
             placeholder="Search ideas by title, description, category, or tags..."
@@ -139,11 +139,11 @@ export default function IdeaList({
         {/* Filters Row */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-xs font-medium text-neutral-600 mb-1">Category</label>
+            <label className="block text-xs font-medium text-gray mb-1">Category</label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 text-sm border border-light-gray rounded-md focus:outline-none focus:ring-2 focus:ring-custom-brown focus:border-transparent"
             >
               <option value="">All Categories</option>
               {categories.map(category => (
@@ -153,11 +153,11 @@ export default function IdeaList({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-neutral-600 mb-1">Priority</label>
+            <label className="block text-xs font-medium text-gray mb-1">Priority</label>
             <select
               value={selectedPriority}
               onChange={(e) => setSelectedPriority(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent capitalize"
+              className="w-full px-3 py-2 text-sm border border-light-gray rounded-md focus:outline-none focus:ring-2 focus:ring-custom-brown focus:border-transparent capitalize"
             >
               <option value="">All Priorities</option>
               {priorities.map(priority => (
@@ -167,11 +167,11 @@ export default function IdeaList({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-neutral-600 mb-1">Tag</label>
+            <label className="block text-xs font-medium text-gray mb-1">Tag</label>
             <select
               value={selectedTag}
               onChange={(e) => setSelectedTag(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 text-sm border border-light-gray rounded-md focus:outline-none focus:ring-2 focus:ring-custom-brown focus:border-transparent"
             >
               <option value="">All Tags</option>
               {tags.map(tag => (
@@ -195,18 +195,18 @@ export default function IdeaList({
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
-            <div className="text-sm text-neutral-600">Total Ideas</div>
+            <div className="text-2xl font-bold text-custom-brown">{stats.total}</div>
+            <div className="text-sm text-gray">Total Ideas</div>
           </div>
           {categories.slice(0, 3).map(category => (
             <div key={category} className="text-center">
               <div className="text-2xl font-bold text-green-600">{stats.byCategory[category]}</div>
-              <div className="text-sm text-neutral-600">{category}</div>
+              <div className="text-sm text-gray">{category}</div>
             </div>
           ))}
           <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">{stats.withAttachments}</div>
-            <div className="text-sm text-neutral-600">With Files</div>
+            <div className="text-2xl font-bold text-custom-brown">{stats.withAttachments}</div>
+            <div className="text-sm text-gray">With Files</div>
           </div>
         </div>
       </div>
@@ -215,8 +215,8 @@ export default function IdeaList({
       {activeIdeas.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <Lightbulb className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-            <p className="text-neutral-600 mb-4">
+            <Lightbulb className="w-16 h-16 text-light-gray mx-auto mb-4" />
+            <p className="text-gray mb-4">
               {hasActiveFilters ? 'No ideas match your filters' : 'No ideas yet'}
             </p>
             {!hasActiveFilters && (
@@ -251,14 +251,14 @@ export default function IdeaList({
                   <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={() => onEditIdea(idea)}
-                      className="p-1 hover:bg-neutral-100 rounded"
+                      className="p-1 hover:bg-light-gray rounded"
                       title="Edit idea"
                     >
-                      <Edit2 className="w-4 h-4 text-neutral-500" />
+                      <Edit2 className="w-4 h-4 text-gray" />
                     </button>
                     <button
                       onClick={() => onDeleteIdea(idea.id)}
-                      className="p-1 hover:bg-neutral-100 rounded"
+                      className="p-1 hover:bg-light-gray rounded"
                       title="Delete idea"
                     >
                       <Trash2 className="w-4 h-4 text-red-500" />
@@ -272,12 +272,12 @@ export default function IdeaList({
                 {(idea.description || idea.richDescription) && (
                   <div className="mb-4">
                     {idea.description && (
-                      <p className="text-sm text-neutral-600 mb-2 line-clamp-2">
+                      <p className="text-sm text-gray mb-2 line-clamp-2">
                         {idea.description}
                       </p>
                     )}
                     {idea.richDescription && (
-                      <div className="text-xs text-neutral-500 max-h-16 overflow-y-auto">
+                      <div className="text-xs text-gray max-h-16 overflow-y-auto">
                         <pre className="whitespace-pre-wrap font-sans">
                           {idea.richDescription.length > 150 
                             ? idea.richDescription.substring(0, 150) + '...'
@@ -292,7 +292,7 @@ export default function IdeaList({
                 {/* Category */}
                 {idea.category && (
                   <div className="mb-3">
-                    <span className="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+                    <span className="inline-block px-2 py-1 bg-light-gray text-custom-brown text-xs rounded">
                       {idea.category}
                     </span>
                   </div>
@@ -305,14 +305,14 @@ export default function IdeaList({
                       {idea.tags.slice(0, 3).map((tag, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded"
+                          className="inline-flex items-center gap-1 px-2 py-1 bg-light-gray text-gray text-xs rounded"
                         >
                           <Tag className="w-3 h-3" />
                           {tag}
                         </span>
                       ))}
                       {idea.tags.length > 3 && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray">
                           +{idea.tags.length - 3} more
                         </span>
                       )}
@@ -323,7 +323,7 @@ export default function IdeaList({
                 {/* Attachments indicator */}
                 {idea.attachments && idea.attachments.length > 0 && (
                   <div className="mb-3">
-                    <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                    <span className="inline-flex items-center gap-1 text-xs text-gray">
                       <Paperclip className="w-3 h-3" />
                       {idea.attachments.length} attachment{idea.attachments.length !== 1 ? 's' : ''}
                     </span>

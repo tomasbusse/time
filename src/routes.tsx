@@ -1,22 +1,30 @@
 import { Routes, Route } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
-import TimeApp from './apps/time/TimeApp'
-import FinanceApp from './apps/finance/FinanceApp'
-import FlowApp from './apps/flow/FlowApp'
+import SimpleFinanceApp from './apps/finance/SimpleFinanceApp'
 import FoodApp from './apps/food/FoodApp'
 import CalendarApp from './apps/calendar/CalendarApp'
+import InvoiceApp from './apps/invoices/InvoiceApp'
+import ProductivityApp from './apps/productivity/ProductivityApp'
 import AdminPanel from './pages/AdminPanel'
+import TempDeletePage from './pages/TempDeletePage'
+import LoginPage from './pages/LoginPage'
+import SettingsPage from './pages/SettingsPage'
+import OAuthCallback from './pages/OAuthCallback'
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
-      <Route path="/time" element={<TimeApp />} />
-      <Route path="/finance" element={<FinanceApp />} />
-      <Route path="/flow" element={<FlowApp />} />
+      <Route path="/productivity" element={<ProductivityApp />} />
+      <Route path="/finance" element={<SimpleFinanceApp />} />
       <Route path="/food" element={<FoodApp />} />
       <Route path="/calendar" element={<CalendarApp />} />
+      <Route path="/invoices/*" element={<InvoiceApp />} />
+      <Route path="/auth/google/callback" element={<OAuthCallback />} />
       <Route path="/admin" element={<AdminPanel />} />
+      <Route path="/settings" element={<SettingsPage />} />
+      <Route path="/temp-delete" element={<TempDeletePage />} />
+      <Route path="/login" element={<LoginPage />} />
     </Routes>
   )
 }

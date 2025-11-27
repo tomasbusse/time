@@ -9,6 +9,7 @@ import { useWorkspace } from '@/lib/WorkspaceContext'
 interface AssetFormData {
   name: string
   type: string
+  accountId: string
 }
 
 interface AssetFormProps {
@@ -17,14 +18,16 @@ interface AssetFormProps {
   onCancel: () => void
   isLoading?: boolean
   title?: string
+  availableAccounts: Array<{ _id: string; accountName: string; accountCode: string }>
 }
 
-export function AssetForm({ 
-  initialData, 
-  onSubmit, 
-  onCancel, 
+export function AssetForm({
+  initialData,
+  onSubmit,
+  onCancel,
   isLoading = false,
-  title = "Add Asset" 
+  title = "Add Asset",
+  availableAccounts = []
 }: AssetFormProps) {
   const { workspaceId, userId } = useWorkspace()
   
@@ -48,6 +51,7 @@ export function AssetForm({
   const [formData, setFormData] = useState<AssetFormData>({
     name: initialData?.name || '',
     type: initialData?.type || '',
+    accountId: initialData?.accountId || '',
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -56,17 +60,32 @@ export function AssetForm({
   const [isCreatingType, setIsCreatingType] = useState(false)
 
   // Combine standard and custom types
-  const allTypes = [
-    ...standardTypes,
-    ...customTypes.map((type: any) => ({ 
-      value: type.name, 
-      label: type.name.charAt(0).toUpperCase() + type.name.slice(1) 
-    }))
-  ]
+  const allTypes: { value: string; label: string }[] = [];
+
+  const seen = new Set<string>();
+  for (const t of standardTypes) {
+    if (!seen.has(t.value)) {
+      allTypes.push(t);
+      seen.add(t.value);
+    }
+  }
+
+  if (Array.isArray(customTypes)) {
+    for (const type of customTypes) {
+      const val = String(type.name ?? "").toLowerCase();
+      if (val && !seen.has(val)) {
+        allTypes.push({
+          value: val,
+          label: val.charAt(0).toUpperCase() + val.slice(1),
+        });
+        seen.add(val);
+      }
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const newErrors: Record<string, string> = {}
     if (!formData.name.trim()) {
       newErrors.name = 'Asset name is required'
@@ -74,6 +93,7 @@ export function AssetForm({
     if (!formData.type.trim()) {
       newErrors.type = 'Asset type is required'
     }
+    // accountId is now optional - will be auto-created if not provided
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -84,6 +104,7 @@ export function AssetForm({
       await onSubmit({
         name: formData.name.trim(),
         type: formData.type.trim().toLowerCase(),
+        accountId: formData.accountId, // Can be empty string, parent will handle account creation
       })
     } catch (error) {
       console.error('Error submitting asset:', error)
@@ -122,13 +143,13 @@ export function AssetForm({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold text-neutral-800">{title}</h3>
-        <p className="text-sm text-neutral-600">Fill in the details for your asset</p>
+        <h3 className="text-lg font-semibold text-dark-blue">{title}</h3>
+        <p className="text-sm text-gray">Fill in the details for your asset</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-neutral-700 mb-1">
+          <label htmlFor="name" className="block text-sm font-medium text-gray mb-1">
             Asset Name *
           </label>
           <Input
@@ -146,7 +167,7 @@ export function AssetForm({
         </div>
 
         <div>
-          <label htmlFor="type" className="block text-sm font-medium text-neutral-700 mb-1">
+          <label htmlFor="type" className="block text-sm font-medium text-gray mb-1">
             Asset Type *
           </label>
           {showNewTypeInput ? (
@@ -192,7 +213,7 @@ export function AssetForm({
                 id="type"
                 value={formData.type}
                 onChange={(e) => handleChange('type', e.target.value)}
-                className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm ring-offset-off-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dark-blue focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isLoading}
               >
                 <option value="">Select a type...</option>
@@ -216,6 +237,32 @@ export function AssetForm({
           )}
           {errors.type && (
             <p className="text-sm text-red-600 mt-1">{errors.type}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="accountId" className="block text-sm font-medium text-gray mb-1">
+            Asset Account (Optional)
+          </label>
+          <select
+            id="accountId"
+            value={formData.accountId}
+            onChange={(e) => handleChange('accountId', e.target.value)}
+            className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm ring-offset-off-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dark-blue focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isLoading}
+          >
+            <option value="">Auto-create account</option>
+            {availableAccounts.map((account) => (
+              <option key={account._id} value={account._id}>
+                {account.accountCode} - {account.accountName}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-gray mt-1">
+            Leave empty to automatically create an asset account
+          </p>
+          {errors.accountId && (
+            <p className="text-sm text-red-600 mt-1">{errors.accountId}</p>
           )}
         </div>
 

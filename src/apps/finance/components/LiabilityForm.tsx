@@ -13,7 +13,7 @@ interface LiabilityFormProps {
   onCancel: () => void
   isLoading?: boolean
   title?: string
-  availableAssets: Array<{ id: string; name: string }>
+  availableAssets: Array<{ _id: string; accountName: string; accountCode: string }>
 }
 
 export function LiabilityForm({ 
@@ -65,13 +65,13 @@ export function LiabilityForm({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold text-neutral-800">{title}</h3>
-        <p className="text-sm text-neutral-600">Fill in the details for your liability</p>
+        <h3 className="text-lg font-semibold text-dark-blue">{title}</h3>
+        <p className="text-sm text-gray">Fill in the details for your liability</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-neutral-700 mb-1">
+          <label htmlFor="name" className="block text-sm font-medium text-gray mb-1">
             Liability Name *
           </label>
           <Input
@@ -89,24 +89,24 @@ export function LiabilityForm({
         </div>
 
         <div>
-          <label htmlFor="relatedAssetId" className="block text-sm font-medium text-neutral-700 mb-1">
+          <label htmlFor="relatedAssetId" className="block text-sm font-medium text-gray mb-1">
             Related Asset (Optional)
           </label>
           <select
             id="relatedAssetId"
             value={formData.relatedAssetId}
             onChange={(e) => handleChange('relatedAssetId', e.target.value)}
-            className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm ring-offset-off-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dark-blue focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={isLoading}
           >
             <option value="">No related asset</option>
             {availableAssets.map((asset) => (
-              <option key={asset.id} value={asset.id}>
-                {asset.name}
+              <option key={asset._id} value={asset._id}>
+                {asset.accountCode} - {asset.accountName}
               </option>
             ))}
           </select>
-          <p className="text-xs text-neutral-500 mt-1">
+          <p className="text-xs text-gray mt-1">
             Link this liability to a specific asset (e.g., mortgage → property)
           </p>
         </div>

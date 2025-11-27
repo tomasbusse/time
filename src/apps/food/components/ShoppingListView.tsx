@@ -37,14 +37,14 @@ export default function ShoppingListView({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-neutral-800">Shopping Lists</h2>
+        <h2 className="text-xl font-semibold text-dark-blue">Shopping Lists</h2>
         <Button onClick={onAddList}>Add List</Button>
       </div>
 
       {shoppingLists.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-neutral-600 mb-4">No shopping lists yet</p>
+            <p className="text-gray mb-4">No shopping lists yet</p>
             <Button onClick={onAddList}>Create Your First List</Button>
           </CardContent>
         </Card>
@@ -60,13 +60,13 @@ export default function ShoppingListView({
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle>{list.name}</CardTitle>
-                      <p className="text-sm text-neutral-500 mt-1">
+                      <p className="text-sm text-gray mt-1">
                         {completedItems} / {totalItems} items completed
                       </p>
                     </div>
                     <button
                       onClick={() => onDeleteList(list.id)}
-                      className="p-2 hover:bg-neutral-100 rounded"
+                      className="p-2 hover:bg-light-gray rounded"
                       title="Delete list"
                     >
                       <Trash2 className="w-4 h-4 text-red-500" />
@@ -75,7 +75,7 @@ export default function ShoppingListView({
                 </CardHeader>
                 <CardContent>
                   {list.items.length === 0 ? (
-                    <p className="text-sm text-neutral-500 text-center py-4">
+                    <p className="text-sm text-gray text-center py-4">
                       No items in this list
                     </p>
                   ) : (
@@ -85,27 +85,27 @@ export default function ShoppingListView({
                           key={item.id}
                           className={`flex items-center gap-3 p-3 border rounded-lg transition-colors ${
                             item.completed
-                              ? 'bg-neutral-50 border-neutral-200'
-                              : 'bg-white border-neutral-300 hover:bg-neutral-50'
+                              ? 'bg-off-white border-light-gray'
+                              : 'bg-white border-light-gray hover:bg-off-white'
                           }`}
                         >
                           <button
                             onClick={() => onToggleItem(list.id, item.id)}
                             className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
                               item.completed
-                                ? 'bg-green-500 border-green-500'
-                                : 'border-neutral-300 hover:border-green-500'
+                                ? 'bg-off-white0 border-green-500'
+                                : 'border-light-gray hover:border-green-500'
                             }`}
                           >
-                            {item.completed && <Check className="w-3 h-3 text-white" />}
+                            {item.completed && <Check className="w-3 h-3 text-off-white" />}
                           </button>
 
                           <div className="flex-1">
                             <span
                               className={`${
                                 item.completed
-                                  ? 'line-through text-neutral-500'
-                                  : 'text-neutral-800'
+                                  ? 'line-through text-gray'
+                                  : 'text-dark-blue'
                               }`}
                             >
                               {item.quantity && `${item.quantity} `}
@@ -113,7 +113,7 @@ export default function ShoppingListView({
                               {item.ingredientName}
                             </span>
                             {item.recipeSourceId && (
-                              <span className="ml-2 text-xs text-blue-600">
+                              <span className="ml-2 text-xs text-custom-brown">
                                 (from recipe)
                               </span>
                             )}
@@ -121,10 +121,10 @@ export default function ShoppingListView({
 
                           <button
                             onClick={() => onDeleteItem(list.id, item.id)}
-                            className="p-1 hover:bg-neutral-200 rounded"
+                            className="p-1 hover:bg-light-gray rounded"
                             title="Remove item"
                           >
-                            <Trash2 className="w-4 h-4 text-neutral-500" />
+                            <Trash2 className="w-4 h-4 text-gray" />
                           </button>
                         </div>
                       ))}
@@ -132,7 +132,7 @@ export default function ShoppingListView({
                   )}
 
                   {completedItems === totalItems && totalItems > 0 && (
-                    <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="mt-4 p-3 bg-off-white border border-light-gray rounded-lg">
                       <p className="text-sm text-green-700 font-medium">
                         ✓ All items completed!
                       </p>
@@ -140,11 +140,11 @@ export default function ShoppingListView({
                   )}
 
                   {/* Add item inline form */}
-                  <div className="mt-4 p-3 border border-neutral-200 rounded-lg">
+                  <div className="mt-4 p-3 border border-light-gray rounded-lg">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                       <input
                         placeholder="Item name"
-                        className="h-10 rounded-md border border-neutral-300 px-3 text-sm"
+                        className="h-10 rounded-md border border-light-gray px-3 text-sm"
                         onKeyDown={(e) => {
                           // store temporary values on DOM element dataset
                           const t = e.target as HTMLInputElement
@@ -155,18 +155,18 @@ export default function ShoppingListView({
                       />
                       <input
                         placeholder="Qty"
-                        className="h-10 rounded-md border border-neutral-300 px-3 text-sm"
+                        className="h-10 rounded-md border border-light-gray px-3 text-sm"
                         onChange={(e) => ((e.target as any)._val = e.target.value)}
                         id={`qty-${list.id}`}
                       />
                       <input
                         placeholder="Unit"
-                        className="h-10 rounded-md border border-neutral-300 px-3 text-sm"
+                        className="h-10 rounded-md border border-light-gray px-3 text-sm"
                         onChange={(e) => ((e.target as any)._val = e.target.value)}
                         id={`unit-${list.id}`}
                       />
                       <button
-                        className="h-10 rounded-md bg-neutral-900 text-white px-4 text-sm"
+                        className="h-10 rounded-md bg-dark-blue text-off-white px-4 text-sm"
                         onClick={() => {
                           const nameEl = document.getElementById(`name-${list.id}`) as any
                           const qtyEl = document.getElementById(`qty-${list.id}`) as any

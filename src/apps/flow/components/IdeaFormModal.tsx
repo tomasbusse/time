@@ -113,10 +113,10 @@ export default function IdeaFormModal({
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'bg-red-100 text-red-700 border-red-200'
+      case 'high': return 'bg-light-gray text-red-700 border-light-gray'
       case 'medium': return 'bg-yellow-100 text-yellow-700 border-yellow-200'
-      case 'low': return 'bg-green-100 text-green-700 border-green-200'
-      default: return 'bg-gray-100 text-gray-700 border-gray-200'
+      case 'low': return 'bg-light-gray text-green-700 border-light-gray'
+      default: return 'bg-light-gray text-gray border-light-gray'
     }
   }
 
@@ -133,15 +133,15 @@ export default function IdeaFormModal({
       {/* Modal */}
       <div className="relative bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-800">
+        <div className="flex items-center justify-between p-6 border-b border-light-gray">
+          <h2 className="text-xl font-semibold text-dark-blue">
             {mode === 'create' ? 'Create New Idea' : 'Edit Idea'}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full"
+            className="p-2 hover:bg-light-gray rounded-full"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-gray" />
           </button>
         </div>
 
@@ -149,7 +149,7 @@ export default function IdeaFormModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Title */}
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="title" className="block text-sm font-medium text-gray mb-2">
               Title *
             </label>
             <Input
@@ -164,7 +164,7 @@ export default function IdeaFormModal({
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="description" className="block text-sm font-medium text-gray mb-2">
               Description
             </label>
             <textarea
@@ -173,13 +173,13 @@ export default function IdeaFormModal({
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder="Enter brief description..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-light-gray rounded-md focus:outline-none focus:ring-2 focus:ring-custom-brown focus:border-transparent"
             />
           </div>
 
           {/* Rich Description */}
           <div>
-            <label htmlFor="richDescription" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="richDescription" className="block text-sm font-medium text-gray mb-2">
               Rich Description (Markdown supported)
             </label>
             <textarea
@@ -188,14 +188,14 @@ export default function IdeaFormModal({
               onChange={(e) => setFormData(prev => ({ ...prev, richDescription: e.target.value }))}
               placeholder="Enter detailed description with formatting..."
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+              className="w-full px-3 py-2 border border-light-gray rounded-md focus:outline-none focus:ring-2 focus:ring-custom-brown focus:border-transparent font-mono text-sm"
             />
           </div>
 
           {/* Category and Priority Row */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="category" className="block text-sm font-medium text-gray mb-2">
                 Category
               </label>
               <Input
@@ -208,14 +208,14 @@ export default function IdeaFormModal({
             </div>
 
             <div>
-              <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="priority" className="block text-sm font-medium text-gray mb-2">
                 Priority
               </label>
               <select
                 id="priority"
                 value={formData.priority}
                 onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value as 'low' | 'medium' | 'high' }))}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent capitalize ${getPriorityColor(formData.priority)}`}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-custom-brown focus:border-transparent capitalize ${getPriorityColor(formData.priority)}`}
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -226,7 +226,7 @@ export default function IdeaFormModal({
 
           {/* Tags */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray mb-2">
               Tags
             </label>
             <div className="flex gap-2 mb-3">
@@ -248,13 +248,13 @@ export default function IdeaFormModal({
                 {formData.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
+                    className="inline-flex items-center gap-1 px-2 py-1 bg-light-gray text-custom-brown text-xs rounded-full"
                   >
                     {tag}
                     <button
                       type="button"
                       onClick={() => removeTag(tag)}
-                      className="hover:text-blue-900"
+                      className="hover:text-dark-blue"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -266,7 +266,7 @@ export default function IdeaFormModal({
 
           {/* Attachments */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray mb-2">
               Attachments (URLs)
             </label>
             <div className="grid grid-cols-3 gap-2 mb-3">
@@ -298,12 +298,12 @@ export default function IdeaFormModal({
                 {formData.attachments.map((attachment, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                    className="flex items-center justify-between p-2 bg-off-white rounded"
                   >
                     <div className="flex items-center gap-2">
-                      <Paperclip className="w-4 h-4 text-gray-500" />
+                      <Paperclip className="w-4 h-4 text-gray" />
                       <span className="text-sm">{attachment.name}</span>
-                      <span className="text-xs text-gray-500">({attachment.type})</span>
+                      <span className="text-xs text-gray">({attachment.type})</span>
                     </div>
                     <button
                       type="button"
@@ -319,7 +319,7 @@ export default function IdeaFormModal({
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex justify-end gap-3 pt-4 border-t border-light-gray">
             <Button
               type="button"
               onClick={onClose}
@@ -331,7 +331,7 @@ export default function IdeaFormModal({
             <Button
               type="submit"
               disabled={isSubmitting || !formData.title.trim()}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-dark-blue hover:bg-dark-blue"
             >
               {isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Idea' : 'Update Idea'}
             </Button>

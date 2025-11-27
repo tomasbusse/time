@@ -36,8 +36,8 @@ export function MonthlyValuationChart({ data, onYearChange, currentYear = new Da
 
   if (!data || data.length === 0) {
     return (
-      <div className="w-full h-96 flex items-center justify-center bg-neutral-50 rounded-lg border border-neutral-200">
-        <p className="text-neutral-500 text-center">
+      <div className="w-full h-96 flex items-center justify-center bg-off-white rounded-lg border border-light-gray">
+        <p className="text-gray text-center">
           No valuation data yet. Start by entering your first monthly valuation.
         </p>
       </div>
@@ -51,28 +51,28 @@ export function MonthlyValuationChart({ data, onYearChange, currentYear = new Da
   }))
 
   return (
-    <div className="w-full bg-white rounded-lg border border-neutral-200 p-6">
+    <div className="w-full bg-white rounded-lg border border-light-gray p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <button
             onClick={handlePreviousYear}
-            className="p-2 hover:bg-neutral-100 rounded-md transition-colors"
+            className="p-2 hover:bg-light-gray rounded-md transition-colors"
             title="Previous year"
           >
-            <ChevronLeft className="w-5 h-5 text-neutral-600" />
+            <ChevronLeft className="w-5 h-5 text-gray" />
           </button>
-          <h3 className="text-lg font-semibold text-neutral-800 w-24 text-center">
+          <h3 className="text-lg font-semibold text-dark-blue w-24 text-center">
             {displayYear}
           </h3>
           <button
             onClick={handleNextYear}
-            className="p-2 hover:bg-neutral-100 rounded-md transition-colors"
+            className="p-2 hover:bg-light-gray rounded-md transition-colors"
             title="Next year"
           >
-            <ChevronRight className="w-5 h-5 text-neutral-600" />
+            <ChevronRight className="w-5 h-5 text-gray" />
           </button>
         </div>
-        <p className="text-sm text-neutral-500">12-Month Progress</p>
+        <p className="text-sm text-gray">12-Month Progress</p>
       </div>
 
       <ResponsiveContainer width="100%" height={400}>

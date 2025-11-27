@@ -69,12 +69,12 @@ export function ValuationEntry({
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
         <div className="p-6 border-b flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-neutral-800">
+          <h2 className="text-lg font-semibold text-dark-blue">
             Record {type === 'asset' ? 'Asset' : 'Liability'} Valuation
           </h2>
           <button
             onClick={onCancel}
-            className="p-1 hover:bg-neutral-100 rounded-md"
+            className="p-1 hover:bg-light-gray rounded-md"
             disabled={isLoading}
           >
             <X className="w-4 h-4" />
@@ -83,7 +83,7 @@ export function ValuationEntry({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label htmlFor="account" className="block text-sm font-medium text-neutral-700 mb-1">
+            <label htmlFor="account" className="block text-sm font-medium text-gray mb-1">
               {type === 'asset' ? 'Asset Account' : 'Liability Account'} *
             </label>
             <select
@@ -96,8 +96,8 @@ export function ValuationEntry({
                 }
               }}
               disabled={isLoading || accounts.length === 0}
-              className={`flex h-10 w-full rounded-md border bg-white px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                errors.account ? 'border-red-500' : 'border-neutral-300'
+              className={`flex h-10 w-full rounded-md border bg-white px-3 py-2 text-sm ring-offset-off-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dark-blue focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                errors.account ? 'border-red-500' : 'border-light-gray'
               }`}
             >
               <option value="">Select account...</option>
@@ -113,7 +113,7 @@ export function ValuationEntry({
           </div>
 
           <div>
-            <label htmlFor="date" className="block text-sm font-medium text-neutral-700 mb-1">
+            <label htmlFor="date" className="block text-sm font-medium text-gray mb-1">
               Valuation Date *
             </label>
             <Input
@@ -136,7 +136,7 @@ export function ValuationEntry({
           </div>
 
           <div>
-            <label htmlFor="amount" className="block text-sm font-medium text-neutral-700 mb-1">
+            <label htmlFor="amount" className="block text-sm font-medium text-gray mb-1">
               Total Value (€) *
             </label>
             <Input
@@ -165,14 +165,14 @@ export function ValuationEntry({
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="flex-1 h-10 px-4 rounded-md border border-neutral-300 disabled:opacity-50"
+            className="flex-1 h-10 px-4 rounded-md border border-light-gray disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="flex-1 h-10 px-4 rounded-md bg-neutral-900 text-white disabled:opacity-50"
+            className="flex-1 h-10 px-4 rounded-md bg-dark-blue text-off-white disabled:opacity-50"
           >
             {isLoading ? 'Saving...' : 'Save Valuation'}
           </button>

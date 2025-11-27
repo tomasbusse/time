@@ -44,11 +44,11 @@ export default function WeeklyOverview({
 
   const getCategoryColor = (category?: string): string => {
     const colors: Record<string, string> = {
-      work: 'bg-blue-500',
-      personal: 'bg-green-500',
-      learning: 'bg-purple-500',
-      health: 'bg-red-500',
-      default: 'bg-neutral-400',
+      work: 'bg-custom-brown',
+      personal: 'bg-off-white0',
+      learning: 'bg-dark-blue',
+      health: 'bg-off-white0',
+      default: 'bg-gray',
     }
     return category ? colors[category.toLowerCase()] || colors.default : colors.default
   }
@@ -58,10 +58,10 @@ export default function WeeklyOverview({
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-neutral-800">
+        <h2 className="text-xl font-semibold text-dark-blue">
           Week of {format(weekStartDate, 'MMM d, yyyy')}
         </h2>
-        <div className="text-sm text-neutral-600">
+        <div className="text-sm text-gray">
           Total: <span className="font-semibold">{formatDuration(weekTotal)}</span>
         </div>
       </div>
@@ -79,13 +79,13 @@ export default function WeeklyOverview({
               onClick={() => onDayClick?.(dayDate)}
               className={`border rounded-lg p-3 min-h-[150px] cursor-pointer transition-all ${
                 isToday
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50'
+                  ? 'border-custom-brown bg-custom-brown/10'
+                  : 'border-light-gray hover:border-light-gray hover:bg-off-white'
               }`}
             >
               <div className="text-center mb-2">
-                <div className="text-xs font-medium text-neutral-500">{day}</div>
-                <div className="text-lg font-semibold text-neutral-800">
+                <div className="text-xs font-medium text-gray">{day}</div>
+                <div className="text-lg font-semibold text-dark-blue">
                   {format(addDays(weekStartDate, index), 'd')}
                 </div>
               </div>
@@ -95,7 +95,7 @@ export default function WeeklyOverview({
                   {allocations.map((allocation, idx) => (
                     <div
                       key={idx}
-                      className={`text-xs p-1.5 rounded text-white ${getCategoryColor(
+                      className={`text-xs p-1.5 rounded text-off-white ${getCategoryColor(
                         allocation.category
                       )}`}
                     >
@@ -106,12 +106,12 @@ export default function WeeklyOverview({
                     </div>
                   ))}
 
-                  <div className="text-xs text-neutral-600 font-medium pt-1 border-t border-neutral-200">
+                  <div className="text-xs text-gray font-medium pt-1 border-t border-light-gray">
                     Total: {formatDuration(dayTotal)}
                   </div>
                 </div>
               ) : (
-                <div className="text-xs text-neutral-400 text-center mt-4">
+                <div className="text-xs text-gray text-center mt-4">
                   No allocations
                 </div>
               )}
@@ -121,34 +121,34 @@ export default function WeeklyOverview({
       </div>
 
       <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-neutral-50 rounded-lg p-3">
-          <div className="text-xs text-neutral-500">Mon-Fri</div>
-          <div className="text-lg font-semibold text-neutral-800">
+        <div className="bg-off-white rounded-lg p-3">
+          <div className="text-xs text-gray">Mon-Fri</div>
+          <div className="text-lg font-semibold text-dark-blue">
             {formatDuration(
               DAYS.slice(0, 5).reduce((total, _, index) => total + getDayTotal(index), 0)
             )}
           </div>
         </div>
 
-        <div className="bg-neutral-50 rounded-lg p-3">
-          <div className="text-xs text-neutral-500">Weekend</div>
-          <div className="text-lg font-semibold text-neutral-800">
+        <div className="bg-off-white rounded-lg p-3">
+          <div className="text-xs text-gray">Weekend</div>
+          <div className="text-lg font-semibold text-dark-blue">
             {formatDuration(
               DAYS.slice(5).reduce((total, _, index) => total + getDayTotal(index + 5), 0)
             )}
           </div>
         </div>
 
-        <div className="bg-neutral-50 rounded-lg p-3">
-          <div className="text-xs text-neutral-500">Avg/Day</div>
-          <div className="text-lg font-semibold text-neutral-800">
+        <div className="bg-off-white rounded-lg p-3">
+          <div className="text-xs text-gray">Avg/Day</div>
+          <div className="text-lg font-semibold text-dark-blue">
             {formatDuration(Math.round(weekTotal / 7))}
           </div>
         </div>
 
-        <div className="bg-blue-50 rounded-lg p-3">
-          <div className="text-xs text-blue-600">Week Total</div>
-          <div className="text-lg font-semibold text-blue-700">
+        <div className="bg-custom-brown/10 rounded-lg p-3">
+          <div className="text-xs text-custom-brown">Week Total</div>
+          <div className="text-lg font-semibold text-custom-brown">
             {formatDuration(weekTotal)}
           </div>
         </div>

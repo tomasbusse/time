@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { useWorkspace } from '@/lib/WorkspaceContext'
@@ -12,10 +13,10 @@ import { AssetForm } from './components/AssetForm'
 import { LiabilityForm } from './components/LiabilityForm'
 import { MonthlyValuationChart } from './components/MonthlyValuationChart'
 import { ValuationEntry } from './components/ValuationEntry'
+import { SubscriptionForm } from './components/SubscriptionForm'
 import SubscriptionList from './components/SubscriptionList'
-import CategoryBudgetsPanel from './components/CategoryBudgetsPanel'
 
-type TabType = 'liquidity' | 'assets' | 'subscriptions' | 'categories'
+type TabType = 'liquidity' | 'assets' | 'subscriptions'
 
 interface Account {
   id: string
@@ -30,7 +31,7 @@ interface AccountWithBalance {
   workspaceId: string
   accountCode: string
   accountName: string
-  accountType: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense'
+  accountType: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
   accountCategory: string
   isActive: boolean
   currentBalance: number
@@ -83,20 +84,10 @@ interface Subscription {
   subcategory?: string
 }
 
-interface CategoryBudget {
-  id: string
-  classification: 'business' | 'private'
-  category: 'ai' | 'software' | 'marketing' | 'productivity' | 'design' | 'communication' | 'development' | 'analytics' | 'security' | 'other'
-  subcategory?: string
-  monthlyBudgetLimit: number
-  yearlyBudgetLimit: number
-  alertThreshold: '50' | '75' | '90' | '100'
-  isActive: boolean
-}
-
 export default function FinanceApp() {
   const { workspaceId, userId } = useWorkspace()
   const [activeTab, setActiveTab] = useState<TabType>('liquidity')
+  const [classificationFilter, setClassificationFilter] = useState<'all' | 'business' | 'private'>('all');
   const [showAccountForm, setShowAccountForm] = useState(false)
   const [editingAccount, setEditingAccount] = useState<Account | undefined>()
 
@@ -106,10 +97,10 @@ export default function FinanceApp() {
   )
   const accounts = (accountsData || []).map(acc => ({
     id: acc._id,
-    name: acc.name,
+    name: acc.name ?? '',
     accountType: acc.accountType,
-    currentBalance: acc.currentBalance,
-    isPrivate: acc.isPrivate,
+    currentBalance: acc.currentBalance ?? 0,
+    isPrivate: acc.isPrivate ?? false,
   }))
 
   // Mutations
@@ -119,10 +110,10 @@ export default function FinanceApp() {
 
   // Equity goal (Convex)
   const goal = useQuery(
-    api.finance.getEquityGoal,
+    api.finance.getLiquidityGoal,
     workspaceId ? { workspaceId } : 'skip'
   )
-  const upsertGoal = useMutation(api.finance.upsertEquityGoal)
+  const upsertGoal = useMutation(api.finance.upsertLiquidityGoal)
   const [showGoalModal, setShowGoalModal] = useState(false)
   const [goalAmount, setGoalAmount] = useState<number>(goal?.targetEquity ?? 0)
   const [goalDate, setGoalDate] = useState<string>(goal?.targetDate ?? '')
@@ -137,23 +128,23 @@ export default function FinanceApp() {
     workspaceId ? { workspaceId, accountType: 'liability' } : 'skip'
   )
 
-  const assetAccounts = (accountsForAssets || []).map((a: AccountWithBalance) => ({
+  const assetAccounts = (accountsForAssets || []).map((a) => ({
     id: a._id,
     accountId: a._id,
     accountCode: a.accountCode,
     accountName: a.accountName,
     accountCategory: a.accountCategory,
-    currentBalance: a.currentBalance,
+    currentBalance: a.currentBalance ?? 0,
     isActive: a.isActive,
   }))
 
-  const liabilityAccounts = (accountsForLiabilities || []).map((a: AccountWithBalance) => ({
+  const liabilityAccounts = (accountsForLiabilities || []).map((a) => ({
     id: a._id,
     accountId: a._id,
     accountCode: a.accountCode,
     accountName: a.accountName,
     accountCategory: a.accountCategory,
-    currentBalance: a.currentBalance,
+    currentBalance: a.currentBalance ?? 0,
     isActive: a.isActive,
   }))
 
@@ -235,61 +226,17 @@ export default function FinanceApp() {
     category: s.category ?? 'other',
     subcategory: s.subcategory,
   }))
+
+  const filteredSubs = subs.filter(sub => {
+    if (classificationFilter === 'all') {
+      return true;
+    }
+    return sub.classification === classificationFilter;
+  });
   const createSubscription = useMutation(api.finance.createSubscription)
   const updateSubscription = useMutation(api.finance.updateSubscription)
   const deleteSubscription = useMutation(api.finance.deleteSubscription)
   
-  // Category Budgets (Convex)
-  const categoryBudgetsData = useQuery(
-    api.finance.listCategoryBudgets,
-    workspaceId ? { workspaceId } : 'skip'
-  )
-  const categoryBudgets: CategoryBudget[] = (categoryBudgetsData || []).map((b: any) => ({
-    id: b._id,
-    classification: b.classification ?? 'business',
-    category: b.category ?? 'other',
-    subcategory: b.subcategory,
-    monthlyBudgetLimit: b.monthlyBudgetLimit,
-    yearlyBudgetLimit: b.yearlyBudgetLimit,
-    alertThreshold: b.alertThreshold ?? '75',
-    isActive: b.isActive ?? true,
-  }))
-  const createCategoryBudgetMutation = useMutation(api.finance.createCategoryBudget)
-  const updateCategoryBudgetMutation = useMutation(api.finance.updateCategoryBudget)
-  const deleteCategoryBudgetMutation = useMutation(api.finance.deleteCategoryBudget)
-
-  const handleCreateCategoryBudget = async (payload: {
-    classification: 'business' | 'private'
-    category: 'ai' | 'software' | 'marketing' | 'productivity' | 'design' | 'communication' | 'development' | 'analytics' | 'security' | 'other'
-    subcategory?: string
-    monthlyBudgetLimit: number
-    yearlyBudgetLimit: number
-    alertThreshold: '50' | '75' | '90' | '100'
-  }) => {
-    if (!workspaceId) return
-    await createCategoryBudgetMutation({
-      workspaceId: workspaceId as any,
-      ...payload,
-    })
-  }
-
-  const handleUpdateCategoryBudget = async (payload: {
-    id: string
-    monthlyBudgetLimit?: number
-    yearlyBudgetLimit?: number
-    alertThreshold?: '50' | '75' | '90' | '100'
-    isActive?: boolean
-  }) => {
-    await updateCategoryBudgetMutation({
-      ...payload,
-      id: payload.id as any,
-    })
-  }
-
-  const handleDeleteCategoryBudget = async ({ id }: { id: string }) => {
-    await deleteCategoryBudgetMutation({ id: id as any })
-  }
-
   const [showSubModal, setShowSubModal] = useState(false)
   const [editingSub, setEditingSub] = useState<Subscription | undefined>()
   const [subForm, setSubForm] = useState({
@@ -311,20 +258,19 @@ export default function FinanceApp() {
     if (accountData.id) {
       // Update existing account
       await updateAccountMutation({
-        id: accountData.id as any,
-        name: accountData.name,
-        currentBalance: accountData.currentBalance,
-        isPrivate: accountData.isPrivate,
+        accountId: accountData.id as any,
+        accountName: accountData.name!,
       })
     } else {
       // Create new account
       await createAccountMutation({
         workspaceId: workspaceId as any,
-        ownerId: userId as any,
-        name: accountData.name!,
-        accountType: accountData.accountType!,
-        currentBalance: accountData.currentBalance!,
-        isPrivate: accountData.isPrivate!,
+        accountCode: `ACCT-${Date.now()}`,
+        accountName: accountData.name!,
+        accountType: accountData.accountType as any,
+        accountCategory: 'default',
+        isActive: true,
+        createdBy: userId as any,
       })
     }
     setShowAccountForm(false)
@@ -333,8 +279,10 @@ export default function FinanceApp() {
 
   const handleEditAccount = (accountId: string) => {
     const account = accounts.find((a) => a.id === accountId)
-    setEditingAccount(account)
-    setShowAccountForm(true)
+    if (account) {
+      setEditingAccount(account as any)
+      setShowAccountForm(true)
+    }
   }
 
   const handleDeleteAccount = async (accountId: string) => {
@@ -345,46 +293,61 @@ export default function FinanceApp() {
     const account = accounts.find((a) => a.id === accountId)
     if (account) {
       await updateAccountMutation({
-        id: accountId as any,
-        isPrivate: !account.isPrivate,
+        accountId: accountId as any,
       })
     }
   }
 
   // Asset handlers (account-based)
-  const handleSaveAsset = async (assetData: { name: string; type: string; accountId?: string; purchasePrice?: number; currentValue?: number }) => {
+  const handleSaveAsset = async (assetData: { name: string; type: string; accountId: string }) => {
     if (!workspaceId || !userId) return
 
-    if (editingAsset) {
-      await updateAssetMutation({
-        id: editingAsset.id as any,
-        name: assetData.name,
-        type: assetData.type,
-        ownerId: userId as any,
-      })
-    } else {
-      if (!assetData.accountId) {
-        alert('Please select or create an asset account')
-        return
+    try {
+      if (editingAsset) {
+        await updateAssetMutation({
+          id: editingAsset.id as any,
+          name: assetData.name,
+          type: assetData.type,
+          ownerId: userId as any,
+        })
+      } else {
+        // If no accountId provided, create an asset account automatically
+        let accountId = assetData.accountId
+        if (!accountId) {
+          const newAccountId = await createAccountMutation({
+            workspaceId: workspaceId as any,
+            accountCode: `ASSET-${Date.now()}`,
+            accountName: `${assetData.name} Account`,
+            accountType: 'asset',
+            accountCategory: assetData.type === 'property' || assetData.type === 'vehicle' ? 'fixed_asset' : 'current_asset',
+            isActive: true,
+            createdBy: userId as any,
+          })
+          accountId = newAccountId
+        }
+
+        await assetsMutation({
+          workspaceId: workspaceId as any,
+          ownerId: userId as any,
+          accountId: accountId as any,
+          name: assetData.name,
+          type: assetData.type,
+          isFixed: assetData.type === 'property' || assetData.type === 'vehicle',
+        })
       }
-      await assetsMutation({
-        workspaceId: workspaceId as any,
-        ownerId: userId as any,
-        accountId: assetData.accountId as any,
-        name: assetData.name,
-        type: assetData.type,
-        purchasePrice: assetData.purchasePrice,
-        currentValue: assetData.currentValue,
-        isFixed: assetData.type === 'property' || assetData.type === 'vehicle',
-      })
+      setShowAssetForm(false)
+      setEditingAsset(undefined)
+    } catch (error) {
+      console.error('Error saving asset:', error)
+      alert('Failed to save asset. Please try again.')
     }
-    setShowAssetForm(false)
-    setEditingAsset(undefined)
   }
 
   const handleEditAsset = (assetId: string) => {
+    console.log('[DEBUG] handleEditAsset triggered for', assetId)
     const asset = assetAccounts.find((a) => a.id === assetId)
     if (asset) {
+      console.log('[DEBUG] Found asset for editing:', asset)
       setEditingAsset({
         id: asset.id,
         accountId: asset.accountId,
@@ -393,6 +356,8 @@ export default function FinanceApp() {
         isFixed: asset.accountCategory.includes('fixed'),
       })
       setShowAssetForm(true)
+    } else {
+      console.warn('[DEBUG] handleEditAsset: no matching asset found for ID', assetId)
     }
   }
 
@@ -407,39 +372,50 @@ export default function FinanceApp() {
   }
 
   // Liability handlers (account-based)
-  const handleSaveLiability = async (liabilityData: { name: string; type: string; accountId?: string; originalAmount?: number; currentBalance?: number }) => {
+  const handleSaveLiability = async (liabilityData: { name: string; relatedAssetId: string }) => {
     if (!workspaceId || !userId) return
 
-    if (editingLiability) {
-      await updateLiabilityMutation({
-        id: editingLiability.id as any,
-        name: liabilityData.name,
-        type: liabilityData.type,
-        ownerId: userId as any,
-      })
-    } else {
-      if (!liabilityData.accountId) {
-        alert('Please select or create a liability account')
-        return
+    try {
+      if (editingLiability) {
+        await updateLiabilityMutation({
+          id: editingLiability.id as any,
+          name: liabilityData.name,
+          ownerId: userId as any,
+        })
+      } else {
+        // For new liabilities, create a new liability account
+        const liabilityAccountId = await createAccountMutation({
+          workspaceId: workspaceId as any,
+          accountCode: `LIABILITY-${Date.now()}`,
+          accountName: `${liabilityData.name} Account`,
+          accountType: 'liability',
+          accountCategory: 'current_liability',
+          isActive: true,
+          createdBy: userId as any,
+        })
+
+        await liabilityMutation({
+          workspaceId: workspaceId as any,
+          ownerId: userId as any,
+          accountId: liabilityAccountId as any,
+          name: liabilityData.name,
+          type: 'liability',
+          isFixed: true,
+        })
       }
-      await liabilityMutation({
-        workspaceId: workspaceId as any,
-        ownerId: userId as any,
-        accountId: liabilityData.accountId as any,
-        name: liabilityData.name,
-        type: liabilityData.type,
-        originalAmount: liabilityData.originalAmount,
-        currentBalance: liabilityData.currentBalance,
-        isFixed: liabilityData.type === 'mortgage' || liabilityData.type === 'loan',
-      })
+      setShowLiabilityForm(false)
+      setEditingLiability(undefined)
+    } catch (error) {
+      console.error('Error saving liability:', error)
+      alert('Failed to save liability. Please try again.')
     }
-    setShowLiabilityForm(false)
-    setEditingLiability(undefined)
   }
 
   const handleEditLiability = (liabilityId: string) => {
+    console.log('[DEBUG] handleEditLiability triggered for', liabilityId)
     const liability = liabilityAccounts.find((l) => l.id === liabilityId)
     if (liability) {
+      console.log('[DEBUG] Found liability for editing:', liability)
       setEditingLiability({
         id: liability.id,
         accountId: liability.accountId,
@@ -448,6 +424,8 @@ export default function FinanceApp() {
         isFixed: liability.accountCategory.includes('long_term'),
       })
       setShowLiabilityForm(true)
+    } else {
+      console.warn('[DEBUG] handleEditLiability: no matching liability found for ID', liabilityId)
     }
   }
 
@@ -524,71 +502,76 @@ export default function FinanceApp() {
   }
 
   const totalLiquidity = accounts
-    .filter((acc) => acc.accountType !== 'loan')
+    .filter((acc) => acc.accountType === 'asset')
     .reduce((sum, acc) => sum + acc.currentBalance, 0)
 
   const totalLiabilitiesFromAccounts = accounts
-    .filter((acc) => acc.accountType === 'loan')
+    .filter((acc) => acc.accountType === 'liability')
     .reduce((sum, acc) => sum + Math.abs(acc.currentBalance), 0)
 
   const currentEquity = totalLiquidity - totalLiabilitiesFromAccounts
 
   return (
-    <div className="min-h-screen bg-neutral-50 p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-off-white p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-800 mb-6"
+          className="inline-flex items-center gap-2 text-gray hover:text-dark-blue mb-4 sm:mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Dashboard
+          <span className="text-sm sm:text-base">Back to Dashboard</span>
         </Link>
 
-        <h1 className="text-3xl font-bold text-neutral-800 mb-8">Finance</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-dark-blue mb-6 sm:mb-8">Finance</h1>
 
-        <div className="bg-white rounded-lg shadow-md mb-6">
-          <div className="border-b border-neutral-200">
-            <div className="flex">
+        {/* Responsive Tab Navigation */}
+        <div className="bg-white rounded-lg shadow-md mb-4 sm:mb-6 overflow-hidden">
+          <div className="border-b border-light-gray">
+            {/* Desktop: Horizontal tabs */}
+            <div className="hidden sm:flex overflow-x-auto">
               <button
                 onClick={() => setActiveTab('liquidity')}
-                className={`px-6 py-3 font-medium transition-colors ${
+                className={`px-4 md:px-6 py-3 font-medium transition-colors whitespace-nowrap ${
                   activeTab === 'liquidity'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
+                    ? 'text-custom-brown border-b-2 border-custom-brown'
+                    : 'text-gray hover:text-dark-blue'
                 }`}
               >
                 Liquidity
               </button>
               <button
                 onClick={() => setActiveTab('assets')}
-                className={`px-6 py-3 font-medium transition-colors ${
+                className={`px-4 md:px-6 py-3 font-medium transition-colors whitespace-nowrap ${
                   activeTab === 'assets'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
+                    ? 'text-custom-brown border-b-2 border-custom-brown'
+                    : 'text-gray hover:text-dark-blue'
                 }`}
               >
                 Assets & Liabilities
               </button>
               <button
                 onClick={() => setActiveTab('subscriptions')}
-                className={`px-6 py-3 font-medium transition-colors ${
+                className={`px-4 md:px-6 py-3 font-medium transition-colors whitespace-nowrap ${
                   activeTab === 'subscriptions'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
+                    ? 'text-custom-brown border-b-2 border-custom-brown'
+                    : 'text-gray hover:text-dark-blue'
                 }`}
               >
                 Subscriptions
               </button>
-              <button
-                onClick={() => setActiveTab('categories')}
-                className={`px-6 py-3 font-medium transition-colors ${
-                  activeTab === 'categories'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
-                }`}
+            </div>
+
+            {/* Mobile: Dropdown select */}
+            <div className="sm:hidden p-3">
+              <select
+                value={activeTab}
+                onChange={(e) => setActiveTab(e.target.value as TabType)}
+                className="w-full px-4 py-2 border border-light-gray rounded-lg bg-white text-dark-blue font-medium focus:outline-none focus:ring-2 focus:ring-custom-brown"
               >
-                Categories
-              </button>
+                <option value="liquidity">Liquidity</option>
+                <option value="assets">Assets & Liabilities</option>
+                <option value="subscriptions">Subscriptions</option>
+              </select>
             </div>
           </div>
         </div>
@@ -604,7 +587,7 @@ export default function FinanceApp() {
             />
 
             <AccountList
-              accounts={accounts}
+              accounts={accounts as any}
               onAddAccount={() => {
                 setEditingAccount(undefined)
                 setShowAccountForm(true)
@@ -618,23 +601,64 @@ export default function FinanceApp() {
 
       {showSubModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <SubscriptionForm
+            initialData={editingSub ? {
+              id: editingSub.id,
+              name: editingSub.name,
+              cost: editingSub.cost,
+              yearlyAmount: editingSub.yearlyAmount,
+              billingCycle: editingSub.billingCycle,
+              nextBillingDate: editingSub.nextBillingDate,
+              isActive: editingSub.isActive,
+              isNecessary: editingSub.isNecessary,
+              classification: editingSub.classification,
+              category: editingSub.category,
+              subcategory: editingSub.subcategory,
+            } : undefined}
+            onSubmit={async (data) => {
+              if (!workspaceId || !userId) return
+              if (editingSub) {
+                await updateSubscription({
+                  id: editingSub.id as any,
+                  ...data,
+                  ownerId: userId as any,
+                })
+              } else {
+                await createSubscription({
+                  workspaceId: workspaceId as any,
+                  ownerId: userId as any,
+                  ...data,
+                })
+              }
+              setShowSubModal(false)
+              setEditingSub(undefined)
+            }}
+            onCancel={() => {
+              setShowSubModal(false)
+              setEditingSub(undefined)
+            }}
+          />
+        </div>
+      )}
+      {showSubModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
             <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold text-neutral-800">{editingSub ? 'Edit Subscription' : 'Add Subscription'}</h2>
+              <h2 className="text-xl font-semibold text-dark-blue">{editingSub ? 'Edit Subscription' : 'Add Subscription'}</h2>
             </div>
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Name</label>
+                <label className="block text-sm font-medium text-gray mb-2">Name</label>
                 <input
                   type="text"
                   value={subForm.name}
                   onChange={(e) => setSubForm({ ...subForm, name: e.target.value })}
-                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                  className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  <label className="block text-sm font-medium text-gray mb-2">
                     {subForm.billingCycle === 'monthly' ? 'Monthly Cost (€)' : 'Yearly Cost (€)'}
                   </label>
                   <input
@@ -643,11 +667,11 @@ export default function FinanceApp() {
                     step={0.01}
                     value={subForm.cost}
                     onChange={(e) => setSubForm({ ...subForm, cost: Number(e.target.value) })}
-                    className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                    className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Yearly Amount (€) <span className="text-xs text-neutral-500">(Optional)</span></label>
+                  <label className="block text-sm font-medium text-gray mb-2">Yearly Amount (€) <span className="text-xs text-gray">(Optional)</span></label>
                   <input
                     type="number"
                     min={0}
@@ -655,16 +679,16 @@ export default function FinanceApp() {
                     value={subForm.yearlyAmount || ''}
                     onChange={(e) => setSubForm({ ...subForm, yearlyAmount: e.target.value ? Number(e.target.value) : undefined })}
                     placeholder="Leave empty to auto-calc"
-                    className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                    className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Billing Cycle</label>
+                <label className="block text-sm font-medium text-gray mb-2">Billing Cycle</label>
                 <select
                   value={subForm.billingCycle}
                   onChange={(e) => setSubForm({ ...subForm, billingCycle: e.target.value as 'monthly' | 'yearly' })}
-                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                  className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
                 >
                   <option value="monthly">Monthly</option>
                   <option value="yearly">Yearly</option>
@@ -677,7 +701,7 @@ export default function FinanceApp() {
                     checked={subForm.isNecessary}
                     onChange={(e) => setSubForm({ ...subForm, isNecessary: e.target.checked })}
                   />
-                  <span className="text-sm text-neutral-700">Necessary subscription</span>
+                  <span className="text-sm text-gray">Necessary subscription</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <input
@@ -685,26 +709,26 @@ export default function FinanceApp() {
                     checked={subForm.isActive}
                     onChange={(e) => setSubForm({ ...subForm, isActive: e.target.checked })}
                   />
-                  <span className="text-sm text-neutral-700">Active</span>
+                  <span className="text-sm text-gray">Active</span>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Classification</label>
+                <label className="block text-sm font-medium text-gray mb-2">Classification</label>
                 <select
                   value={subForm.classification}
                   onChange={(e) => setSubForm({ ...subForm, classification: e.target.value as 'business' | 'private' })}
-                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                  className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
                 >
                   <option value="business">Business</option>
                   <option value="private">Private</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Category</label>
+                <label className="block text-sm font-medium text-gray mb-2">Category</label>
                 <select
                   value={subForm.category}
                   onChange={(e) => setSubForm({ ...subForm, category: e.target.value as any })}
-                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                  className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
                 >
                   <option value="ai">AI</option>
                   <option value="software">Software Tools</option>
@@ -719,27 +743,27 @@ export default function FinanceApp() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Subcategory (Optional)</label>
+                <label className="block text-sm font-medium text-gray mb-2">Subcategory (Optional)</label>
                 <input
                   type="text"
                   value={subForm.subcategory || ''}
                   onChange={(e) => setSubForm({ ...subForm, subcategory: e.target.value || undefined })}
                   placeholder="e.g., ChatGPT, Figma Pro, etc."
-                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                  className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Next Billing Date</label>
+                <label className="block text-sm font-medium text-gray mb-2">Next Billing Date</label>
                 <input
                   type="date"
                   value={subForm.nextBillingDate}
                   onChange={(e) => setSubForm({ ...subForm, nextBillingDate: e.target.value })}
-                  className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                  className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
             <div className="p-6 border-t flex gap-3">
-              <button onClick={() => setShowSubModal(false)} className="flex-1 h-10 px-4 rounded-md border border-neutral-300">Cancel</button>
+              <button onClick={() => setShowSubModal(false)} className="flex-1 h-10 px-4 rounded-md border border-light-gray">Cancel</button>
               <button
                 onClick={async () => {
                   if (!workspaceId || !userId || !subForm.name || subForm.cost <= 0 || !subForm.nextBillingDate) return
@@ -777,7 +801,7 @@ export default function FinanceApp() {
                   setShowSubModal(false)
                   setEditingSub(undefined)
                 }}
-                className="flex-1 h-10 px-4 rounded-md bg-neutral-900 text-white"
+                className="flex-1 h-10 px-4 rounded-md bg-dark-blue text-off-white"
               >
                 Save Subscription
               </button>
@@ -792,14 +816,14 @@ export default function FinanceApp() {
               <div className="flex gap-4 mb-6">
                 <button
                   onClick={() => setShowAssetValuationEntry(true)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  className="px-4 py-2 bg-dark-blue text-off-white rounded-lg hover:bg-dark-blue disabled:opacity-50"
                   disabled={assetAccounts.length === 0}
                 >
                   Record Asset Valuation
                 </button>
                 <button
                   onClick={() => setShowLiabilityValuationEntry(true)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                  className="px-4 py-2 bg-red-600 text-off-white rounded-lg hover:bg-red-700 disabled:opacity-50"
                   disabled={liabilityAccounts.length === 0}
                 >
                   Record Liability Valuation
@@ -839,7 +863,13 @@ export default function FinanceApp() {
                         id: editingAsset.id,
                         name: editingAsset.name,
                         type: editingAsset.type,
+                        accountId: editingAsset.accountId,
                       } : undefined}
+                      availableAccounts={assetAccounts.map(acc => ({
+                        _id: acc.id,
+                        accountName: acc.accountName,
+                        accountCode: acc.accountCode,
+                      }))}
                       onSubmit={handleSaveAsset}
                       onCancel={() => {
                         setShowAssetForm(false)
@@ -860,9 +890,13 @@ export default function FinanceApp() {
                       initialData={editingLiability ? {
                         id: editingLiability.id,
                         name: editingLiability.name,
-                        relatedAssetId: editingLiability.relatedAssetId || '',
+                        relatedAssetId: '',
                       } : undefined}
-                      availableAssets={assets}
+                      availableAssets={assetAccounts.map(acc => ({
+                        _id: acc.id,
+                        accountName: acc.accountName,
+                        accountCode: acc.accountCode,
+                      }))}
                       onSubmit={handleSaveLiability}
                       onCancel={() => {
                         setShowLiabilityForm(false)
@@ -892,29 +926,62 @@ export default function FinanceApp() {
                 onCancel={() => setShowLiabilityValuationEntry(false)}
                 isLoading={isSubmittingValuation}
                 accounts={liabilityAccounts}
-              />
+                />
             )}
-          </>
-        )}
+        </>
+    )}
 
         {activeTab === 'subscriptions' && (
-          <SubscriptionList
-            subscriptions={subs}
-            onAddSubscription={() => {
-              setEditingSub(undefined)
-              setSubForm({ 
-                name: '', 
-                cost: 0, 
-                billingCycle: 'monthly', 
-                nextBillingDate: '', 
-                isActive: true,
-                isNecessary: true,
-                classification: 'private',
-                category: 'other',
-                subcategory: undefined
-              })
-              setShowSubModal(true)
-            }}
+          <>
+            {/* Responsive Filter Buttons */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4">
+              <span className="text-sm font-medium text-gray-600">Filter by:</span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Button
+                  variant={classificationFilter === 'all' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setClassificationFilter('all')}
+                  className="flex-1 sm:flex-none"
+                >
+                  All
+                </Button>
+                <Button
+                  variant={classificationFilter === 'business' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setClassificationFilter('business')}
+                  className="flex-1 sm:flex-none"
+                >
+                  Business
+                </Button>
+                <Button
+                  variant={classificationFilter === 'private' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setClassificationFilter('private')}
+                  className="flex-1 sm:flex-none"
+                >
+                  Private
+                </Button>
+              </div>
+            </div>
+            <SubscriptionList
+              subscriptions={filteredSubs}
+              classificationFilter={classificationFilter}
+              onAddSubscription={() => {
+                setEditingSub(undefined)
+                setSubForm({
+                  name: '',
+                  cost: 0,
+                  yearlyAmount: undefined,
+                  billingCycle: 'monthly',
+                  nextBillingDate: '',
+                  isActive: true,
+                  isNecessary: true,
+                  classification: 'private',
+                  category: 'other',
+                  subcategory: undefined,
+                })
+                setShowSubModal(true)
+              }}
             onEditSubscription={(id) => {
               const found = subs.find((s) => s.id === id)
               if (found) {
@@ -940,17 +1007,8 @@ export default function FinanceApp() {
             }}
             onToggleNecessary={handleToggleNecessary}
             onToggleActive={handleToggleActive}
-          />
-        )}
-
-        {activeTab === 'categories' && (
-          <CategoryBudgetsPanel
-            subscriptions={subs}
-            categoryBudgets={categoryBudgets}
-            onCreateBudget={handleCreateCategoryBudget}
-            onUpdateBudget={handleUpdateCategoryBudget}
-            onDeleteBudget={handleDeleteCategoryBudget}
-          />
+            />
+          </>
         )}
 
         {showAccountForm && (
@@ -968,33 +1026,33 @@ export default function FinanceApp() {
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
               <div className="p-6 border-b">
-                <h2 className="text-xl font-semibold text-neutral-800">Set Equity Goal</h2>
+                <h2 className="text-xl font-semibold text-dark-blue">Set Equity Goal</h2>
               </div>
               <div className="p-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Target Amount (€)</label>
+                  <label className="block text-sm font-medium text-gray mb-2">Target Amount (€)</label>
                   <input
                     type="number"
                     min={1}
                     value={goalAmount}
                     onChange={(e) => setGoalAmount(Number(e.target.value))}
-                    className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                    className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Target Date (optional)</label>
+                  <label className="block text-sm font-medium text-gray mb-2">Target Date (optional)</label>
                   <input
                     type="date"
                     value={goalDate}
                     onChange={(e) => setGoalDate(e.target.value)}
-                    className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+                    className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
                   />
                 </div>
               </div>
               <div className="p-6 border-t flex gap-3">
                 <button
                   onClick={() => setShowGoalModal(false)}
-                  className="flex-1 h-10 px-4 rounded-md border border-neutral-300"
+                  className="flex-1 h-10 px-4 rounded-md border border-light-gray"
                 >
                   Cancel
                 </button>
@@ -1009,7 +1067,7 @@ export default function FinanceApp() {
                     })
                     setShowGoalModal(false)
                   }}
-                  className="flex-1 h-10 px-4 rounded-md bg-neutral-900 text-white"
+                  className="flex-1 h-10 px-4 rounded-md bg-dark-blue text-off-white"
                 >
                   Save Goal
                 </button>

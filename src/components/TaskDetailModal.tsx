@@ -87,15 +87,15 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-background-light rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-off-white-light rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-border-light">
-          <h2 className="text-2xl font-bold text-text-primary">
+        <div className="flex justify-between items-center p-6 border-b border-gray-light">
+          <h2 className="text-2xl font-bold text-dark-blue">
             {task ? 'Edit Task' : 'Create New Task'}
           </h2>
           <button
             onClick={onClose}
-            className="text-text-muted hover:text-text-primary transition-colors"
+            className="text-gray hover:text-dark-blue transition-colors"
             disabled={isLoading}
           >
             <span className="material-symbols-outlined text-2xl">close</span>
@@ -106,7 +106,7 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
+            <label className="block text-sm font-medium text-dark-blue mb-2">
               Title *
             </label>
             <input
@@ -114,26 +114,26 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
               value={formData.title}
               onChange={(e) => handleInputChange('title', e.target.value)}
               className={`w-full px-4 py-3 rounded-lg border ${
-                errors.title ? 'border-error' : 'border-border-light'
-              } bg-background-light text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors`}
+                errors.title ? 'border-red-500' : 'border-gray-light'
+              } bg-off-white-light text-dark-blue focus:ring-2 focus:ring-dark-blue focus:border-dark-blue transition-colors`}
               placeholder="Enter task title"
               disabled={isLoading}
             />
             {errors.title && (
-              <p className="mt-1 text-sm text-error">{errors.title}</p>
+              <p className="mt-1 text-sm text-red-500">{errors.title}</p>
             )}
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
+            <label className="block text-sm font-medium text-dark-blue mb-2">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
               rows={3}
-              className="w-full px-4 py-3 rounded-lg border border-border-light bg-background-light text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-none"
+              className="w-full px-4 py-3 rounded-lg border border-gray-light bg-off-white-light text-dark-blue focus:ring-2 focus:ring-dark-blue focus:border-dark-blue transition-colors resize-none"
               placeholder="Enter task description (optional)"
               disabled={isLoading}
             />
@@ -141,13 +141,13 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
 
           {/* Priority */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
+            <label className="block text-sm font-medium text-dark-blue mb-2">
               Priority
             </label>
             <select
               value={formData.priority}
               onChange={(e) => handleInputChange('priority', e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-border-light bg-background-light text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+              className="w-full px-4 py-3 rounded-lg border border-gray-light bg-off-white-light text-dark-blue focus:ring-2 focus:ring-dark-blue focus:border-dark-blue transition-colors"
               disabled={isLoading}
             >
               <option value="low">Low</option>
@@ -157,16 +157,16 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
           </div>
 
           {/* Time Allocation Section */}
-          <div className="bg-surface-light rounded-lg p-6 space-y-4">
+          <div className="bg-off-white rounded-lg p-6 space-y-4">
             <div className="flex items-center gap-2 mb-4">
-              <span className="material-symbols-outlined text-primary-600">schedule</span>
-              <h3 className="text-lg font-semibold text-text-primary">Time Allocation</h3>
+              <span className="material-symbols-outlined text-dark-blue">schedule</span>
+              <h3 className="text-lg font-semibold text-dark-blue">Time Allocation</h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Daily Allocation */}
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
+                <label className="block text-sm font-medium text-dark-blue mb-2">
                   Daily (hours)
                 </label>
                 <input
@@ -176,19 +176,19 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
                   value={formData.dailyAllocation}
                   onChange={(e) => handleInputChange('dailyAllocation', e.target.value)}
                   className={`w-full px-4 py-3 rounded-lg border ${
-                    errors.dailyAllocation ? 'border-error' : 'border-border-light'
-                  } bg-background-light text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors`}
+                    errors.dailyAllocation ? 'border-red-500' : 'border-gray-light'
+                  } bg-off-white-light text-dark-blue focus:ring-2 focus:ring-dark-blue focus:border-dark-blue transition-colors`}
                   placeholder="0"
                   disabled={isLoading}
                 />
                 {errors.dailyAllocation && (
-                  <p className="mt-1 text-sm text-error">{errors.dailyAllocation}</p>
+                  <p className="mt-1 text-sm text-red-500">{errors.dailyAllocation}</p>
                 )}
               </div>
 
               {/* Weekly Allocation */}
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
+                <label className="block text-sm font-medium text-dark-blue mb-2">
                   Weekly (hours)
                 </label>
                 <input
@@ -198,19 +198,19 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
                   value={formData.weeklyAllocation}
                   onChange={(e) => handleInputChange('weeklyAllocation', e.target.value)}
                   className={`w-full px-4 py-3 rounded-lg border ${
-                    errors.weeklyAllocation ? 'border-error' : 'border-border-light'
-                  } bg-background-light text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors`}
+                    errors.weeklyAllocation ? 'border-red-500' : 'border-gray-light'
+                  } bg-off-white-light text-dark-blue focus:ring-2 focus:ring-dark-blue focus:border-dark-blue transition-colors`}
                   placeholder="0"
                   disabled={isLoading}
                 />
                 {errors.weeklyAllocation && (
-                  <p className="mt-1 text-sm text-error">{errors.weeklyAllocation}</p>
+                  <p className="mt-1 text-sm text-red-500">{errors.weeklyAllocation}</p>
                 )}
               </div>
 
               {/* Monthly Allocation */}
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
+                <label className="block text-sm font-medium text-dark-blue mb-2">
                   Monthly (hours)
                 </label>
                 <input
@@ -220,19 +220,19 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
                   value={formData.monthlyAllocation}
                   onChange={(e) => handleInputChange('monthlyAllocation', e.target.value)}
                   className={`w-full px-4 py-3 rounded-lg border ${
-                    errors.monthlyAllocation ? 'border-error' : 'border-border-light'
-                  } bg-background-light text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors`}
+                    errors.monthlyAllocation ? 'border-red-500' : 'border-gray-light'
+                  } bg-off-white-light text-dark-blue focus:ring-2 focus:ring-dark-blue focus:border-dark-blue transition-colors`}
                   placeholder="0"
                   disabled={isLoading}
                 />
                 {errors.monthlyAllocation && (
-                  <p className="mt-1 text-sm text-error">{errors.monthlyAllocation}</p>
+                  <p className="mt-1 text-sm text-red-500">{errors.monthlyAllocation}</p>
                 )}
               </div>
 
               {/* Yearly Allocation */}
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
+                <label className="block text-sm font-medium text-dark-blue mb-2">
                   Yearly (hours)
                 </label>
                 <input
@@ -242,13 +242,13 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
                   value={formData.yearlyAllocation}
                   onChange={(e) => handleInputChange('yearlyAllocation', e.target.value)}
                   className={`w-full px-4 py-3 rounded-lg border ${
-                    errors.yearlyAllocation ? 'border-error' : 'border-border-light'
-                  } bg-background-light text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors`}
+                    errors.yearlyAllocation ? 'border-red-500' : 'border-gray-light'
+                  } bg-off-white-light text-dark-blue focus:ring-2 focus:ring-dark-blue focus:border-dark-blue transition-colors`}
                   placeholder="0"
                   disabled={isLoading}
                 />
                 {errors.yearlyAllocation && (
-                  <p className="mt-1 text-sm text-error">{errors.yearlyAllocation}</p>
+                  <p className="mt-1 text-sm text-red-500">{errors.yearlyAllocation}</p>
                 )}
               </div>
             </div>
@@ -258,9 +258,9 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
               (task?.weeklyAllocation || formData.weeklyAllocation) ||
               (task?.monthlyAllocation || formData.monthlyAllocation) ||
               (task?.yearlyAllocation || formData.yearlyAllocation)) && (
-              <div className="bg-primary-50 rounded-lg p-4 mt-4">
-                <h4 className="text-sm font-medium text-primary-700 mb-2">Time Allocation Summary</h4>
-                <div className="text-sm text-primary-600">
+              <div className="bg-off-white rounded-lg p-4 mt-4">
+                <h4 className="text-sm font-medium text-dark-blue mb-2">Time Allocation Summary</h4>
+                <div className="text-sm text-dark-blue">
                   {task?.timeSpent !== undefined && (
                     <p>⏱️ Time spent: {task.timeSpent.toFixed(1)} hours</p>
                   )}
@@ -287,14 +287,14 @@ export function TaskDetailModal({ task, isOpen, onClose, onSave, isLoading }: Ta
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-border-light text-text-secondary hover:bg-surface-light disabled:opacity-50"
+              className="px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-gray-light text-gray hover:bg-off-white disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading || !formData.title.trim()}
-              className="px-6 py-3 rounded-lg font-medium transition-colors duration-200 bg-primary-600 hover:bg-primary-700 text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-3 rounded-lg font-medium transition-colors duration-200 bg-dark-blue hover:bg-dark-blue text-off-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {isLoading && <span className="material-symbols-outlined animate-spin">progress_activity</span>}
               {task ? 'Update Task' : 'Create Task'}

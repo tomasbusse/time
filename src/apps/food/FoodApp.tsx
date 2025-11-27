@@ -82,27 +82,27 @@ export default function FoodApp() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 p-8">
+    <div className="min-h-screen bg-off-white p-8">
       <div className="max-w-6xl mx-auto">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-800 mb-6"
+          className="inline-flex items-center gap-2 text-gray hover:text-dark-blue mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </Link>
 
-        <h1 className="text-3xl font-bold text-neutral-800 mb-8">Food & Shopping</h1>
+        <h1 className="text-3xl font-bold text-dark-blue mb-8">Food & Shopping</h1>
 
         <div className="bg-white rounded-lg shadow-md mb-6">
-          <div className="border-b border-neutral-200">
+          <div className="border-b border-light-gray">
             <div className="flex">
               <button
                 onClick={() => setActiveTab('recipes')}
                 className={`px-6 py-3 font-medium transition-colors ${
                   activeTab === 'recipes'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
+                    ? 'text-custom-brown border-b-2 border-custom-brown'
+                    : 'text-gray hover:text-dark-blue'
                 }`}
               >
                 Recipes
@@ -111,8 +111,8 @@ export default function FoodApp() {
                 onClick={() => setActiveTab('shopping')}
                 className={`px-6 py-3 font-medium transition-colors ${
                   activeTab === 'shopping'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
+                    ? 'text-custom-brown border-b-2 border-custom-brown'
+                    : 'text-gray hover:text-dark-blue'
                 }`}
               >
                 Shopping Lists
@@ -168,33 +168,33 @@ export default function FoodApp() {
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-lg shadow-xl max-w-lg w-full">
               <div className="p-6 border-b">
-                <h2 className="text-xl font-semibold text-neutral-800">{editingRecipeId ? 'Edit Recipe' : 'Add Recipe'}</h2>
+                <h2 className="text-xl font-semibold text-dark-blue">{editingRecipeId ? 'Edit Recipe' : 'Add Recipe'}</h2>
               </div>
               <div className="p-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Name</label>
+                  <label className="block text-sm font-medium text-gray mb-2">Name</label>
                   <input
-                    className="h-10 w-full rounded-md border border-neutral-300 px-3 text-sm"
+                    className="h-10 w-full rounded-md border border-light-gray px-3 text-sm"
                     value={recipeForm.name}
                     onChange={(e) => setRecipeForm({ ...recipeForm, name: e.target.value })}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Instructions (optional)</label>
+                  <label className="block text-sm font-medium text-gray mb-2">Instructions (optional)</label>
                   <textarea
-                    className="w-full min-h-[100px] rounded-md border border-neutral-300 px-3 py-2 text-sm"
+                    className="w-full min-h-[100px] rounded-md border border-light-gray px-3 py-2 text-sm"
                     value={recipeForm.instructions || ''}
                     onChange={(e) => setRecipeForm({ ...recipeForm, instructions: e.target.value })}
                   />
                 </div>
-                <div className="p-3 border border-neutral-200 rounded-lg">
-                  <div className="text-sm font-medium text-neutral-700 mb-2">Ingredients</div>
+                <div className="p-3 border border-light-gray rounded-lg">
+                  <div className="text-sm font-medium text-gray mb-2">Ingredients</div>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-                    <input id="newIngName" placeholder="Ingredient" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
-                    <input id="newIngQty" placeholder="Qty" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
-                    <input id="newIngUnit" placeholder="Unit" className="h-10 rounded-md border border-neutral-300 px-3 text-sm" />
+                    <input id="newIngName" placeholder="Ingredient" className="h-10 rounded-md border border-light-gray px-3 text-sm" />
+                    <input id="newIngQty" placeholder="Qty" className="h-10 rounded-md border border-light-gray px-3 text-sm" />
+                    <input id="newIngUnit" placeholder="Unit" className="h-10 rounded-md border border-light-gray px-3 text-sm" />
                     <button
-                      className="h-10 rounded-md bg-neutral-900 text-white px-4 text-sm"
+                      className="h-10 rounded-md bg-dark-blue text-off-white px-4 text-sm"
                       onClick={() => {
                         const nameEl = document.getElementById('newIngName') as HTMLInputElement
                         const qtyEl = document.getElementById('newIngQty') as HTMLInputElement
@@ -214,7 +214,7 @@ export default function FoodApp() {
                     {recipeForm.ingredients.map((ing, idx) => (
                       <div key={idx} className="grid grid-cols-1 md:grid-cols-5 gap-2 items-center">
                         <input
-                          className="h-9 rounded-md border border-neutral-300 px-3 text-sm"
+                          className="h-9 rounded-md border border-light-gray px-3 text-sm"
                           value={ing.name}
                           onChange={(e) => {
                             const next = [...recipeForm.ingredients]
@@ -223,7 +223,7 @@ export default function FoodApp() {
                           }}
                         />
                         <input
-                          className="h-9 rounded-md border border-neutral-300 px-3 text-sm"
+                          className="h-9 rounded-md border border-light-gray px-3 text-sm"
                           value={ing.quantity || ''}
                           placeholder="Qty"
                           onChange={(e) => {
@@ -233,7 +233,7 @@ export default function FoodApp() {
                           }}
                         />
                         <input
-                          className="h-9 rounded-md border border-neutral-300 px-3 text-sm"
+                          className="h-9 rounded-md border border-light-gray px-3 text-sm"
                           value={ing.unit || ''}
                           placeholder="Unit"
                           onChange={(e) => {
@@ -243,7 +243,7 @@ export default function FoodApp() {
                           }}
                         />
                         <button
-                          className="h-9 rounded-md border border-neutral-300 px-3 text-sm"
+                          className="h-9 rounded-md border border-light-gray px-3 text-sm"
                           onClick={async () => {
                             // If editing existing recipe, persist edited ingredient immediately
                             if (editingRecipeId) {
@@ -254,7 +254,7 @@ export default function FoodApp() {
                           Save Row
                         </button>
                         <button
-                          className="h-9 rounded-md border border-red-300 text-red-700 px-3 text-sm"
+                          className="h-9 rounded-md border border-light-gray text-red-700 px-3 text-sm"
                           onClick={async () => {
                             const next = [...recipeForm.ingredients]
                             next.splice(idx, 1)
@@ -270,7 +270,7 @@ export default function FoodApp() {
                 </div>
               </div>
               <div className="p-6 border-t flex gap-3">
-                <button onClick={() => setShowRecipeModal(false)} className="flex-1 h-10 px-4 rounded-md border border-neutral-300">Cancel</button>
+                <button onClick={() => setShowRecipeModal(false)} className="flex-1 h-10 px-4 rounded-md border border-light-gray">Cancel</button>
                 <button
                   onClick={async () => {
                     if (!workspaceId || !userId || !recipeForm.name) return
@@ -293,7 +293,7 @@ export default function FoodApp() {
                     setEditingRecipeId(null)
                     setRecipeForm({ name: '', instructions: '', ingredients: [] })
                   }}
-                  className="flex-1 h-10 px-4 rounded-md bg-neutral-900 text-white"
+                  className="flex-1 h-10 px-4 rounded-md bg-dark-blue text-off-white"
                 >
                   Save Recipe
                 </button>

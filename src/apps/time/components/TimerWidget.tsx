@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/Button'
 interface TimerWidgetProps {
   allocatedDuration: number
   taskName?: string
+  autoStart?: boolean
+  initialElapsedSeconds?: number
   onPause?: () => void
   onStop?: (elapsedTime: number) => void
   onComplete?: () => void
@@ -13,13 +15,15 @@ interface TimerWidgetProps {
 export default function TimerWidget({
   allocatedDuration,
   taskName,
+  autoStart = false,
+  initialElapsedSeconds = 0,
   onPause,
   onStop,
   onComplete,
 }: TimerWidgetProps) {
-  const [isRunning, setIsRunning] = useState(false)
-  const [elapsedSeconds, setElapsedSeconds] = useState(0)
-  const [sessionStart, setSessionStart] = useState<number | null>(null)
+  const [isRunning, setIsRunning] = useState(autoStart)
+  const [elapsedSeconds, setElapsedSeconds] = useState(initialElapsedSeconds)
+  const [sessionStart, setSessionStart] = useState<number | null>(autoStart ? Date.now() : null)
   const intervalRef = useRef<number | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -35,7 +39,7 @@ export default function TimerWidget({
 
   useEffect(() => {
     if (isRunning) {
-      intervalRef.current = setInterval(() => {
+      intervalRef.current = window.setInterval(() => {
         setElapsedSeconds((prev) => prev + 1)
       }, 1000)
     } else {
@@ -67,18 +71,22 @@ export default function TimerWidget({
         })
       }
     }
-    
+
     if (audioRef.current) {
-      audioRef.current.play().catch(() => {})
+      audioRef.current.play().catch(() => { })
     }
   }
 
   const handlePlayPause = () => {
-    if (!isRunning && !sessionStart) {
-      setSessionStart(Date.now())
-    }
-    setIsRunning(!isRunning)
-    if (isRunning) {
+    if (!isRunning) {
+      // Start the timer
+      if (!sessionStart) {
+        setSessionStart(Date.now())
+      }
+      setIsRunning(true)
+    } else {
+      // Pause the timer
+      setIsRunning(false)
       onPause?.()
     }
   }
@@ -95,31 +103,31 @@ export default function TimerWidget({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-8">
+    <div className="bg-white rounded-lg shadow-md p-6 pb-10">
       <div className="flex flex-col items-center">
         {taskName && (
-          <h3 className="text-xl font-semibold text-neutral-800 mb-6">{taskName}</h3>
+          <h3 className="text-xl font-semibold text-dark-blue mb-6 text-center break-words w-full">{taskName}</h3>
         )}
 
-        <div className="relative w-64 h-64 mb-8">
+        <div className="relative w-56 h-56 mb-8">
           <svg className="w-full h-full transform -rotate-90">
             <circle
-              cx="128"
-              cy="128"
-              r="120"
+              cx="112"
+              cy="112"
+              r="104"
               stroke="#E5E7EB"
               strokeWidth="8"
               fill="none"
             />
             <circle
-              cx="128"
-              cy="128"
-              r="120"
+              cx="112"
+              cy="112"
+              r="104"
               stroke="#1D4ED8"
               strokeWidth="8"
               fill="none"
-              strokeDasharray={`${2 * Math.PI * 120}`}
-              strokeDashoffset={`${2 * Math.PI * 120 * (1 - progress / 100)}`}
+              strokeDasharray={`${2 * Math.PI * 104}`}
+              strokeDashoffset={`${2 * Math.PI * 104 * (1 - progress / 100)}`}
               strokeLinecap="round"
               className="transition-all duration-1000"
             />
@@ -128,37 +136,37 @@ export default function TimerWidget({
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Clock className="w-5 h-5 text-blue-600" />
-                <span className="text-sm text-neutral-600">Elapsed</span>
+                <Clock className="w-4 h-4 text-custom-brown" />
+                <span className="text-xs text-gray">Elapsed</span>
               </div>
-              <div className="text-4xl font-bold text-neutral-800 mb-4">
+              <div className="text-3xl font-bold text-dark-blue mb-3">
                 {formatTime(elapsedSeconds)}
               </div>
-              
-              <div className="text-sm text-neutral-500">Remaining</div>
-              <div className="text-2xl font-semibold text-blue-600">
+
+              <div className="text-xs text-gray">Remaining</div>
+              <div className="text-xl font-semibold text-custom-brown">
                 {formatTime(remainingSeconds)}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 w-full mb-6">
           <Button
             onClick={handlePlayPause}
             variant="default"
-            size="lg"
-            className="w-32"
+            size="default"
+            className="flex-1 px-2 h-10"
           >
             {isRunning ? (
               <>
-                <Pause className="w-5 h-5 mr-2" />
-                Pause
+                <Pause className="w-4 h-4 mr-1.5" />
+                <span className="text-sm font-medium">Pause</span>
               </>
             ) : (
               <>
-                <Play className="w-5 h-5 mr-2" />
-                Start
+                <Play className="w-4 h-4 mr-1.5" />
+                <span className="text-sm font-medium">Start</span>
               </>
             )}
           </Button>
@@ -168,34 +176,36 @@ export default function TimerWidget({
               <Button
                 onClick={handleStop}
                 variant="secondary"
-                size="lg"
+                size="default"
+                className="flex-1 px-2 h-10"
               >
-                <Square className="w-5 h-5 mr-2" />
-                Log Time
+                <Square className="w-4 h-4 mr-1.5" />
+                <span className="text-sm font-medium">Log</span>
               </Button>
 
               <Button
                 onClick={handleReset}
                 variant="outline"
-                size="lg"
+                size="default"
+                className="flex-1 px-2 h-10"
               >
-                Reset
+                <span className="text-sm font-medium">Reset</span>
               </Button>
             </>
           )}
         </div>
 
-        {elapsedSeconds > 0 && (
-          <div className="mt-6 text-center">
-            <p className="text-sm text-neutral-500">
-              Started {sessionStart ? new Date(sessionStart).toLocaleTimeString() : ''}
+        {sessionStart && (
+          <div className="text-center mt-6">
+            <p className="text-xs text-gray">
+              Started {new Date(sessionStart).toLocaleTimeString()}
             </p>
           </div>
         )}
       </div>
 
       <audio ref={audioRef} preload="auto">
-        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZizcIGWq77+aXTQwNT6bn77RgGgU7k9n1xXEkBSh+zPDakEILGGS56+KJNQYVYrjr56tVFAg+l9v0wm4hBSh9zO/aiz0IG2i56+aXTQwNT6Xm7rVgGgU7lNr1xXEjBCh9y+/ZjDwIGWW76+iJNQYVYbfl5qpUEwg+l9v0wm4hBSh9zO/Zij0IG2m56+aXTQwNTqXm7rVgGgU7ld11xXEjBCh9y+/ZjDwIGWW76+iJNQYVYrfl5axUEwg9ltn0wm4hBSh9zO/Zij0IG2m56+aXTAwLTqXm7rVgGgU7ld11xXEjBCh9y+/ZjTsHF2S76+mJNQYVYrfl5axUEwc9ltn0wm4gBCh9zO/Zij0HG2m56+aXTAwKTqXm7rVgGgQ7ld11xXEjBCh9y+/ZjTsHF2S76+mJNQYVYrfl5axUEwc9ltn0wm4gBCd9zO/Zij0HG2m56+aWTAwKTqXm7rVgGgQ7ld11xXEjAyh9y+/ZjTsHF2S76+mJNQYVYrfl5axUEwc9ltn0wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7rVhGgQ7ld11xXAiAyh9y+/ZjTsHF2S76+mJNQYVYrfl5KxUEwc9ltn0wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7rVhGgQ7ld11xXAiAyd+y+/ZjTsHF2O76+mJNQYVYrfl5KxUEwc9ltn0wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xXAiAyd+y+/ZjTsHF2O76+mJNQYVYrfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xXAiAyd+y+/ZjTsHF2O76+mJNQYVYbfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xXAiAyd+y+/ZjTsHF2O76+mJNQYVYbfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xXAiAyd+y+/ZjTsHF2O76+mJNQYVYbfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xHAiAyd+y+/ZjTsHF2O76+mJNQYVYbfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xHAiAyd+y+/ZjTsHF2O76+mJNQYVYbfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7" type="audio/wav" />
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZizcIGWq77+aXTQwNT6bn77RgGgU7k9n1xXEkBSh+zPDakEILGGS56+KJNQYVYrjr56tVFAg+l9v0wm4hBSh9zO/aiz0IG2i56+aXTQwNT6Xm7rVgGgU7lNr1xXEjBCh9y+/ZjDwIGWW76+iJNQYVYbfl5qpUEwg+l9v0wm4hBSh9zO/Zij0IG2m56+aXTQwNTqXm7rVgGgU7ld11xXEjBCh9y+/ZjDwIGWW76+iJNQYVYrfl5axUEwg9ltn0wm4hBSh9zO/Zij0IG2m56+aXTAwLTqXm7rVgGgU7ld11xXEjBCh9y+/ZjTsHF2S76+mJNQYVYrfl5axUEwc9ltn0wm4gBCh9zO/Zij0HG2m56+aXTAwKTqXm7rVgGgQ7ld11xXEjBCh9y+/ZjTsHF2S76+mJNQYVYrfl5axUEwc9ltn0wm4gBCd9zO/Zij0HG2m56+aWTAwKTqXm7rVgGgQ7ld11xXEjAyh9y+/ZjTsHF2S76+mJNQYVYrfl5axUEwc9ltn0wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7rVhGgQ7ld11xXAiAyh9y+/ZjTsHF2S76+mJNQYVYrfl5KxUEwc9ltn0wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7rVhGgQ7ld11xXAiAyd+y+/ZjTsHF2O76+mJNQYVYrfl5KxUEwc9ltn0wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xXAiAyd+y+/ZjTsHF2O76+mJNQYVYrfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xXAiAyd+y+/ZjTsHF2O76+mJNQYVYbfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xXAiAyd+y+/ZjTsHF2O76+mJNQYVYbfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xHAiAyd+y+/ZjTsHF2O76+mJNQYVYbfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7ld11xHAiAyd+y+/ZjTsHF2O76+mJNQYVYbfl5KxUEwc9ld30wm4gBCd+zO/Zij0HG2m56+aWTAwKTqbm7bVhGgQ7" type="audio/wav" />
       </audio>
     </div>
   )

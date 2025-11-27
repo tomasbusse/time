@@ -27,6 +27,7 @@ Card Background: #FFFFFF (white)
 Text Primary: #292524 (neutral-800)
 Text Secondary: #78716C (neutral-600)
 Border: #E7E5E4 (neutral-200)
+Active Timer Background: #B6B2B5 (gray)
 
 Module Colors:
 - Ideas: #D1FAE5 (green-100) with #047857 (green-700)

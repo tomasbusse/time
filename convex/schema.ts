@@ -6,6 +6,7 @@ export default defineSchema({
     email: v.string(),
     name: v.string(),
     isAdmin: v.boolean(),
+    role: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_email", ["email"]),
 
@@ -13,7 +14,7 @@ export default defineSchema({
     name: v.string(),
     ownerId: v.id("users"),
     createdAt: v.number(),
-    
+
     activeTimerTaskId: v.optional(v.id("tasks")),
     activeTimerStart: v.optional(v.number()),
   }).index("by_owner", ["ownerId"]),
@@ -235,6 +236,7 @@ export default defineSchema({
     billingCycle: v.union(v.literal("monthly"), v.literal("yearly")),
     nextBillingDate: v.string(),
     isActive: v.boolean(),
+    type: v.optional(v.union(v.literal("subscription"), v.literal("bill"), v.literal("rent"), v.literal("utility"), v.literal("insurance"), v.literal("other"))),
     classification: v.optional(v.union(v.literal("business"), v.literal("private"))),
     category: v.optional(v.union(
       v.literal("ai"),
@@ -290,8 +292,10 @@ export default defineSchema({
     tags: v.optional(v.array(v.string())),
     position: v.optional(v.number()),
     isArchived: v.optional(v.boolean()),
+    isRecurring: v.optional(v.boolean()),
+    recurrenceType: v.optional(v.string()),
     estimatedHours: v.optional(v.number()),
-    
+
     // Time allocation fields
     dailyAllocation: v.optional(v.number()),
     weeklyAllocation: v.optional(v.number()),
@@ -299,7 +303,7 @@ export default defineSchema({
     yearlyAllocation: v.optional(v.number()),
     timeSpent: v.optional(v.number()),
     currentSessionStart: v.optional(v.number()),
-    
+
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -370,6 +374,63 @@ export default defineSchema({
     .index("by_user", ["userId"])
     .index("by_google_event", ["googleEventId"]),
 
+  // Customers table for invoicing
+  customers: defineTable({
+    workspaceId: v.id("workspaces"),
+    name: v.string(),
+
+    // German Fields
+    companyName: v.optional(v.string()),
+    salutation: v.optional(v.string()),
+    title: v.optional(v.string()),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
+    supplement1: v.optional(v.string()),
+    supplement2: v.optional(v.string()),
+    street: v.optional(v.string()),
+    zipCode: v.optional(v.string()),
+    city: v.optional(v.string()),
+    state: v.optional(v.string()),
+    country: v.optional(v.string()),
+
+    // PO Box
+    poBox: v.optional(v.string()),
+    poBoxZipCode: v.optional(v.string()),
+    poBoxCity: v.optional(v.string()),
+    poBoxState: v.optional(v.string()),
+    poBoxCountry: v.optional(v.string()),
+
+    // Legacy/Compat
+    contactPerson: v.optional(v.string()),
+    email: v.optional(v.string()),
+    emails: v.optional(v.array(v.string())),
+    addressLine1: v.optional(v.string()),
+    addressLine2: v.optional(v.string()),
+
+    vatId: v.optional(v.string()),
+    taxNumber: v.optional(v.string()),
+    customerNumber: v.optional(v.string()),
+    phone1: v.optional(v.string()),
+    phone2: v.optional(v.string()),
+    paymentTermsDays: v.number(),
+    notes: v.optional(v.string()),
+
+    // Pricing & VAT
+    defaultHourlyRate: v.optional(v.number()),
+    isVatExempt: v.optional(v.boolean()),
+    serviceDescriptions: v.optional(v.array(v.string())),
+
+    // Import tracking
+    importBatchId: v.optional(v.string()),
+
+    // Active status
+    isActive: v.optional(v.boolean()),
+
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"]),
+
   // Asset valuations - now tied to account system for better tracking
   assetValuations: defineTable({
     workspaceId: v.id("workspaces"),
@@ -428,4 +489,277 @@ export default defineSchema({
     .index("by_category", ["accountCategory"])
     .index("by_type_date", ["accountType", "valuationDate"])
     .index("by_category_date", ["accountCategory", "valuationDate"]),
+
+  // Simple assets table
+  simpleAssets: defineTable({
+    workspaceId: v.id("workspaces"),
+    name: v.string(),
+    type: v.string(),
+    currentValue: v.number(),
+    purchaseValue: v.optional(v.number()),
+    purchaseDate: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_workspace", ["workspaceId"]),
+
+  // Simple liabilities table
+  simpleLiabilities: defineTable({
+    workspaceId: v.id("workspaces"),
+    name: v.string(),
+    type: v.string(),
+    currentBalance: v.number(),
+    originalAmount: v.optional(v.number()),
+    interestRate: v.optional(v.number()),
+    monthlyPayment: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_workspace", ["workspaceId"]),
+
+  // Simple monthly valuations
+  simpleMonthlyValuations: defineTable({
+    workspaceId: v.id("workspaces"),
+    itemType: v.union(v.literal("asset"), v.literal("liability")),
+    itemId: v.string(),
+    year: v.number(),
+    month: v.number(),
+    value: v.number(),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_item", ["itemId"])
+    .index("by_period", ["year", "month"]),
+
+  // Simple equity accounts
+  simpleEquityAccounts: defineTable({
+    workspaceId: v.id("workspaces"),
+    name: v.string(),
+    type: v.string(),
+    description: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_workspace", ["workspaceId"]),
+
+  // Simple equity valuations
+  simpleEquityValuations: defineTable({
+    workspaceId: v.id("workspaces"),
+    equityAccountId: v.id("simpleEquityAccounts"),
+    year: v.number(),
+    month: v.number(),
+    amount: v.number(),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_equity_account", ["equityAccountId"])
+    .index("by_period", ["year", "month"]),
+
+  // Simple asset monthly balances
+  simpleAssetMonthlyBalances: defineTable({
+    workspaceId: v.id("workspaces"),
+    assetId: v.id("simpleAssets"),
+    month: v.string(),
+    balance: v.number(),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    createdBy: v.id("users"),
+  })
+    .index("by_workspace_asset", ["workspaceId", "assetId"])
+    .index("by_workspace_month", ["workspaceId", "month"]),
+
+  // Invoices table
+  invoices: defineTable({
+    workspaceId: v.id("workspaces"),
+    customerId: v.id("customers"),
+    invoiceNumber: v.string(),
+    date: v.number(),
+    dueDate: v.number(),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("sent"),
+      v.literal("paid"),
+      v.literal("cancelled"),
+      v.literal("archived")
+    ),
+    subtotal: v.number(),
+    taxTotal: v.number(),
+    total: v.number(),
+    notes: v.optional(v.string()),
+    paymentTerms: v.optional(v.string()),
+    relatedCalendarEvents: v.optional(v.array(v.string())),
+    sentAt: v.optional(v.number()),
+    paidAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_customer", ["customerId"])
+    .index("by_number", ["invoiceNumber"])
+    .index("by_status", ["status"]),
+
+  // Invoice items table
+  invoiceItems: defineTable({
+    invoiceId: v.id("invoices"),
+    productId: v.optional(v.id("products")),
+    description: v.string(),
+    quantity: v.number(),
+    unit: v.string(),
+    unitPrice: v.number(),
+    taxRate: v.number(),
+    total: v.number(),
+    serviceDate: v.optional(v.string()),
+    startTime: v.optional(v.string()),
+    endTime: v.optional(v.string()),
+    calendarEventId: v.optional(v.string()),
+  })
+    .index("by_invoice", ["invoiceId"]),
+
+  // Invoice audit log
+  invoiceAuditLog: defineTable({
+    workspaceId: v.id("workspaces"),
+    invoiceId: v.id("invoices"),
+    userId: v.id("users"),
+    action: v.string(),
+    timestamp: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_invoice", ["invoiceId"]),
+
+  // Company settings
+  companySettings: defineTable({
+    workspaceId: v.id("workspaces"),
+    companyName: v.string(),
+    ownerName: v.optional(v.string()),
+    addressLine1: v.optional(v.string()),
+    addressLine2: v.optional(v.string()),
+    zipCode: v.optional(v.string()),
+    city: v.optional(v.string()),
+    country: v.optional(v.string()),
+    vatId: v.optional(v.string()),
+    taxNumber: v.optional(v.string()),
+    bankName: v.optional(v.string()),
+    iban: v.optional(v.string()),
+    bic: v.optional(v.string()),
+    invoicePrefix: v.optional(v.string()),
+    nextInvoiceNumber: v.optional(v.number()),
+    defaultPaymentTermsDays: v.optional(v.number()),
+    defaultTaxRate: v.optional(v.number()),
+    defaultHourlyRate: v.optional(v.number()),
+    email: v.optional(v.string()),
+    phone1: v.optional(v.string()),
+    phone2: v.optional(v.string()),
+    website: v.optional(v.string()),
+    logoStorageId: v.optional(v.string()),
+    emailSubjectTemplate: v.optional(v.string()),
+    emailBodyTemplate: v.optional(v.string()),
+    paymentInstructionTemplate: v.optional(v.string()),
+    taxExemptionEnabled: v.optional(v.boolean()),
+    taxExemptionLegalBasis: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"]),
+
+  // Products table
+  products: defineTable({
+    workspaceId: v.id("workspaces"),
+    name: v.string(),
+    description: v.optional(v.string()),
+    unitPrice: v.number(),
+    unit: v.string(),
+    taxRate: v.number(),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"]),
+
+  // Lessons table (for invoicing from calendar)
+  lessons: defineTable({
+    workspaceId: v.id("workspaces"),
+    customerId: v.id("customers"),
+    title: v.string(),
+    start: v.number(),
+    end: v.number(),
+    rate: v.optional(v.number()),
+    isBillable: v.optional(v.boolean()),
+    invoiceId: v.optional(v.id("invoices")),
+    googleEventId: v.optional(v.string()),
+    type: v.optional(v.string()),
+    status: v.optional(v.string()),
+    teacherId: v.optional(v.string()),
+    cancelledAt: v.optional(v.number()),
+    cancelledBy: v.optional(v.string()),
+    groupId: v.optional(v.string()),
+    meetingLink: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_customer", ["customerId"])
+    .index("by_invoice", ["invoiceId"]),
+
+  // ========== BUDGET TABLES (Restored and Verified) ==========
+  budgetIncome: defineTable({
+    workspaceId: v.id("workspaces"),
+    userId: v.id("users"),
+    year: v.number(),
+    month: v.number(),
+    amount: v.number(),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace_period", ["workspaceId", "year", "month"])
+    .index("by_workspace", ["workspaceId"]),
+
+  budgetOutgoings: defineTable({
+    workspaceId: v.id("workspaces"),
+    userId: v.id("users"),
+    name: v.string(),
+    category: v.string(),
+    amount: v.number(),
+    isFixed: v.boolean(),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"]),
+
+  budgetMonthlyOutgoings: defineTable({
+    workspaceId: v.id("workspaces"),
+    outgoingId: v.id("budgetOutgoings"),
+    year: v.number(),
+    month: v.number(),
+    amount: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace_period", ["workspaceId", "year", "month"])
+    .index("by_outgoing_period", ["outgoingId", "year", "month"]),
+
+  // Customer Imports table
+  customerImports: defineTable({
+    workspaceId: v.id("workspaces"),
+    batchId: v.string(),
+    fileName: v.string(),
+    customerCount: v.number(),
+    importedBy: v.id("users"),
+    importedAt: v.number(),
+    status: v.string(),
+    rolledBackAt: v.optional(v.number()),
+    rolledBackBy: v.optional(v.id("users")),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_batch_id", ["batchId"]),
+
+  // Auth tokens table
+  userTokens: defineTable({
+    userId: v.id("users"),
+    accessToken: v.string(),
+    refreshToken: v.optional(v.string()),
+    expiresAt: v.optional(v.number()),
+    createdAt: v.optional(v.number()),
+  })
+    .index("by_userId", ["userId"]),
 });

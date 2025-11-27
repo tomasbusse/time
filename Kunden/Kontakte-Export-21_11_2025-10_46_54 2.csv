@@ -1,0 +1,718 @@
+Kundennummer;Anrede;Titel;Vorname;Name;Geburtsdatum;Firma;Straße/Hausnummer;Postleitzahl;Ort;Land;Postfach;Postfach-Postleitzahl;Postfach-Ort;Postfach-Land;"Telefon 1";"Telefon 2";Fax;Mobiltelefon;E-Mail;Internet;"Info 1";"Info 2";"Steuer Nr.";"Umsatzsteuer-ID Nr.";Kontoinhaber;Bankname;Kontonummer;Bankleitzahl;BIC;IBAN;"Zusatz 1";"Zusatz 2";Notiz;Gruppe;Preisgruppe;"Kontakt seit";SEPA-Lastschriftverfahren;"Eingangsdatum des Mandates";Mandatsreferenz;"Skonto (%)";"Skonto (Tage)";"Rabatt (%/Betrag)";"Zahlungsziel (Tage)";Umsatzsteueroption
+10001;Frau;;Rixa;Schmidt;;"BIOLAC GmbH & Co. KG";"Am Bahnhof 1";31097;Harbarnsen;Deutschland;;;;;"+49 5060 609-23";;"+49 5060 609-50";;rixa.schmidt@arlafoods.com;www.biolac.de;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10002;Frau;;Rebecca;Spieß-Schudrowitz;;"BLUME ELEKTRONIK DISTRIBUTION GMBH";"TECCENTER 1";31162;"Bad Salzdetfurth";Deutschland;;;;;"+49 50 63 27 12-17";;"(0 50 63) 27 12-12";;rodemann@blume-elektronik.de;WWW.BLUME-ELEKTRONIK.DE;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;10002;;7;;;Umsatzsteuerpflichtig
+10003;Frau;;"Teresa Romualda ";Kaatz;;;"Bettina von Arnim Weg 1";30855;Hannover;Deutschland;;;;;;;;;romakaatz@beleg-hebamme.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10004;Frau;;"Anita ";Kröger;;;"Gehägestraße 20N";30655;Hannover;Deutschland;;;;;;;;;anita.kroeger@gmx.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10005;Herrn;;"Erich ";Marks;;;"Schlüsselblümenweg 1";30880;Laatzen;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10006;Herrn;;"Ralf ";Schmitt;;"NewSource GmbH";"Büttnerstraße 21";30165;Hannover;Deutschland;;;;;"+49 (0) 511 - 33630 - 2964";;"+49 (0) 511 - 33630 - 2625";;Ralf.Schmitt@NewSource.de;www.newsource.de;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10007;Frau;;"Diana ";Siems;;"Siems GmbH & Co. KG";"Zur Bergermühle 3";31228;Peine;Deutschland;;;;;"+49 5171-25255 ";"+49 5171-583310";;;diana_siems@adh-fishing.com;www.adh-fishing.com;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10008;Herrn;;"Martin Kleemann";;;"Artist Station Records";"Osterstraße 36";30159;Hannover;Deutschland;;;;;"+49 (0)511 360697-14";;;;martin@artiststation.de;www.artiststation-records.de;;;;;;;;;;;;;;"Text work";;#;;#;10008;;7;;;Umsatzsteuerpflichtig
+10009;Frau;;Andrea;Manthey;;"facts and fiction GmbH";"Anna-Schneider-Steig 2";50678;"Reinhauhafen, Köln";Deutschland;;;;;"+49 30 789 59 38 95";"+49 30 789 59 38 93";;;james@englisch-lehrer.com;;;;;;;;;;;;;;;"Text work";;#;;#;10009;;7;;;Umsatzsteuerpflichtig
+10010;Firma;;;;;"wesentlich, visuelle kommunikation";"Lothringerstraße 61";52070;Aachen;Deutschland;;;;;"+49 241 559 729 6";;;;gabi@wesentlich.com;;;;;;;;;;;;"partnerschaft gartz.petermann";;;"Text work";;#;;#;10010;;7;;;Umsatzsteuerpflichtig
+10011;Frau;;"Elisabeth ";Klapetz;;"Zieher Dienstleistungen GmbH";"Kurfürstendamm 30";10719;Berlin;Deutschland;;;;;"+49 30 886 200 213";;;;patricia.thesmann@zieher.de;;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10012;Herrn;;"Adam ";Botor;;"BotorPlus GmbH - Steuerberatungsgesellschaft";"Hinüberstraße 4";30175;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10013;Herrn;;;;;"braun teleCom GmbH";"Merkurstraße 3c";30419;Hannover;Deutschland;;;;;"+49 511 75 70 8763";;;;j.strube@brauntelecom.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10014;Frau;;"Arleta ";Dobiecki;;;"Verdener Hof 4";30419;Hannover;Deutschland;;;;;;;;;jacek.dobiecki@googlemail.com;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10015;Frau;;Sylvia;Eschweiler;;;"Geibelstr. 99";30173;Hannover;Deutschland;;;;;;;;;dr.eschweiler@t-online.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;10015;;7;;;Umsatzsteuerpflichtig
+10016;;;;;;"Firinit GmbH";"Niedersachsenstr. 23";30853;Langenhagen;Deutschland;;;;;"0511 72 62 98 15";;;;heike.kunz@firinit.de;www.firinit.de;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;10016;;7;;;Umsatzsteuerpflichtig
+10017;Frau;;"Svenja ";Flitta;;"GETEC Energie AG";"Expo Plaza 10";30539;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10018;Frau;;"Isabel ";"von Ploetz";;"Hannover Marketing & Tourismus GmbH";"Vahrenwalder Straße 7";30165;Hannover;Deutschland;;;;;"+49 511 168 349 20";;;;vonPloetz@hannover-marketing.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10019;Frau;;"Tina ";Heimberg;;;"Auf dem Emmerberge 26";30169;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10020;Frau;;"Sylvia ";Liemer;;"ILFA Feinstleitertechnik GmbH";"Lohweg 3";30559;Hannover;Deutschland;;;;;"+49 511 959 5520";;;;s.liemer@ilfa.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10021;Frau;;"Britta ";Karanjuloff;;;"In der Flagge 5 ";"30167 ";Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10022;Herrn;;"Georg ";Kornau;;"Kornau Engineering";"Kieselgurweg 22";30455;Hannover;Deutschland;;;;;;;;01703311595;engkorn@t-online.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;10022;;7;;;Umsatzsteuerpflichtig
+10023;Herrn;;"Alfried ";Kostrzewa;;;"Nienburger Straße 28";31535;Neustadt;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10024;Herrn;;"Max-Michael ";Krumpeter;;;"Niedernfeldstr. 20";"30890 ";Barsinghausen;Deutschland;;;;;;;;;maxkrumpeter@yahoo.de;;;;;;;;;;;;;;;;;#;;#;10024;;7;;;Umsatzsteuerpflichtig
+10025;Herrn;;"Heiko ";Paskowski;;"TOI TOI & DIXI Sanitärsysteme GmbH";"Lehmkuhlenweg 37";"31224 ";Peine;Deutschland;;;;;"05171 50 85 33";;;;kristina.cox@dixi-wc.de;;;;;;;;;;;;;;;;;#;;#;10025;;7;;;Umsatzsteuerpflichtig
+10026;Frau;;"Veronika ";Rogozyanov;;;"Fundstraße 27";30161;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10027;;;"Peter ";Schmitt;;"IS Verwaltung Ltd.";"Weißer Kamp 5";30966;Hemmingen;Deutschland;;;;;"+49 511 353 19626";;;;p.schmitt@ts-tribuenenservice.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10028;Frau;;Janina;Sievers;;;"Nelkenstraße 17";30167;Hannover;Deutschland;;;;;;;;;janinasievers@hotmail.com;;;;;;;;;;;;;;;;;#;;#;10028;;7;;;Umsatzsteuerpflichtig
+10029;;;;;;"Sonepar PIM solutions GmbH";"Industrieweg 26";30179;Hannover;Deutschland;;;;;"+49 511 646 88 103";;;;assistenz.sps@sonepar.de;;;;;;;;;;;;;;;;;#;;#;10029;;7;;;Umsatzsteuerpflichtig
+10030;Herrn;;"Bert ";Körting;;"Sonepar PIM solutions GmbH";"Industrieweg 26";30179;Hannover;Deutschland;;;;;"+49 5108 912623";;;;bert.koerting@upk.de;;;;;;;;;;;;;;;;;#;;#;10030;;7;;;Umsatzsteuerpflichtig
+10031;Herrn;;"Ingo ";Vetter;;;"Rosenweg 4";30880;Laatzen;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10032;Herrn;;"Jörg ";"Wede ";;SEC;"Voigtländer Weg 11";31319;Sehnde/Rethmar;Deutschland;;;;;;;;;j.wede@secservice.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10033;Frau;;Tamara;Steinhäuser;;"facts and fiction GmbH";"Anna-Schneider-Steig 2";"50678 ";Köln;Deutschland;;;;;"+49 221 95 15 30 0";;;;tamara.steinhaeuser@factsfiction.de;;;;;;;;;;;;;Reinhauhafen;;"Englischunterricht Berlin";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10034;Herrn;;"Helge ";Jürgens;;;"Möckernstraße 66";"10965 ";Berlin;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Englischunterricht Berlin";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10035;Herrn;;"Lars ";Kotte;;;"Bundesallee 70";"12161 ";Berlin;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Englischunterricht Berlin";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10036;Herrn;;"Christian ";Patze;;;"Lissabonallee 12";14163;Berlin;Deutschland;;;;;;;;;christianpatze@freenet.de;;;;;;;;;;;;;;;"Englischunterricht Berlin";;#;;#;10036;;7;;;Umsatzsteuerpflichtig
+10037;Frau;;"Paulina ";Smola;;"Smola GmbH";"Kleine Eiswerderstraße 15";13599;Berlin;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Englischunterricht Berlin";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10038;Herrn;;"Peter ";Zimmermann;;"eye concept OHG";"Falkenhagener Str. 1";"14612 ";Falkensee;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Englischunterricht Berlin";;#;;#;10038;;7;;;Umsatzsteuerpflichtig
+10039;;;;;;"NORD Holding Unternehmensbeteiligungsgesellschaft mbH";"Walderseestraße 23";30177;Hannover;Deutschland;;;;;"+49 511 270 41 530";"+49 511 270 41 512";;;info@nordholding.de;;;;;;;;;;;;"Villa Venture";;;;;#;;#;10039;;7;;;Umsatzsteuerpflichtig
+10040;Frau;;"Michaela ";"Babion M. A";;"Technische Informationsbibliothek und Universitätsbibliothek Hannover (TIB/UB) ";"Welfengarten 1b";30167;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10041;Frau;;Lydia;Pyka-Riches;;"Wertgarantie Management GmbH";"Breite Straße 6-8";"30159 ";Hannover;Deutschland;;;;;"+49 511 71 280 152";;;;L.Pyka-Riches@wertgarantie.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10042;;;;;;"CALLIDUS executive GmbH";"Friedrich-Ebert-Anlage 49";60308;"Frankfurt am Main";Deutschland;;;;;;;;;;;;;;;;;;;;;MesseTurm;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10043;Herrn;;"Ronny ";Jäger;;"GL Spezialverglasung GmbH";"Immelsweg 21";"25469 ";Halstenbek;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10044;Herrn;Dr.;"Detlef ";Niederhut;;;"Westfälische Straße 82";10709;Berlin;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10045;Herrn;;"Konstantin ";Silov;;;"Schlüterstraße 11";38640;Goslar;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10046;Herrn;;Gerd;Telsemeyer;;"facts and fiction GmbH";"Anna-Schneider-Steig 2";50678;Köln;Deutschland;;;;;"0 221 95 15 30 54";;;;Victoria.Brabeck@factsfiction.de;http://www.factsfiction.de/;;;;;;;;;;;;;;"Text work";;#;;#;10046;;7;;;Umsatzsteuerpflichtig
+10047;Frau;;"Verena ";Münz;;"Blossom Management GmbH";"Greifswalder Str. 36/37";10405;Berlin;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10048;;;;;;"Avia Consult Flugbetriebs GmbH";"Promenadenweg 8";2522;Oberwaltersdorf;Österreich;;;;;;;;;;;;;;;;;;;;;Fontana-Park;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10049;Herrn;Dr;"Jens ";Soentgen;;"Universität Augsburg";"Universitätsstraße Augsburg 1a";"86159 ";"Augsburg ";Deutschland;;;;;;;;;soentgen@wzu.uni-augsburg.de;;;;;;;;;;;;"Wissenschaftszentrum Umwelt";;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10050;Herrn;;"Elke ";Raubenheimer-Rümenapf;;"rundum kommunikation und design";"Sigmaringer Straße 27";10713;Berlin;Deutschland;;;;;"+49 30 700 35 999";;;"+49173 941 83 79";elke.raubenheimer@rundum-design.de;www.rundum-design.de;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10051;;;;;;"Hoffmann und Partner Werbeagentur GmbH";"Alter Markt 13/14";39104;Magdeburg;Deutschland;;;;;"+49 391 289 231 24";"+49 391 289 231 0";"+49 391 289 231 20";;a.borchert@hup-md.de;http://www.hoffmannundpartner.de/;;;;;;;;;;;;;;"Text work";;#;;#;10051;;7;;;Umsatzsteuerpflichtig
+10052;Herrn;;Christian;Müller;;;"Grazer Straße 29";30519;Hannover;Deutschland;;;;;"+49 172 5344883";;;;christian.mueller79@yahoo.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10053;Frau;;Meike;Steifer;;"Kohlhaas Messebau GmbH & Co. KG";"Industriestr. 13";82110;Germering;Deutschland;;;;;"+49 511450 897 12";;;;m.steifer@kohlhaas-messebau.de;http://www.kohlhaas-messebau.de/;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10054;Frau;;Martina;Sturm;;;"Kreuzacker 6";31177;Hannover;Deutschland;;;;;"+49 511 67 669 8278";;;;m.sturm@biallas-cc.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10055;Herrn;;Michael;Bulgrin;;;"Am Graben 19";15732;Eidewalde;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10056;Herrn;;Benjamin;" Berndt";;"FUELGUARD Rohstoffmanagement GmbH";"Ostendstr. 1";D-60314;" Frankfurt";Deutschland;;;;;"+49 (0) 69 / 175362 121";;;;benjamin.berndt@fuelguard.de;www.fuelguard.de;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10057;Frau;Dr.;Anke;Rosenthal;;"Dr. med. Anke Rosenthal";"Bismarckstraße 5";"10625 Berlin";;Deutschland;;;;;"+49 30 383 77 07 0";;;;anke@dr-rosenthal.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10058;Herrn;;Martin;Schuberth;;;"Stephanusstraße 9";30827;Garbsen;Deutschland;;;;;;;;"+49 (0) 1789719790";mschub12@hs-mittweida.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10059;Frau;;"Yvonne ";Waldstein;;"Greller-Schweickhardt GmbH";"Wiedner Hauptstrasse 40/1/8";1040;Wien;Österreich;;;;;"+43-(0)1-585 17 60 ";;;;wien@schweickhardt.at;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10060;Frau;;Chokey;Dunchu;;;"Alte Landstraße 23";8868;Oberurnen;Schweiz;;;;;;;;;c.dunchu@googlemail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10061;;Mr;Roberto;Teresi;;"Treré S.r.L. Innovation";"Via Modena 18";46041;"Asola (MN)";Italien;;;;;;;;;roberto.teresi@trereinnovation.it;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10062;Frau;;Marion;Terrell;;"Professor DBIS - Fachbereich 12";"Robert-Mayer-Str. 10";60325;"Fraunkfurt am main";Deutschland;;;;;;;;;tolle@dbis.cs.uni-frankfurt.de;;;;;;;;;;;;"Goethe Universität Frankfurt";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10063;Frau;;Sabine;Löser;;"Leibniz Universität Hannover";"Wilhelm-Busch-Str. 22";"30167 ";Hannover;Deutschland;;;;;;;;;Sabine.Loeser@zuv.uni-hannover.de;;;;;;;;;;;;"Referent der Graduiertenakademie";"Leibniz Universität Hannover";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10064;Herrn;;Thorsten;"Naab M.A.";;IJK;"Expo Plaza 12";30539;Hannover;Deutschland;;;;;;;;;Thorsten.Naab@ijk.hmtm-hannover.de;;;;;;;;;;;;"Inst. für Journalistik u. Kommunikations";"der Hochschule für Musik u. Theater Hann";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10065;Frau;;Yvonne;Waldstein;;"Greller-Schweickhardt GmbH ";"Wiedner Hauptstrasse 40/1/8";"1040 ";Wien;Österreich;;;;;;;;;wien@schweickhardt.at;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10066;;Dr.;Dominic;Pfeiffer;;"LINKS DER ISAR GmbH";Widenmayerstr.31;80538;München;Deutschland;;;;;;;;;d.pfeiffer@linksderisar.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10067;Frau;;Nina;Weger;;;"Liebrechtstr. 58";30519;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10068;Frau;;Sabine;Kreiter;;;"Bäckerstraße 16";30938;Engelsen;Deutschland;;;;;;"0152 225 732 71";;"0171 1669588";;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10069;Herrn;;Carsten;Steifer;;DCI;"Wunstorfer Str. 130";30453;Hannover;Deutschland;;;;;;;;;info@dci-germany.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10070;Frau;;"Antonia ";Kielmansegg;;;"Unterlindau 7";60323;"Frankfurt am Main";Deutschland;;;;;;;;"+49 176 23468625";antonia@kielmansegg.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10071;Herrn;;Marcel;Rüdlinger;;"HOCHEDEL AG";"Bösch 41";6331;Hünenberg;Schweiz;;;;;0041848830000;;;"0041 796 105 080";info@hochedel.ch;;;;;;;;;;;;;;;;;#;;#;10071;;7;;;Umsatzsteuerpflichtig
+10072;Herrn;;Carsten;Steifer;;DCI;"Wunstorfer Straße 130";30453;Hannover;Deutschland;;;;;0049511908796;;;00491739670682;info@dci-germany.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10073;Frau;;Gabi;Lins;;;"Regensburger Straße 9";10777;Berlin;Deutschland;;;;;;;;00491736059492;gabi.lins@t-online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10074;Herrn;;Johannes;Jacob;;;"Binger Straße 68";55257;Budenheim/Mainz;Deutschland;;;;;;;;00491784143795;johannes.jacob@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10075;Herrn;;Lluis;Puig;;;"Plettenbergstr. 22";70186;Stuttgart;Deutschland;;;;;;;;004915142638061;lluis.pgc@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10076;Herrn;;Klaus-Dieter;Walter;;;"Schusterbrink 2";30926;Seelze;Deutschland;;;;;;;;00491736385236;k.d.walter@t-online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10077;;;;;;"Horus Sound Studio GmbH";"Osterstr. 36";30159;Hannover;Deutschland;;;;;"+49 (0) 511 36 06 97 0";;;;ines@horus.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10078;Herrn;;Florian;Berg;;;"Wilhelm Busch Str. 2";31655;Stadthagen;Deutschland;;;;;;;;"0162 2439 197";mail.florianberg@googlemail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10079;;;"Ulrike und Thomas ";Wolf;;;"Heimstättenstr. 4 B";"30659 ";Hannover;Deutschland;;;;;"0152 5578 0939 -- (Thomas Wolf";"0162 9898 577 (Ulrike Wolf)";;;Thomas.Wolf@woelfe24.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10080;;;"Ann und Achim ";Volz;;;"Am Lindenhofe 34";"30519 ";Hannover;Deutschland;;;;;;;;;ann.philine.volz@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10081;Frau;;Annegret;Lucke;;;"Anecampstr. 53F";30539;Hannover;Deutschland;;;;;;;;;annegret.lucke@googlemail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10082;Herrn;;Florian;Berg;;;"Wilhelm-Busch-Str. 2";31655;Stadthagen;Deutschland;;;;;01622939197;;;;mail.florianberg@googlemail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10083;;;;;;"GHT Gesellschaft für Projektmanagement";"Knesebeckstraße 59/61";10719;Berlin;Deutschland;;;;;03032775023;;;;Sabine.Meinecke@ofb.de;;;;;;;;;;;;"Hessen-Thüringen GmbH";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10084;Frau;;Anke;Wagner;;"Leibniz Universität Hannover";"Im Moore 17 c";30167;Hannover;Deutschland;;;;;;;;;anke.wagner@zfl.uni-hannover.de;;;;;;;;;;;;"Zentrum für Lehrerbildung";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10085;Frau;;Astrid;Eickhoff;;"WERTGARANTIE Beteiligungen GmbH";"Breite Straße 6";30159;Hannover;Deutschland;;;;;"+49 511 71 280 152";;;;A.Eickhoff@wertgarantie.com;;;;;;;;;;;;;;;;;#;;#;10085;;7;;;Umsatzsteuerpflichtig
+10086;Frau;;"Neslihan Manikofski";;;"Neslihan Manikofski";"Liverpoolerstraße 8";;;Deutschland;;"13349 ";Berlin;;;;;;n.manikofski@googlemail.com;;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10087;Frau;;Lindda;Gubler;;"Packartis AG/Ltd/SA";"Aemtlerstrasse 17";8003;Zürich;Schweiz;;;;;"+41 (0) 44 451 77 50";;;;linda.gubler@packartis.ch;www.packartis.ch;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10088;Herrn;;"Johannes ";Jacob;;;"Binger Straße 68";"55257 ";Budenheim/Mainz;Deutschland;;;;;;;;;johannes.jacob@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10089;Frau;;Anna;Davidian;;"AD Sprachen";"Winterhuder Weg 29";22085;Hamburg;Deutschland;;;;;01704013542;;;;ad@ad-sprachen.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10090;Herrn;;"Carsten ";Großmann;;"Synfis Service GmbH";"Gerberstraße 4";"30916 ";Isernhagen;Deutschland;;;;;" 05136 885-103";05136-885-103;;;info@synfis.com;;;;;;;;;;;;;;"Britta Erwald";;;#;;#;10090;;7;;;Umsatzsteuerpflichtig
+10091;Herrn;;"Carsten ";Bolle;;;"Friedrich-Engels-Str. 32 B";"30880 ";Laatzen;Deutschland;;;;;;;;;carstenbolle@t-online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10092;Frau;;Petra;Krywald;;;"Pasteurstr. 34";10407;Berlin;Deutschland;;;;;;;;"0173 564 33 00";petra.krywald@hausdirekt.de;;;;;;;;;;;;;;;;;#;;#;10092;;7;;;Umsatzsteuerpflichtig
+10093;;;;;;"Semiconductor Equipment and Materials International";"3081 Zanker Road";"CA 95134";"San Jose";"Vereinigte Staaten von Amerika";;;;;;;;;tfasinski@semi.org;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10094;Herrn;Dr.;"Simeon ";Stracke;;"Holcim (Deutschland) AG";"Hannoversche Straße 28";"31319 ";Höver;Deutschland;;;;;"+49(0)5132 927 480";;;;Simeon.Stracke@holcim.com;www.holcim.com;;;;;;;;;;;"Technical Marketing";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10095;Herrn;;Raimund;Rieger;;"msg Beteiligungs- und Verwaltungs-GmbH";"Brucker Str. 10";82223;Eichenau;Deutschland;;;;;;;;;b.hager@deutsche-pop.de;;;;;;;;;;;;;;;;;#;;#;10095;;7;;;Umsatzsteuerpflichtig
+10096;Frau;;Mirja;Ciesiolka;;;"Husarenstr. 3";30163;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10097;Frau;;"Ulla ";Plate;;"Fachhochschule Mainz - University of Applied Sciences ";"Lucy-Hillebrand-Str. 2";"55128 ";Mainz;Deutschland;;;;;+496131;;;;Petra.Mieth@fh-mainz.de;;"Petra Mieth";;;;;;;;;;"Director, International Office  ";"ERASMUS Institutional Co-ordinator ";"Englischunterricht für Frau Petra Mieth";;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10098;;;;;;"Holcim (Deutschland) AG";"Willy-Brandt-Str. 69";20457;Hamburg;Deutschland;;;;;;;;;simeon.stracke@holcim.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10099;Herrn;;"Björn-Arved ";Holke;;"ArtLab Studios";"Wisslerstr. 23";12587;Berlin;Deutschland;;;;;;;;;bholke@artlabstudios.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10100;Herrn;;Jobst-Albrecht;Steckelberg;;;"Rehbockstraße 32";"30167 ";Hannover;Deutschland;;;;;" 0511 / 37365731";;;;jobst.steckelberg@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10101;Herrn;;"Conny ";Protze;;"ITP Innovative Technologie Projekte GmbH";"Karwendelstrasse 39";12203;" Berlin";Deutschland;;;;;;;;;conny.protze@web.de;;;;;;;;;;;;;;;;;#;;#;10101;;7;;;Umsatzsteuerpflichtig
+10102;Frau;;Iris;Schuh;;"Mähren Immobilien GmbH";"Kurfürstendamm 150";"10709 ";Berlin;Deutschland;;;;;"030 / 50 50 90 80";;"030 / 50 50 90 81";;schuh@maehren-gruppe.de;;;;;;;;;;;;;;;;;#;;#;10102;;7;;;Umsatzsteuerpflichtig
+10103;;;Patrick;" Peemöller";;;Neustadtstr.39;30974;Wennigsen;Deutschland;;;;;;;;;grafikdtp@aol.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10104;Herrn;;Thorsten;Roolf;;;"Am Feldrain 3";31542;"Bad Nenndorf";Deutschland;;;;;;;;;troolf@arcor.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10105;Frau;;Christine;Unger;;;"Schwanheimer Straße 113";60528;"Frankfurt am Main";Deutschland;;;;;;;;;c.unger@hotmail.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10106;Herrn;;Thorsten;Druckenmüller;;;"Zum Hügel 2";54317;Thomm;Deutschland;;;;;;;;;thorsten.druckenmueller@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10107;Frau;;Marion;Abeln;;"Munksjö Germany Holding GmbH";"Nördlicher Stadtgraben 4";73340;Aalen;Deutschland;;;;;;;;;marion.abeln@munksjo.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10108;Herrn;;Milos;Popvic;;"Aspecto GmbH";"Täfernstraße 2";5405;Baden;Schweiz;;;;;;;;;milos.popovic@aspecto.ch;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10109;Herrn;Dr;Peter;Menges;;;"Neuer Wall 38";20354;Hamburg;Deutschland;;;;;;;;;wp.dr.menges@t-online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10110;Herrn;;Patrick;Engelsberg;;;"Dellplatz 21";47051;Duisburg;Deutschland;;;;;;;;;patrickengelsberg@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10111;Frau;;Astrid;Joppen;;"Förder- u. Krankentechnik MEISTER GmbH";"August-Borsig-Str. 1";30827;Garbsen;Deutschland;;;;;"05131 92501";;;;a.joppen@foerder-krantechnik-meister.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10112;Herrn;;Michael;Götze;;"EBV Elektronik GmbH & Co. KG";"Burgdorfer Str. 2";30938;Burgwedel;Deutschland;;;;;;;;;michael.goetz@ebv.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10113;Herrn;;Hauke;Rieffel;;"Lex Lumen Feine Medienproduktion";"Ottenser Hauptstraße 44 Innenhof";22765;Hamburg;Deutschland;;;;;;;;;hr@lexlumen.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10114;Herrn;;Achim;Wirtz;;;"Dorfstraße 10";"CH 8606";Greifensee;Schweiz;;;;;;;;;achimwirtz@me.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10115;Herrn;;Michael;Bauch;;"design + marketing";"Kreisstraße 22";31700;Heuerßen;Deutschland;;;;;"+49 (0) 5725 - 91 41 45";;;;mbauch@design-schaumburg.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10116;Frau;;Josta;Keil;;;"An der Eikesmühle 4";41238;Mönchengladbach;Deutschland;;;;;;;;;Josta.keil@t-online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10117;Herrn;;Daniel;Hessdörfer;;"Bayerische Landesanstalt für Weinbau u. Gartenbau";"An der Steige 15";97209;Veitshöchheim;Deutschland;;;;;;;;;daniel.hessdoerfer@lwg.bayern.de;;;;;;;;;;;;"Sachgebiet Weinbaumanagement";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10118;Herrn;;Sebastian;Henn;;;"Rennweger Ring 15";97070;Würzburg;Deutschland;;;;;;;;;sebastian_henn@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10119;;;;;;"Sonepar Deutschland GmbH";"Peter-Müller-Straße 3";40468;Düsseldorf;Deutschland;;;;;;;;;kristin.neitzel@sonepar.de;;;;;;;;;;;;;;;;;#;;#;10119;;7;;;Umsatzsteuerpflichtig
+10120;Frau;;Sabine;Sahling;;Alice-Salomon-Schule;"Kirchröderstr. 13";30625;Hannover;Deutschland;;;;;"(0049) 511 - 22 00 22 10";;;;U.Sahling@klimaschutzagentur.de;www.klimaschutzagentur.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10121;;;;;;"Stichting IEA Secretariaat Nederland";"Herengracht 487";"1017 BT";Amsterdam;Niederlande;;;;;;;;;agnes.stancel-piatak@iea-dpc.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10122;Frau;;Jenna;Welzel;;;"Danziger Straße 48";10435;Berlin;Deutschland;;;;;;;;;jjvwelzel@bluemail.ch;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10123;Frau;;Miriam;Schad;;;"Meistersingerstraße 70";45307;Essen;Deutschland;;;;;;;;;Miriam.Schad@gmx.net;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10124;Frau;;Marion;Blicke;;"blicke Kommunikation GbR";"Straßburger Straße 26";10405;Berlin;Deutschland;;;;;;;;;mb@blickekom.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10125;Frau;;Imke;Hennemann-Kreikenbohm;;;"Junkerhof 3";31542;"Bad Nenndorf";Deutschland;;;;;;;;;imke.kreikenbohm@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10126;Herrn;;Wolfgang;Siedenbühl;;"W. Bertelsmann Verlag GmbH & Co. KG";"Auf dem Esch 4";33619;Bielefeld;Deutschland;;;;;;;;;wolfgang.siedenbuehl@wbv.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10127;Frau;;"Astrid ";Sassen;;;"Fiedelerstr. 5";"30519 ";Hannover;Deutschland;;;;;;;;;asassen@gmx.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10128;Herrn;;"Matthias ";Brandes;;;"Schwicheldter Str. 20 A";"31228 ";Peine;Deutschland;;;;;;;;;brandes@whm.net;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10129;Frau;;"Ruth ";"Hammerbacher ";;"Hammerbacher gmbh";"Schnatgang 27";"49080 ";Osnabrück;Deutschland;;;;;;;;;rh@hammerbacher.de;;;;;;;;;;;;"beratung & projekte";;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10130;Frau;;Ruth;Hammerbacher;;"hammerbacher gmbh";"Schnatgang 27";49080;Osnabrück;Deutschland;;;;;;;;;mail@hammerbacher.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10131;Frau;;"Patricia ";Drefs;;;"Roßkampstr. 69a";30519;Hannover;Deutschland;;;;;"0511 9201613";;;;patriciadrefs@web.de;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10132;Frau;;Christine;Römer-Hellmann;;;"Hildesheimer Str. 554 A";30880;Laatzen;Deutschland;;;;;05102/9384-12;;;" 0176/19384000";c.roemer-hellmann@intercris.de;;;;;;;;;;;;;;"Marie H";;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10133;Herrn;;Said;"El Manouni";;;"Nordbahnstraße 30";13409;Berlin;Deutschland;;;;;;;;;manouni@math.tu-berlin.com;james@englisch-lehrer.com;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10134;Frau;;Stefanie;Schütt;;;"Freiligrathstraße 14";30851;Langenhagen;Deutschland;;;;;;;;;stefanieschuett@googlemail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10135;Frau;;"Pierrette ";Gröninger;;"Pierrette Gröninger GmbH";"Pfarrer-Husslein-Str. 15";97204;Höchberg;Deutschland;;;;;"+49 (0)931 40 96 47";"+49 (0)931 903 1652";;;info@pierrette-groeninger-gmbh.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10136;Herrn;;Roman;Fedorenko;;;"Steinwartskamp 57";30826;Garbsen;Deutschland;;;;;;;;;roma.f@gmx.net;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10137;Herrn;;Tobias;Müller;;"Müller Unternehmensberatung GmbH";"Mottmannstr. 4a";53842;Troisdorf;Deutschland;;;;;;;;;tobias.mueller@mub-assekuranz.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10138;Frau;;Kristy-Barbara;Lange;;"European Bioplastics";"Marienstraße 19/20";10117;Berlin;Deutschland;;;;;"+49 30 28482 356";;;;lange@european-bioplastics.org;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10139;Herrn;;Andreas;"Kurz M.A.";;"Gesundheitsregion KölnBonn e.V.";"Im MediaPark 4d";50670;Köln;Deutschland;;;;;;;;;kurz@gewi-institut.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10140;Frau;;Sarah;Nöllenheidt;;NOC;"Mehringdamm 62";10961;Berlin;Deutschland;;;;;"+49 (0)30 940 57 476";;;"+49 (0)179 29 36 217";sn@bueronoc.de;;;;;;;;;;;;;;;;;#;;#;10140;;7;;;Umsatzsteuerpflichtig
+10141;Frau;;Katrin;Oehlerrahman;;;"Sperlingsfeld 57";30627;Hannover;Deutschland;;;;;;;;;k.oehlerrahman@hotmail.com;;;;;;;;;;;;;;;;;#;;#;10141;;7;;;Umsatzsteuerpflichtig
+10142;Herrn;;Christian;Daniel;;"LUME Development GmbH";"Behlertstraße 4c";14469;Potsdam;Deutschland;;;;;;;;;info@lume.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10143;Herrn;Dr.;Christoph;Wilk;;;"Planckstraße 2";30169;Hannover;Deutschland;;;;;"0511 1206 802";;;;christoph.wilk@stk.niedersachsen.de;;;;;;;;;;;;"Abteilungsleiter 3";"Europa, Internationale Zusammenarbeit Niedersächsische Staatskanzlei";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10144;Frau;;Katharina;Köhlmoos;;;"Alveser Str. 22b";21224;Rosengarten;Deutschland;;;;;;;;;katharina@koehlmoos.org;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10145;Frau;;Petra;Neumeister;;"Petra Neumeister Kostümbild";"Arysallee 8";14055;Berlin;Deutschland;;;;;;;;01707768489;mail@neumeister-kostuem.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10146;;;;;;"GIZ - Deutsche Gesellschaft für Internationale Zusammenarbeit GmbH";"Postfach 5180";65726;Eschborn;Deutschland;;;;;;;;;peter.hillen@giz.de;;;;;;;;;;;;Rechnungseingang;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10147;Herrn;;"Jan Marten Scholz";;;"TEMA-Fischer GmbH";"Kanalstraße 7 A";12357;Berlin;Deutschland;;;;;"+49 (0)30 660 60 66";;;"0171 - 566 0562";JM.Scholz@tema-fischer.de;" www.tema-fischer.de";;;;;;;;;;;;;;;;#;;#;10147;;7;;;Umsatzsteuerpflichtig
+10148;Herrn;;Eduard;Enriquez;;;"Herthastr. 18";14193;Berlin;Deutschland;;;;;;;;;eduard.enriquez@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10149;Frau;;Sabine;Frömling;;;"Rautenstr. 19";30171;Hannover;Deutschland;;;;;;;;;sabine.froemling@gmail.com;;;;;;;;;;;;;;;;;#;;#;10149;;7;;;Umsatzsteuerpflichtig
+10150;Herrn;;Markus;Busch;;;"Podbielskistr. 173, Eingang II";30177;Hannover;Deutschland;;;;;;;;;mbusch@gmx.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10151;Frau;;Petra;Kloepper;;;"Ahornweg 12";31688;Nienstadt;Deutschland;;;;;;;;;p.sonnengarten@arcor.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10152;Frau;;Claudia;Mirrione;;;"Boddinstr. 49";12503;Berlin;Deutschland;;;;;;;;;claudia.mirrione85@googlemail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10153;Frau;;Mandy;Zahlmann;;;"Blumhardthof 17";30625;Hannover;Deutschland;;;;;;;;;Mandyjacobs@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10154;Frau;;Jessica;Schulte;;;"Trabener Str. 16";14193;Berlin;Deutschland;;;;;;;;;jessicaschulte@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10155;Herrn;;Marco;Rosenthal;;"Interoute Germany GmbH";"Weismuellerstr. 26";60314;Frankfurt;Deutschland;;;;;;;;;patrick.gerard@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10156;Frau;;Judith;Muster;;;"Czarnikauer Straße 17a";10439;Berlin;Deutschland;;;;;;;;01724209100;judith.jules.muster@gmail.com;;;;;;;;;;;;;;;;;#;;#;10156;;7;;;Umsatzsteuerpflichtig
+10157;Herrn;Dr;Oliver;Kutz;;;"Hegestraße 12";20251;Hamburg;Deutschland;;;;;;;;;Oliver.Kutz@ua.imptob.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10158;Herrn;;Thomas;Erfling;;;"Königsworther Str. 3";"30167 ";Hannover;Deutschland;;;;;;;;0176-38001493;thomaserfling@gmail.com;;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10159;Frau;;"Maike ";Heppelmann;;;"Tiekstr 13";30625;Hannover;Deutschland;;;;;;;;"0160 7582951";maikesmail@freenet.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10160;Herrn;;Heinz;Bormann;;"Hafenrichter Gmbh";"Altes Feld 24";31749;Auetal-Rehren;Deutschland;;;;;"05752 96375";;;"0173 205 6960";info@hafenrichter.de;www.hafenrichter.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10161;Frau;;Pelin;Ersoy;;;"Demminerstr. 3";13355;Berlin;Deutschland;;;;;;;;"0163 - 783 2069";pelinersoy81@hotmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10162;Herrn;;"Christian ";Motschke;;"IT Service Omikron GmbH (ITSO)";"Mohrenstraße 63";10117;Berlin;Deutschland;;;;;"+49 30 220791-30";;;;motschke@itso.de;www.itso.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10163;Frau;;Simone;Blömer;;;"Akazienstr. 19";10823;Berlin;Deutschland;;;;;;;;01723891579;sbloemer@gmx.net;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10164;;;"Maxi + Michael";"Berger + Städtler";;;"Am Kanonenwall 3";30169;Hannover;Deutschland;;;;;;;;"01525 3104929";maxiberger@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10165;Herrn;Dr.;Dirk;Zetzsche;;"Universität Liechtenstein";Fürst-Fürst-Franz-Josef-Strasse;9498;"Vaduz, Liechtenstein";Liechtenstein;;;;;;;;;Thomas.Marte@uni.li;;;;;;;;;;;;"Propter Homines Lehrstuhl für Bank- und Finanzmarktrecht";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10166;Herrn;"Prof. Dr.";Dirk;Zetsche;;;"Humboldtstr. 48";40347;Düsseldorf;Deutschland;;;;;;;;;dirk.zetzsche@uni.lu;;;;;;;;;;;;;;;;;#;;#;10166;;7;;;Umsatzsteuerpflichtig
+10167;;;;;;"WISTA-MANAGEMENT GMBH";"Rudower Chaussee 17";12489;Berlin;Deutschland;;;;;+49-30-6392-2228;;;;jarmoskaite@wista.de;;;;;;;;;;;;;;;;;#;;#;10167;;7;;;Umsatzsteuerpflichtig
+10168;Frau;;Esmeray;Karasahin;;;"Germersheimer Weg 86 b";13583;Berlin;Deutschland;;;;;;;;"0175 23 55 419";esmeray-karasahin@gmx.de;;;;;;;;;;;;;;;;;#;;#;10168;;7;;;Umsatzsteuerpflichtig
+10169;;;"Kreditorenbuchhaltung/Carolin Stützel";;;"Computacenter AG & Co. oHG";"Europaring 34 – 40";"50170 ";Kerpen;Deutschland;;;;;"+49 511 1607 2333";;;"+49 152 54611239";Carolin.Stuetzel@computacenter.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10170;;;;;;"Verband der Deutschen Automatenindustrie e.V.";"Dircksenstraße 49";10178;Berlin;Deutschland;;;;;"030 - 28 40 70";;;;vdai@vdai.de;;;;;;;;;;;;;;;;;#;;#;10170;;7;;;Umsatzsteuerpflichtig
+10171;;;Martin;Kleemann;;"Artist Station Records";"Egestorffstr. 14";30449;Hannover;Deutschland;;;;;;;;;martin@artiststation.de;;;;;;;;;;;;;;;;;#;;#;10171;;7;;;Umsatzsteuerpflichtig
+10172;Frau;;Nadine;Keil;;;Ludwig-Dürr-Str.19;"14089 ";Berlin;Deutschland;;;;;;;;;keilnadine@web.de;James@englisch-lehrer.com;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10173;Frau;Dr.;"Petra ";Mieth;;;"Im Dorfe 19";30890;Barsinghausen;Deutschland;;;;;"05105 6624977";;;;pmieth@carnehl.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10174;Frau;;Sara;Bartsch;;"FLASKAMP UMMEN AG";"Fritschestraße 62";10627;Berlin;Deutschland;;;;;"+49 30 46006-708";;;;bartsch@flaskamp-ummen.de;www.flaskamp-ummen.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10175;;;Anita;Kleemann;;;"Egestorffstr. 14";"30449 ";Hannover;Deutschland;;;;;;;;;martin@artiststation.de;;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10176;Frau;;Michaela;Bühring;;"Geozentrum Hannover - Bundesanstalt für Geowissenschaften und Rohstoffe";"Stilleweg 2";30655;Hannover;Deutschland;;;;;"0511 643-2356 (Sabine Piephoh)";"0511 643-3678 (Deborah Forth)";;;Sabine.Piephoh@bgr.de;www.geozentrum-hannover.de;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;10176;;7;;;Umsatzsteuerpflichtig
+10177;Herrn;;Olaf;Pollex;;;"via Tilia 3";14109;Berlin;Deutschland;;;;;"030 91525118";;;015118245346;opollex@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10178;;;Tim;Richter;;;"Herzog-Wilhelm- Straße 5";"31515 ";Wunstorf;Deutschland;;;;;;;;"0172 35 98 823";tim.richter@uni-bremen.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10179;Herrn;;"Manfred ";Sauer;;"NOVENTIZ GmbH";"Dürener Strasse 350";50935;Köln;Deutschland;;;;;"+49 221-800 158 49";;;;Manfred.Sauer@noventiz.de;;;;;;;;;;;;;;;"Text work";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10180;Herrn;;"Norbert ";"Schütze ";;"noma-med GmbH";"Kreuzacker 2 ";"31177 ";"Harsum ";Deutschland;;;;;"(0 51 27) 98 57-0 ";;;" 0172 874 3076";norbert@schuetze.li;"www.nomamed.de ";;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10181;Frau;;Charlotte;Freund;;;"Raffaelstr. 6";30177;Hannover;Deutschland;;;;;;;;017661232401;Charlottefreund@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10182;Frau;;"Nastasja ";Johnston;;"camunda services GmbH";"Zossener Str. 55-58, ";"10961 Berlin";;Deutschland;;;;;"+49 30 664 04 09 - 00";;;;nastasja.johnston@camunda.com;www.camunda.org;;;;;;;;;;;"Assistenz der Geschäftsführung";"Aufgang 2";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10183;Herrn;;"Sven ";Kubal;;"Berliner Gesellschaft für Vermögensverwaltung mbH ";"Französische Str. 9-12  ";"10117 ";Berlin;Deutschland;;;;;" +49 (0) 30 / 2 06 417 -318";;"+49 (0) 30 / 2 06 417 -363";;Sven.kubal@bgv-berlin.de;www.bgv-berlin.de;BGV;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10184;Frau;Dipl.-Sozialwis;"Stefanie ";Theil;;"Technische Universität Braunschweig";"Pockelsstr. 4, EG, Raum 029";"38106 ";Braunschweig;Deutschland;;;;;"+49 531 391 2305";;"+49 531 391 5937";;international-fk3@tu-braunschweig.de;www.tu-braunschweig.de/abu;;;;;;;;;;;"Fakultät Architektur, Bauingenieurwesen und Umweltwissenschaften";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10185;Frau;;"Katharina ";Lux;;;"Oesterleystr. 12";30171;Hannover;Deutschland;;;;;;;;016096862478;kathilux77@hotmail.com;;;;;;;;;;;;;;;;;#;;#;10185;;7;;;Umsatzsteuerpflichtig
+10186;Frau;;"Susanne ";Elsholz;;;"Lindenstraße 8 b";30559;Hannover;Deutschland;;;;;;;;"0151 5238 6372";susanne.elsholz@gmx.de;;;;;;;;;;;;;;;;;#;;#;10186;;7;;;Umsatzsteuerpflichtig
+10187;Herrn;;Mengda;" Liu";;;"Bischofsholer Damm 85";30173;Hannover;Deutschland;;;;;;;;017681711385;mengda.liu127@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10188;Frau;;Sigrid;Kiontke;;;"Wiesenstrasse 15";"30169 ";Hannover;Deutschland;;;;;"0511 - 9555810";;;"0179 695 4003";sigrid.kiontke@o2online.de;;;;;;;;;;;;;;;;;#;;#;10188;;7;;;Umsatzsteuerpflichtig
+10189;Frau;;"Gabi  ";Lukomski;;"Wesentlich Verlag, gartz und petermann gbr";"Alfonsstr. 44";"52070 ";Aachen;Deutschland;;;;;"+49 241 565 291 73 (Gabi)";"+49 241 565 291 70 (Zentrale)";;;gabi@wesentlich.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10190;Frau;;"Vera ";Funk;;"Bagel Verlag GmbH";"Grafenberger Allee 82";"40237  ";Düsseldorf;Deutschland;;;;;" +49 211 9682-218";;;;vera.funk@bagel.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10191;Frau;;"Ina ";Plewa;;"MM-Eye GmbH";"Schulterblatt 120";20357;Hamburg;Deutschland;;;;;"+49 (0) 40 30 68 88-21";;;;Ina.Plewa@MM-Eye.com;www.MM-Eye.com;;;;;;;;;;;"Manager Field Operations";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10192;Herrn;;"Sascha ";Mika;;;"Gehägestrasse 20 K";"30655 ";Hannover;Deutschland;;;;;;;;"0151 - 605 17100";Sascha.Mika@bmw.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10193;Herrn;;Sven;Wolfgram;;"facts and fiction GmbH";"Anna-Schneider-Steig 2 ";"50678 ";Köln;Deutschland;;;;;"+49 221 95 15 30 68";;;;james@englischlektorat.com;;;;;;;;;;;;;;;;;#;;#;10193;;7;;;Umsatzsteuerpflichtig
+10194;Frau;;Ramona;Stanau;;;"Geibel Str. 60";30173;Hannover;Deutschland;;;;;;;;" 0163 2544 395";ramona.stanau@web.de;;;;;;;;;;;;;;;;;#;;#;10194;;7;;;Umsatzsteuerpflichtig
+10195;Frau;;Iris;Nölting;;;"Hauptstr. 76";30457;Hannover;Deutschland;;;;;"0511 4609872";;;"0172 1711833";irisnoelting@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10196;Herrn;;"Andreas ";Möbius;;VGA;"Am Weidendamm 1A";10117;Berlin;Deutschland;;;;;"030 5900 999 99";;;"0171 2206 022";a.moebius@yahoo.de;www.vga.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10197;Frau;;Maike;Storsberg;;;"Osnabrücker Str. 11";10589;Berlin;Deutschland;;;;;;;;"0160 9333 5747";maike.storsberg@me.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10198;Herrn;;"Gerhard ";"Eller ";;;"Ginsterweg 5";"30989 ";Gehrden;Deutschland;;;;;"+49 170 23851 29";;;;gerhard@eller-familie.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10199;Herrn;;"Richard ";Lemke;;"Institut für Publizistik";"Jakob-Welder-Weg 2";"55099 ";Mainz;Deutschland;;;;;;;;;lemke@uni-mainz.de;;;;;;;;;;;;"Johannes Gutenberg-Universität";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10200;Frau;;"Jacqueline ";Rüster;;"HASA GmbH";"Lindenallee 20";"39288 ";Burg;Deutschland;;;;;"+49 (0) 3921 - 48 28-36";;;;jacqueline.ruester@hasa-burg.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10201;Frau;;"Maria ";Bychkova;;;"Ferdinandstr. 11";"30175 ";Hannover;Deutschland;;;;;;;;;bychkova.maria@googlemail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10202;;;;;;"REMONDIS Industrieservice GmbH & Co. KG ";"Zum Bahnhof 33 - 39";31311;Uetze;Deutschland;;;;;"05138  -  605141";;;"0172  -  2707217";eckhard.matthies@remondis.de;;;;;;;;;;;;;;;;;#;;#;10202;;7;;;Umsatzsteuerpflichtig
+10203;Frau;;"Gordana ";Martinovic;;;"Hasenkamp 1";"31319 ";Sehnde;Deutschland;;;;;"05132 885 905";;;"0172-3848901 (Daughter)";martinov@uni-hildesheim.de;;;;;;;;;;;;;;"Mother invoice";;;#;;#;10203;;7;;;Umsatzsteuerpflichtig
+10204;Herrn;;"Slavko ";Martinovic;;;"Hasenkamp 1";"31319 ";Sehnde;Deutschland;;;;;"05132 885 905 (Mother)";;;"0172-3848901 (Daughter)";martinov@uni-hildesheim.de;;;;;;;;;;;;"Rundum's Haus";;"Rechnung für Tochter";;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10205;Frau;;Kristina;Ebel;;;"kötnerholzweg 11";30451;;Deutschland;;;;;;;;"0160 727 5509";Kristina.Ebel@gmx.de;;;;;;;;;;;;;;;;;#;;#;10205;;7;;;Umsatzsteuerpflichtig
+10206;Herrn;;Walter;Zeller;;"mspp / multimedia support og creative agency & production";"Stutterheimstr. 16-18 / 2.Stiege";"1150 ";Vienna;Österreich;;;;;"(+43) (1) 789 061 271";;;"(+43) (0) 6991 9440409 ";walter.zeller@mspp.com;;;;;"AT U57581307";;;;;;;" Büro 3.01";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10207;Herrn;;"Christian ";Scheffer;;;"Kleistert. 6";"45128 ";Essen;Deutschland;;;;;;;;01632863564;christian.scheffer@uni-muenster.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10208;Herrn;;"Jan ";Hüsgen;;;"Kapellenstr. 24";"33442 ";Herzebrock-Clarholz;Deutschland;;;;;"05245 9259 302";;;0173/2030043;janhuesgen@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10209;;"Prof. Dr.";"Erika ";Graf;;"Fachhochschule Frankfurt";"Nibelungenplatz 1";"60318 ";Frankfurt/M;Deutschland;;;;;+49-69-1533-3886;;;;egraf@fb3.fh-frankfurt.de;;;;;;;;;;;;"Fachbereich 3: Wirtschaft und Recht";"University of Applied Sciences";;;;#;;#;10209;;7;;;Umsatzsteuerpflichtig
+10210;Herrn;;"Gerd ";Kastens;;;"Hermann-Ehlers-Allee 70";"30455 ";Hannover;Deutschland;;;;;;;;"0176 509 79086";gekastens@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10211;;;"Ulrike ";Badendick;;"orderbird AG";"Ritterstraße 12-14";10969;Berlin;Deutschland;;;;;;;;;ulrike@orderbird.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10212;;;"Philipp ";Steinecke;;;"Ludwig-Barnay-Str. 5";"30175 ";Hannover;Deutschland;;;;;"0511 – 967 218 85";;;"0152 – 531 075 88";ps@pstrading.de;www.pstrading.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10213;Herrn;;;"St. Meisel";;"Wohnungsgenossenschaft Kleefeld-Buchholz eG";"Berckhusenstr. 16";"30625 ";Hannover;Deutschland;;;;;"0511 / 53002 - 35";;;;st.meisel@kleefeldbuchholz.de;http://www.kleefeldbuchholz.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10214;Herrn;;Johannes;Jacob;;;"Nassauische Straße 21";10717;Berlin;Deutschland;;;;;;;;;johannes.jacob@gmail.com;;;;;;;;;;;;;;;;;#;;#;10214;;7;;;Umsatzsteuerpflichtig
+10216;Frau;;"Gabriele ";Marth;;;"Hirschberger Str. 24";30627;Hannover;Deutschland;;;;;;;;"0151 5122 8625";gabrielemarth@gmail.com;;;;;;;;;;;;;;;;;#;;#;10216;;7;;;Umsatzsteuerpflichtig
+10217;Frau;;"Alexandra  ";Stolle;;"Scheuer Marketingberatung GmbH & Co. KG";"Pahlswinkel 9";30826;" Hannover-Garbsen";Deutschland;;;;;"+49 (0)5131.908 63 63";;;;stolle@marketingberatung.de;;;;;;;;;;;;;;;;;#;;#;10217;;7;;;Umsatzsteuerpflichtig
+10218;Herrn;;"Volker ";Gölz;;;"Deisterkamp 5";"30974 ";Wennigsen;Deutschland;;;;;;;;0171/58794150;vgoelz@online.de;;;;;;;;;;;;;;;;;#;;#;10218;;7;;;Umsatzsteuerpflichtig
+10219;Herrn;;Rajko;Kukic;;;"Hamelner Straße 14";31832;Springe;Deutschland;;;;;;"0152 - 04899157";;"0170 - 774 6582";rajko88@gmx.de;;;;;;;;;;;;;;;;;#;;#;10219;;7;;;Umsatzsteuerpflichtig
+10220;;;;;;"BestSeller Agentur für Absatzförderung GmbH";"Hanauer  Landstraße 289";"60314 ";Frankfurt;Deutschland;;;;;"0049 (0) 69-707976-46";;"0049 (0) 69-707976-77";;heyasat@agentur-bestseller.de;http://www.agentur-bestseller.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10221;Herrn;;"Andre ";Repschinski;;"TUI Deutschland GmbH";"Karl-Wiechert-Allee 23";"30625 ";Hannover;Deutschland;;;;;"05105 - 582 136";;;"0172 567 1901";andre.repschinski@tui-lt.de;;;;;;;;;;;;;;;;;#;;#;10221;;7;;;Umsatzsteuerpflichtig
+10222;Herrn;;"Patrick ";Beukert;;;"Richard-Sorge-Straße 60";10247;Berlin;Deutschland;;;;;;;;;martinschleef@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10223;Frau;Dr.;"Ingrid ";Simson;;"Internationales Graduiertenkolleg ""Entre Espacios""";"Boltzmannstr 4";14195;Berlin;Deutschland;;;;;0049-30-83871681;;;;tfpapacek@zedat.fu-berlin.de;;;;;;;;;;;;"Wissenschaftliche Geschäftsführung";"Freie Universität Berlin";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10224;Herrn;;Jan;Krüger;;"Port-au-Prince Pictures GmbH";"Paul Lincke Ufer 44a";10999;Berlin;Deutschland;;;;;"+ 49 (0) 30 31 955 412";;"+ 49 (0) 30 31 955 413";;lh@port-prince.de;;;;;;;;;;;;;;;;;#;;#;10224;;7;;;Umsatzsteuerpflichtig
+10225;Herrn;;Helmut;Peters;;;"Henniesruh 67b";30655;Hannover;Deutschland;;;;;"0511 614471";;;"0157 8737 7332";1993hemi@gmx.de;;;;;;;;;;;;;;;;;#;;#;10225;;7;;;Umsatzsteuerpflichtig
+10226;Herrn;;Axel;Scherübel;;"AMAX SERVICES Film & Travel";"Gestütsweg 13";"82319 ";Starnberg;Deutschland;;;;;"+49 171 3331710 (DE)";"+43 680 2142999 (AT)";;01713331710;amax.produktion@gmail.com;www.amaxservices.com;;;;;;;;;;;"1. Etage";;;;;#;;#;10226;;7;;;Umsatzsteuerpflichtig
+10227;Frau;;Asil;Hübner;;"Charité Healthcare Services GmbH";"Reinickendorfer Straße 61 - Haus 10";13347;Berlin;Deutschland;;;;;"+49 30 450 578 244";;;;rechnung-chs@charite.de;;;;;;;;;;;;;;;;;#;;#;10227;;7;;;Umsatzsteuerpflichtig
+10229;;;"Franco ";Luca;;"Bottega Manifatturiera Borse";"Via Di Porto, 35 Loc. Olmo";"50018 ";"Scandicci (FL)";Italien;;;;;" +49 89 552563 14";;;;J.Brunswicker@BayernLB-CP.DE;;;;;IT07847080962;;;;;;;;;;;;#;;#;10229;;7;;;Umsatzsteuerpflichtig
+10230;Frau;;"Cordula ";Binner;;;"Podbielski Str. 48";30177;Hannover;Deutschland;;;;;"0511 - 5410600";;;"0176-801 605 69";info@cbinner-consulting.de;www.cbinner-consulting.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10231;Herrn;;Jonathan;Kreuzer;;"I*AM Design";"Bei den Sieben Kindern 1";86168;"Augsburg ";Deutschland;;;;;;;;;jonathan.kreuzer@iam-design.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10232;Frau;;Renate;Bretterebner;;;"Kreuzplatz 7/9";4020;"Bad Ischl";Österreich;;;;;;;;;Renate.Bretterebner@gmx.net;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10233;Herrn;"Dr. ";"Stephan ";Platt;;;"Paul-Lincke-Ufer 42";10999;Berlin;Deutschland;;;;;"+49 30 446 50 555";;;"+49 178 444 50 75";stp@systemic-branding.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10234;Herrn;;"Jan ";Wagener;;;"Großer Hasenpfad 1";60598;"Frankfurt am Main";Deutschland;;;;;;;;" 0151 404 22 798";jan.wagener@hotmail.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10235;Frau;;"Mareike ";Schulz;;"CONRAD CAINE GmbH";"Arnulfstr. 58";"80335 ";München;Deutschland;;;;;"+49 89 2000550 060";;;;mschulz@conrad-caine.com;" www.conrad-caine.com";;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10236;Herrn;;Patrick;Engel;;"phase-6 GmbH ";"Schönhauser Allee 141 b";"10437 ";Berlin;Deutschland;;;;;"(0049) 030 / 417075-15";;;;p.engel@phase6.de;;;;;;;;;;;;;;;;;#;;#;10236;;7;;;Umsatzsteuerpflichtig
+10237;Frau;;Clara;Vilaplana-Alcorisa;;"FOUR MOMENTS GbR ";"Marienhöferstraße 17";38871;" Ilsenburg";Deutschland;;;;;"+49 39 45 2 - 48 28 42";;;;;;;;;;;;;;;;"Marken. Design. Kommunikation";;;;;#;;#;10237;;7;;;Umsatzsteuerpflichtig
+10238;"Herrn und Frau";;"Rodolfo und Margarita";Casaueda;;;"Gretchenstr. 4";"30161 ";Hannover;Deutschland;;;;;;;;;ballesteros_rodolfo@hotmail.com;;;;;;;;;;;;;;;;;#;;#;10238;;7;;;Umsatzsteuerpflichtig
+10239;Herrn;;Kai;Weber;;;" Jakobistr. 29";30163;Hannover;Deutschland;;;;;;;;"+49 151 24161519";kw@tkkw.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10240;;;"Karin ";Bartsch;;"Günther Bartsch & Partner GbR";"Struckmannhof 13";"30455 ";Hannover;Deutschland;;;;;"+49 (0) 511 - 49 81 33";;;0173/2323060;karin.bartsch@bbv-hannover.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10241;Frau;;Anita;Fricke;;"GETEC heat & power AG";"Albert-Vater-Straße 50";39108;"Magdeburg ";Deutschland;;;;;"+49 (391) 2568 303";;;"+49  (151) 1881 8277";anita.fricke@getec.de;www.getec-heat-power.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10242;Herrn;;Holger;Meyer;;"Der Pflegepunkt U.G";"Marktstr. 51";"30159 ";Hannover;Deutschland;;;;;;;;"0172 1355009";meyerholger1@me.com;;;;;;;;;;;;;;;;;#;;#;10242;;7;;;Umsatzsteuerpflichtig
+10243;Herrn;;Sven;Rosorius;;;"Woldsenweg 13";20249;Hamburg;Deutschland;;;;;;;;"0175 - 570 4712";sven.rosorius@t-online.de;;;;;;;;;;;;;;;;;#;;#;10243;;7;;;Umsatzsteuerpflichtig
+10244;Frau;;Barbara;Hilmer;;"Löwen Apotheke";"Holztorstr. 19";31157;Hannover;Deutschland;;;;;"0511 - 7244791";;;"0151 - 14818228";b.hilmer@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10245;Herrn;;Jörg;Hilmer;;;"Großer Hillen 36";30559;Hannover;Deutschland;;;;;"0511 - 7244791";;;"0170 - 8081256";joerg.hilmer@live.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10246;;;"Markus ";Kruse;;;;;;Deutschland;;;;;;;;;markus.kruse@email.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10247;Herrn;;Herbert;Kasperschinsky;;"H. Kasperschinsky GmbH";"Mittagsstraße 23";39124;Magdeburg;Deutschland;;;;;"0391 258 12 35";;;;info@dach-klempnerei.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10248;Frau;;Annette;Seiltgen;;;"Fritschestr. 29 A";"10585 ";Berlin;Deutschland;;;;;;;;;annetteseiltgen@aol.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10249;Herrn;;Harry;Gladow;;;"Grenzheide 22";30853;Hannover;Deutschland;;;;;"0511-7245 401";;;"0172-3227 255";gladow@yahoo.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10250;Frau;;Özlem;Kolcak;;"The unbelievable Machine Company GmbH";"Grolmanstr. 40";10623;Berlin;Deutschland;;;;;"+49 - 30 - 8892656 - 28";;;" +49 - 152 - 2262 9593";billing@unbelievable-machine.com;http://www.unbelievable-machine.com;;;;;;;;;;;;;;;;#;;#;10250;;7;;;Umsatzsteuerpflichtig
+10251;;;;;;Leibniz-Gemeinschaft;"Chauseestraße 111";10115;Berlin;Deutschland;;;;;030-206049-21;;;;rechnungen@leibniz-gemeinschaft.de;;;;;;;;;;;;;;;;;#;;#;10251;;7;;;Umsatzsteuerpflichtig
+10252;Frau;;"Britta ";Rheinhold;;;"Hannoversche Str. 3";"30938 ";Burgwedel-Fuhrberg.;Deutschland;;;;;"05135 - 92 53 67";;;"0172 457 4626";britt.rheinhold@t-online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10253;Herrn;;Frank;Flammer;;Maschinenkanzlei;"Maigoldweg 13";30559;Hannover;Deutschland;;;;;0511-700130-11;;;0177-5982345;ff@maschinenkanzlei.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10254;Herrn;;Marc;Vach;;"LIZAS GmbH & Co.KG";"Lilienthal Str. 9";30179;Hannover;Deutschland;;;;;;;;"0178-555 7060";marc.vach@lizas.eu;www.lizas.eu;;;;;;;;;;;;;;;;#;;#;10254;;7;;;Umsatzsteuerpflichtig
+10255;Herrn;;"Marc ";Müller;;;"Alte Döhrener Str. 37";"30173 ";Hannover;Deutschland;;;;;"0511 / 59 05 246";;;"0160 / 91 00 91 00";info@architekt-marcmueller.de;www.architekt-marcmueller.de;;;;;;;;;;;"Architekt Dipl.-Ing. + Energieberater";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10256;Herrn;"Prof. Dr.";Florian;Sahling;;;"Schützenstraße 65";32545;"Bad Oeynhausen";Deutschland;;;;;057318420099;;;;florian.sahling@prod.uni-hannover.de;;;;;;;;;;;;;;;;;#;;#;10256;;7;;;Umsatzsteuerpflichtig
+10257;Herrn;;"Kay ";Menckhoff;;;"Stoeckhardtstr. 2";20535;Hamburg;Deutschland;;;;;;;;;kay_menckhoff@web.de;;;;;;;;;;;;;;;;;#;;#;10257;;7;;;Umsatzsteuerpflichtig
+10258;;;;;;"Time Tools Mastering & Publishing GmbH";"Sandstr. 12";30167;Hannover;Deutschland;;;;;"+49 511 16 11 700";;"+49 511 70 44 07";;hilke@timetools.de;www.timetools.de;;;;;;;;;;;;;;;;#;;#;10258;;7;;;Umsatzsteuerpflichtig
+10259;;;"Frank ";Bornemann;;;"Alte Döhrener Str. 80a";30173;Hannover;Deutschland;;;;;;;;;frank@artiststation.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10260;;;;;;"facts and fiction GmbH";"Anna-Schneider-Steig 2 / Reinauhafen";50678;Köln;Deutschland;;;;;;;;;Wolfgang.Lorenz@factsfiction.de;;;;;;;;;;;;;;;;;#;;#;10260;;7;;;Umsatzsteuerpflichtig
+10261;Frau;;"Nicole ";Graiss;;;"Viktoriastraße 6";80803;München;Deutschland;;;;;"+49 711 9881 20931";;;" +49 160 939 20931";Nicole.Graiss@de.ey.com;http://www.ey.com;;;;;;;;;;;;;;;;#;;#;10261;;7;;;Umsatzsteuerpflichtig
+10262;Frau;;Kira;Bruksch;;"facts and fiction GmbH";"Anna-Schneider-Steig 2 / Reinauhafen";50678;Köln;Deutschland;;;;;;;;;kira.brucksch@factsfiction.de;;;;;;;;;;;;"Leiterin New Business";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10263;Frau;;"Doris ";Schröder-Köpf;;;;"30519 ";Hannover-Waldhausen;Deutschland;;;;;;;;;dschroeder@buero-schroeder.net;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10264;Frau;;"Astrid ";Döring;;;"Bütersworthstraße 8";30161;Hannover;Deutschland;;;;;"0511 3023738";;;;info@astriddoering.de;www.astriddoering.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10265;Herrn;;"Peer ";Kawalek;;;"Kleine Düwelstr 6";30171;Hannover;Deutschland;;;;;;;;"0163 - 288 2741";p.kawalek@gmail.com;;;;;;;;;;;;;;;;;#;;#;10265;;7;;;Umsatzsteuerpflichtig
+10266;Frau;;Corinna;Degler;;;"Herrenhäuser Kirchweg 26";30167;Hannover;Deutschland;;;;;"0511 - 709903";;;"0163 - 664 0071";corinna.degler@t-online.de;;;;;;;;;;;;;;;;;#;;#;10266;;7;;;Umsatzsteuerpflichtig
+10267;Herrn;"Dr. des.";Matthias;Meyer;;;"Mönckebergallee 2";30453;Hannover;Deutschland;;;;;;;;;matthiasmeyer@gmx.org;;;;;;;;;;;;;;;;;#;;#;10267;;7;;;Umsatzsteuerpflichtig
+10268;Herrn;;"Michael ";Cymbalista;;;"Im Eichenbleek 33";31535;Neustadt;Deutschland;;;;;"05032 657 16 (Zu Hause)";"0511 6747 382 (Arbeit)";;"0151 7080 4238";michael.cymbalista@t-online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10269;Herrn;;Norman;Sterz;;"Departer Deutschland GmbH";"Hohe Bleichen 8";20354;Hamburg;Deutschland;;;;;;;;;Kevin.Kuhlenkamp@departer.com;;;;;;;;;;;;;;;;;#;;#;10269;;7;;;Umsatzsteuerpflichtig
+10270;Herrn;;"Sebastian ";Diedrich;;;"Alte Bemeroder Str. 114";30539;Hannover;Deutschland;;;;;;" 0511 80602028";;015167103771;sd@entwicklerwerk.de;entwicklerwerk.de;;;;;;;;;;;;;;;;#;;#;10270;;7;;;Umsatzsteuerpflichtig
+10271;Herrn;;Stephan;Möhle;;;"Im Lachtetal 22";29331;Lachendorf;Deutschland;;;;;;;;01752481837;s.moehle70@web.de;;;;;;;;;;;;;;"Simone Dirschka
+Charlotten Str. 50
+30449 Hannover
+simone.dirschka@web.de
+0178 6879850";;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10272;Frau;;"Daniela ";Hasenstab;;"Postcon National GmbH & Co. KG";"Rotenburger Straße 24";"30569 ";Hannover;Deutschland;;;;;"+49 (0) 511 56384-195";;;;daniela.hasenstab@postcon.de;www.postcon.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10273;Frau;;Barbara;Neumann;;;"Donaustr. 27";30519;Hannover;Deutschland;;;;;;;;"0176 53701018";babsineumann@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10274;Frau;;"Lisa Marie";Prokisch;;;"Luise - Schröder Str.6";30974;Hannover;Deutschland;;;;;;;;"01577 133 8547";lisa.prokisch@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10275;Herrn;;;Skär;;"Autogena Stahl Gmbh";"Rudolf-Diesel-Weg 11";"30419 ";Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;"Robin Elsner 
+robin.elsner93@gmx.de";;;#;;#;10275;;7;;;Umsatzsteuerpflichtig
+10276;Herrn;;Murat;Cetin;;"El Olivo GmbH sucursal en Espana";"Ctra. Pollenca-Andratx Km 65";E-07179;Deià;Spanien;;;;;;;;00491628940196;carolin@lambsandlions.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10277;Frau;;Alice;Glittermann;;"BALLHAUS WEST - AGENTUR FÜR KAMPAGNEN GMBH";"Potsdamer Straße 83";10785;Berlin;Deutschland;;;;;004930280999950;;;01727365191;Gittermann@ballhauswest.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10278;;;"Leyla ";Ramazan;;;"Friedrich Ebert Str. 66";30459;Hannover;Deutschland;;;;;;;;"0176 6756 5532";leyla-ramazan@yahoo.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10279;Herrn;;"Nico ";Gaida;;;"Kissinger Str. 12";"12157 ";Berlin;Deutschland;;;;;;;;"0173 31 55 333";NGaida@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10280;Herrn;;Andreas;Hemme;;"Wasseraufbereitung GmbH & Co. KG";"Gustav-Wayss-Str. 7";48282;Emsdetten;Deutschland;;;;;02572-960278-0;;;;hemme@hemme-wasser.de;www.hemme-wasser.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10281;Herrn;;"Alexander ";Unger;;"LTS GmbH";"Greifswalder Str. 154";10409;"10409 Berlin";Deutschland;;;;;"030 24 04 67 93";;;;a.unger@language-testing-service.de;www.language-testing-service.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10282;Frau;;Karen;Tepel;;"Studentenwerk Hannover AöR ";"Lodyweg 1 ";30167;Hannover;Deutschland;;;;;"(0511) 76-88919 ";;"(0511) 76-88927";;karen.tepel@studentenwerk-hannover.de;www.studentenwerk-hannover.de;;;;;;;;;;;Sozialberatung;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10283;Herrn;;Ingo;Heinze;;"modotex GmbH";"Meelbaumstraße 8";30165;Hannover;Deutschland;;;;;" +49(0) 511-51 51 27-17";;"+49(0)511-51 51 27-90";;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10284;Frau;;"Wiebke ";Jäschke;;"Miele & Cie. KG ";"Industriestraße 3";31275;Lehrte;Deutschland;;;;;"+49 5132 59-1604 ";;"+49 5132 59-1781604";;;"www.miele.de ";;;;;;;;;;;"Einkauf und Logistik";"Werk Lehrte ";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10285;Herrn;;Simon;Leal;;"Leibniz-Institut für Analytische Wissenschaften - ISAS - e.V.";Bunsen-Kirchhoff-Str.11;"44139 ";Dortmund;Deutschland;;;;;"+49 231 1392-166";;"+49 231 1392-165";;simon.leal@isas.de;;;;;;;;;;;;;;;;;#;;#;10285;;7;;;Umsatzsteuerpflichtig
+10286;Herrn;;Christian;Otto;;"ondamedia GmbH";"Daimlerring 3";31135;Hildesheim;Deutschland;;;;;"+49(0)5121 74977-13";;;;Christian.otto@ondamedia.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10287;Frau;;Alexandra;Peschla;;"Deloitte & Touche GmbH";"Aegidientorplatz 2a";30159;"30159 Hannover";Deutschland;;;;;"0511 30234450";;;01792141677;peschla.alexandra@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10288;Herrn;;Hendrik;Brosent;;"exposive medien gruppe gmbh";"Wohlenbergstraße 4";30179;Hannover;Deutschland;;;;;;;;;H.Brosent@exposive.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10289;Frau;;Janet;Peukert;;;"Donaustraße 22";16314;Panketal;Deutschland;;;;;;;;;janet.peukert@db.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10290;Frau;;Maike;Balzer;;;"Strelitzer Straße 71";10115;Berlin;Deutschland;;;;;;;;;maikebalzer@hotmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10291;"Herrn und Frau";;"Rebekka & Nils";Uhrbach;;;"Plathner Str. 50";30175;Hannover;Deutschland;;;;;"0511 856 49934";;;"0174 371 45 21";rebekka.uhrbach@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10292;Frau;;"Alexandra ";"Peschla ";;;"Harsumer Str. 11";"30519 ";Hannover;Deutschland;;;;;;;;;apeschla@deloitte.de;;;;;;;;;;;;;;;;;#;;#;10292;;7;;;Umsatzsteuerpflichtig
+10293;Frau;;Ulrike;Heuser;;"Content Company - Agentur für Kommunikation GmbH";"Große Brinkgasse 21-25";50672;Köln;Deutschland;;;;;02212071924;;;;u.heuser@slpartners.de;;;;;;;;;;;;;;;;;#;;#;10293;;7;;;Umsatzsteuerpflichtig
+10294;Herrn;;"Werner ";Frye;;;"Biener Busch 21";30539;Hannover;Deutschland;;;;;;;;"0171 722 46261";;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10295;Frau;Dr.;Karolin;Nelles;;"Schindhelm Rechtsanwaltsgesellschaft GmbH";"Aegidientorplatz 2B";30159;Hannover;Deutschland;;;;;"+ 49 511 53460-236";;;;Karolin.Nelles@schindhelm.com;www.schindhelm.com;;;;;;;;;;;;;;;;#;;#;10295;;7;;;Umsatzsteuerpflichtig
+10296;Herrn;;"Steffen ";Büscher;;;"Allerweg 4";"30449 ";;Deutschland;;;;;;;;"0152 56 184 657";S.buescher1@gmx.net;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10297;Herrn;;Rainer;Frank;;;"Wittekamp 2";30177;Hannover;Deutschland;;;;;;;;"0177 - 4428 721";rainer-frank@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10298;Herrn;;Klaus;Burkert;;"KB Ing. Holding GmbH";"Dannhornweg 8";30916;Isernhagen;Deutschland;;;;;"05139 / 95890 11";;;"0173 885 1376";klaus.burkert@kb-ingenieurberatung.de;www.kb-ingenieurberatung.de;;;;;;;;;;;;;;;;#;;#;10298;;7;;;Umsatzsteuerpflichtig
+10299;Frau;;"Sylvia ";Hartje;;;"Auf dem Loh 28";"30167 ";Hannover;Deutschland;;;;;;;;;sylvia.hartje@yahoo.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10300;Herrn;Dipl.;"Thilo ";Haas;;"Connox GmbH";"Eckenerstraße 3";" 30179 ";Hannover;Deutschland;;;;;0511-300341-0;;;;thilo.haas@connox.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10301;Frau;;"Eldem ";Turan;;"BEYS marketing & media GmbH";"Boyenstr. 42";"10115 ";" Berlin";Deutschland;;;;;" +49 30 399 902 45";;;;eldem@beys.de;www.beys.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10302;Herrn;;Patric;Wilhelm;;;"Neue Wiesen 31";30855;Lngenhagen;Deutschland;;;;;;;;"0163 - 318 3087";patric.wilhelm@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10303;Frau;;Carolin;Dunkel;;"Dunkel & Dunkel GbR";"Brunnenstraße 180";10119;Berlin;Deutschland;;;;;;;;01628940196;carolin@lambsandlions.com;;;;;;;;;;;;;;;;;#;;#;10303;;7;;;Umsatzsteuerpflichtig
+10304;Herrn;Dr.;Lars;Karl;;"GWZO - Geisteswissenschaftliches Zentrum Geschichte und Kultur Ostmitteleuropas ";"Reichsstraße 4-6";"04109 ";Leipzig;Deutschland;;;;;;;;;james@englischlektorat.com;;;;;;;;;;;;"Specks Hof (Eingang A)";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10305;Herrn;;Pascal;Mauro;;;"Kniestraße 40";30167;Hannover;Deutschland;;;;;;;;"0157 585 80158";psclmauro@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10306;Herrn;;"Tim Fabian";Böhnke;;;"von-Reden-Str. 4";30989;"Gehrden ";Deutschland;;;;;;;;;boehnketim@hotmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10307;Herrn;"Univ.-Prof. Dr.";" Alexander ";Markschies;;"Institut für Kunstgeschichte der RWTH";"Pfarrlandplatz 9";"30451 ";Hannover;Deutschland;;;;;+49-241-8095068;;;;mark@kunstgeschichte.rwth-aachen.de;;;;;;;;;;;;;;;;;#;;#;10307;;7;;;Umsatzsteuerpflichtig
+10308;Herrn;;Rolf;Eisenmenger;;"Lo&Go Textilvertriebs. mbH";"Windmühlenstr. 3";30159;Hannover;Deutschland;;;;;;;;;rolf.eisenmenger@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10309;Frau;;Helke;Brandt;;"Helke Brandt Communication";"Mars-La-Tour-Straße 17";30175;Hannover;Deutschland;;;;;;;;;agentur@hbcom.eu;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10310;Frau;;Sarah;Koch;;;"Birkenstraße 38";30171;Hannover;Deutschland;;;;;;;;;sarah_koch816@hotmail.de;;;;;;;;;;;;;;;;;#;;#;10310;;7;;;Umsatzsteuerpflichtig
+10311;Herrn;;Patrick;Irmer;;"NewStore GmbH";"Bödekerstraße 56";30161;Hannover;Deutschland;;;;;;;;;pirmer@newstore.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10312;Frau;;Frau;"Hille Behrens";;"ETL Treuhand Steuerberatungsgesellschaft mgH";"Hinüberstraße 4 A";30175;Hannover;Deutschland;;;;;"+49 511 34846-60";;;;Andrea.Kowollik@etl.de;;;;;;;;;;;;;;;;;#;;#;10312;;7;;;Umsatzsteuerpflichtig
+10313;Frau;;Manuela;Voigt;;"Go-Ahead Verkehrsgesellschaft Deutschland GmbH";"Jean-Monnet-Straße 2";10557;Berlin;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;10313;;7;;;Umsatzsteuerpflichtig
+10314;Frau;;Nicole;"Wieczorek ";;"Institut für Diagnostik der Epilepsien (IDE) gGmbH";"Herzbergstraße 79";"10365 ";"Berlin ";Deutschland;;;;;;;;;james@englisch-lehrer.com;;;;;;;;;;;;;;;;;#;;#;10314;;7;;;Umsatzsteuerpflichtig
+10315;;;;;;"Keymile GmbH";"Wohlenbergstraße 3";30179;Hannover;Deutschland;;;;;0511-6747-534;;;;udo.vogt@keymile.com;;;;;;;;;;;;;;;;;#;;#;10315;;7;;;Umsatzsteuerpflichtig
+10316;Herrn;;Patrick;Beukert;;"pb ReCommerce GmbH";"Hauptstraße 13";10317;;Deutschland;;;;;"+49 30 54719273";;;;Patrick.Beukert@pbrecommerce.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10317;Frau;;"Mirja ";Ciesiolka;;;"Husarenstraße 3";"30163 ";Hannover;Deutschland;;;;;;;;"0176 66 88 96 40";mirja.ciesiolka@uzh.ch;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10318;Herrn;;Kai;Nehring;;;"Unterbiberger Straße 21";85579;Neubiberg;Deutschland;;;;;;;;;nehring.kai@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10319;Frau;;"Julia ";Schulz;;;"Am Lindenhof 1";"30519 ";Hannover;Deutschland;;;;;;;;"0179 68 26 502";wotan60@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10320;Frau;;"Helan ";Yang;;"Yu Yang Deutschland GmbH";"Vahrenwalder Str. 205";30165;Hannover;Deutschland;;;;;"+49 511 897 888 88";;;;helan.yang@yuyang.de;www.yuyang.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10321;Frau;;Stephanie;Jenkner-Zeglin;;"Verband der deutschen Automaten e.V.";"Dircksenstraße 49";10178;Berlin;Deutschland;;;;;"030 28 40 70";;;;vdai@vdai.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10322;Herrn;;"Hossein Fazeli";Khalili;;;"Zimmer 192, Heidjerhof 3";30625;Hannover;Deutschland;;;;;;;;01783581611;h.fkh68@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10323;Herrn;;Özkan;Ünlü;;"Özkan Ünlei";"Hannoversche Str. 138F";30823;Garbsen;Deutschland;;;;;;;;"01575 2631578";oezkan.uenlue@arcor.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10324;Herrn;;Dirk;Austen;;"Paul Productions GmbH";"Bunnenbergstraße 16a";30165;Hannover;Deutschland;;;;;"0511 35 05 713";;;;info@paulproductions.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10325;Frau;;Simone;Dirschka;;;"Charlotten Str. 50";30449;Hannover;Deutschland;;;;;;;;"0178 6879850";simone.dirschka@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10326;Herrn;;Thomas;Vorwerk;;;"Kreuzstr. 9";30159;Hannover;Deutschland;;;;;;;;"0171 614 8186";thomas.vorwerk@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10327;Frau;;Katrin;"Helmke-Ruß M.A.";;"Praxis für Kinder- und Jugendlichentherapie (VT)";"Seelhorststr. 35";30175;Hannover;Deutschland;;;;;"0511 6406514";;;;Katrin.russ@kitz-hannover.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10328;Herrn;;Peter;Leppelt;;"Qabel GmbH";"Goseriede 4 / Tiedthof";30159;Hannover;Deutschland;;;;;"0511 - 96 94 98 - 400";;;;goertz@qabel.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10329;Frau;;Min;Yang;;;"Hülsighof 21";30629;Hannover;Deutschland;;;;;"0176 2627 8307";;;"0152 0962 7655";lizhixiongyangmin@163.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10330;Herrn;;"Olaf ";Müller;;"Fala Werk Chemische Fabrik GmbH";"Stahlstraße 5";30916;Isernhagen;Deutschland;;;;;"+49 511 97386-37";;;;o.mueller@fala.de;www.fala.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10331;Herrn;;Matthias;Hake;;" gutenberg beuys feindruckerei GmbH";"Hans-Böckler-Straße 52";"30851 ";Langenhagen;Deutschland;;;;;"+49 511 87415160";;;;hake@feindruckerei.de;www.feindruckerei.de;;;;;;;;;;;;;;;;#;;#;10331;;7;;;Umsatzsteuerpflichtig
+10332;Herrn;;Olaf;Müller;;"Fala Werk Chemische Fabrik GmbH";"Stahlstraße 5";30916;Isernhagen;Deutschland;;;;;"0511 97386 37";;;;o.mueller@fala.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10333;Frau;;Anna;"Schulze Lammers";;;"Hildesheimer Str. 18";31174;Bettmar;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;10333;;7;;;Umsatzsteuerpflichtig
+10334;Frau;;Alice;Welzel;;;"Leisewitz Str. 22";30175;Hannover;Deutschland;;;;;;;;"0177 2737386";welzel@kabelmail.de;;;;;;;;;;;;;;;;;#;;#;10334;;7;;;Umsatzsteuerpflichtig
+10335;Herrn;;"Torsten ";Schlegel;;;"Lise-Meitner-Str. 27";Isernhagen;Isernhagen;Deutschland;;;;;;;;"0171 686 37 99";;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10336;Frau;;Christin;Ferl;;"AGRAVIS Raiffeisen AG";"Chromstraße 19";30916;Isernhagen;Deutschland;;;;;"0511. 973396 - 15";;;;christin.ferl@agravis.de;;;;;;;;;;;;"Bereich Saatgut";;;;;#;;#;10336;;7;;;Umsatzsteuerpflichtig
+10337;Frau;;Anna;"Schulze Lammers";;;"Hildesheimer Straße 18";"31174 ";Bettmar/Schellerten;Deutschland;;;;;;;;;Anna.Luise.Schulze.Lammers@agravis.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10338;Herrn;Dipl.-Kfm.;Bernd;Gössel;;"correctus e. K.";"Meißener Straße 13";90765;Fürth;Deutschland;;;;;"0911 5209560";;;;info@correctus.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10339;Frau;;Inga;"van Husen";;;"Teichstr. 2 ";30449;"Hannover ";Deutschland;;;;;;;;"0176 30453242";"Inga.vanhusen@ gmail.com";;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10340;Frau;;Anna;"Große - Loheide";;;"Bethlehemstr. 5";30451;Hannover;Deutschland;;;;;;;;"0163 8708 782";anna.grosse-loheide1@gmx.de;;;;;;;;;;;;;;;;;#;;#;10340;;7;;;Umsatzsteuerpflichtig
+10341;Frau;;"Alice ";Welzel;;;"Leisewitzstr. 22";"30175 ";Hannover;Deutschland;;;;;;;;"0172 27 37 386";alice.welzel@kabelmail.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10342;Herrn;;"Marcus ";Ludwig;;"Hofmann & Sommer GmbH & Co. KG";"Johann-Hittorf-Str. 8 ";12489;Berlin;Deutschland;;;;;"030/ 6392 – 2900";;;;m.ludwig@hofmannundsommer.de;www.hofmannundsommer.de;;;;;;;;;;;"Büro Berlin";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10343;Herrn;;Bastian;Hager;;"music support group GmbH";"Brucker Str. 10";82223;Einchenau;Deutschland;;;;;;;;"0176 10062711";b.hager@deutsche-pop.de;;;;;;;;;;;;;;;;;#;;#;10343;;7;;;Umsatzsteuerpflichtig
+10344;Herrn;;Thorsten;Seidl;;"msg Beteiligung- und Verwaltung-GmbH";"Brucker Str. 10";82223;Einchenau;Deutschland;;;;;;;;"0176 10588175";t.seidl@deutsche-pop.de;;;;;;;;;;;;;;;;;#;;#;10344;;7;;;Umsatzsteuerpflichtig
+10345;;;;;;"Departer - The German Headhunter DMCC";"Jumeirah Lakes Towers";"P.O. Box 124303";Dubai;"Vereinigte Arabische Emirate";;;;;;;;;Norman.Sterz@departer.com;;;;;;;;;;;;"Jumeirah Business Centre Tower";"1 (Cluster G) Office 2308";;;;#;;#;10345;;7;;;Umsatzsteuerpflichtig
+10346;Frau;;Irene;Leon;;"Red Bull Media House GmbH";"O.-Lepperdinger-Str. 11";5071;Wals;Österreich;;;;;;;;;Sandra.Bellin@at.redbullmediahouse.com;;;;;;;;;;;;;;;;;#;;#;10346;;7;;;Umsatzsteuerpflichtig
+10347;Herrn;;"Thorsten ";Dudenhöffer;;;"Im Mailand 51";"30823 ";Garbsen;Deutschland;;;;;05137-124422;;;"0152 3196 3012";dudenhoeffer.garbsen@freenet.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10348;Frau;;Sandra;Jurczyk;;"Immobilien Scout GmbH";"Andreasstraße 10";10243;Berlin;Deutschland;;;;;;;;;sandra.jurczyk@immobilienscout24.de;;;;;;;;;;;;"Accounts Payable";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10349;Frau;;Julia;Mayer;;"Jobcenter Berlin-Pankow";"Storkower Straße 133";10407;Berlin;Deutschland;;;;;0305555346121;;;;Jobcenter-Berlin-Pankow.BGF-Qualifizierung@jobcenter-ge.de;;;;;;;;;;;;Fachassistentin/Schulungskoordinatorin;"Büro der Geschäftsleitung";"Frau Julia Mayer";;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10350;Frau;;Birgit;Leisten;;"Beziehungsorientiertes Management GbR";"Lutherstraße 57";30171;Hannover;Deutschland;;;;;"0160 6000 623";;;;birgit@bom.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10351;Frau;;Kerstin;Unterluggauer;;;"Wittboldstr. 10";30419;Hannover;Deutschland;;;;;;;;"0162 1057136";keunter@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10352;Herrn;;Jonas;Memenga;;;"Kniestr. 4";30167;Hannover;Deutschland;;;;;;;;"0176 3264 1950";jonas.memenga@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10353;Frau;;Nicola;Friedel;;"Praxis für Logopädie";"Am Holzgraben 3";30161;Hannover;Deutschland;;;;;;30071804;;"0178 727 6672";praxis@logopaedie-friedel.de;;;;;;;;;;;;;;;;;#;;#;10353;;7;;;Umsatzsteuerpflichtig
+10354;Herrn;;Frank;Merten;;"Prifomo GmbH";"Reifträgerweg 17";14129;Berlin;Deutschland;;;;;;;;"+49 171 9519985";merten-frank@web.de;;;;;;;;;;;;;;;;;#;;#;10354;;7;;;Umsatzsteuerpflichtig
+10355;Frau;;Miriam;Valentini;;"MüllerValentini GbR";"Urbanstraße 116";10967;Berlin;Deutschland;;;;;03069517474;;;;miriam@muellervalentini.de;;;;;;;;;;;;"Aufgang 7";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10356;Frau;;Kakuko;Hirose;;;"Färberstraße 26";90402;Nürnberg;Deutschland;;;;;;;;"0174 6742 454";koko@hirose-design.de;;;;;;;;;;;;;;;;;#;;#;10356;;7;;;Umsatzsteuerpflichtig
+10357;Frau;;Antje;Stoya-Ballantyne;;"BORSIG GmbH";"Egellsstraße 21";13507;Berlin;Deutschland;;;;;"0049 30 4301 2622";;;;M.Haverkamp@borsig-mt.com;;;;;;;;;;;;;;;;;#;;#;10357;;7;;;Umsatzsteuerpflichtig
+10358;Frau;;Eva;Valta;;"TRANSTHERMOS GmbH";"Lilienthalallee 25";80939;München;Deutschland;;;;;"089 32360 719";;;;Eva.Valta@transthermos.de;;;;;;;;;;;;"Assistentin der Geschäftsführung";;;;;#;;#;10358;;7;;;Umsatzsteuerpflichtig
+10359;Herrn;;Stefan;Lechermann;;"Flying Steps Entertainment GmbH";"Lobeckstraße 30-35";10969;Berlin;Deutschland;;;;;;;;;stefan.lechermann@flyingsteps.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10360;;;;;;"IG Metall Vorstand";;60519;"Frankfurt a. Main";Deutschland;;;;;;;;;Uwe.Stoffregen@igmetall.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10361;Frau;Dr;Sylvia;Pingen;;;"Mommsenstr. 32";31073;Hannover;Deutschland;;;;;;;;;s.pingen@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10362;Herrn;;Marc;Pritzel;;;"Gropiusstraße 7";30559;Hannover;Deutschland;;;;;;;;"0172 281 2991";m.pritzel@immoverde.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10363;Frau;;Maren;Denecke;;;"Vor der Grund 2";30826;Garbsen;Deutschland;;;;;;;;0173-6227733;refraktaer74@googlemail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10364;Frau;;Sabine;Tober;;;"Weißekreuzstr. 18";30161;Hannover;Deutschland;;;;;"0511 - 89 76 9276";;;"0173 214 4377";info@sabinetober.de;www.sabinetober.de;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;10364;;7;;;Umsatzsteuerpflichtig
+10365;;;;;;"facts and fiction GmbH";"Anna-Schneider-Steig 2 / Rheinauhafen";50678;Köln;Deutschland;;;;;;;;;ingrid.lohre@factsfiction.de;;;;;;;;;;;;;;;;;#;;#;10365;;7;;;Umsatzsteuerpflichtig
+10366;Frau;;Justine;Habraschka;;;"Birkenweg 25";30916;Isernhagen;Deutschland;;;;;;;;"0171 270 5398";;;;;;;;;;;;;;;;"Englischunterricht Hannover";;#;;#;;;7;;;Umsatzsteuerpflichtig
+10367;;;Ralf;Bredow;;;"Seebeeke 19";30823;Garbsen;Deutschland;;;;;;;;"0171 166 9212";;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10368;Herrn;;Marc;Muntau;;"Flughafen Hannover-Langenhagen GmbH";"P.O. Box 42 02 80";30662;Hannover;Deutschland;;;;;;;;;M.Muntau@hannover-airport.de;;;;;;;;;;;;"Human Resources Manager";;;;;#;;#;10368;;7;;;Umsatzsteuerpflichtig
+10369;Frau;;Daniela;Elze;;"European Special Properties GmbH";"Chemnitzer Straße 198-200";12621;Berlin;Deutschland;;;;;;;;;daniela.elze@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10370;Herrn;;;Barsch;;"COMPAX Unternehmensberatung GmbH";"Rotenburger Str. 26";30659;Hannover;Deutschland;;;;;"0511 - 260 939 - 50";;;;info@advokat-stb.de;www.advokat-stb.de;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10371;Frau;;Sandra;Jegodka;;;"Göttinger Chaussee 244";30459;Hannover;Deutschland;;;;;"0511 - 21 374 21 (Home)";"0511 - 168 43 994 (Work)";;"0176 922 67588";sandra.jegodka@t-online.de;;;;;;;;;;;;;;"4 Oct. 12.30 - 14.00
+18th/19th 12.30-14.00 16.00+";;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10372;Frau;;Tina;Simon;;"Berufsverband der Augenärzte Deutschlands e.V.";"Tersteegenstraße 12";40474;Düsseldorf;Deutschland;;;;;;;;;kwapisiewicz@augeninfo.de;;;;;;;;;;;;;;;;;#;;#;10372;;7;;;Umsatzsteuerpflichtig
+10373;Herrn;;Matthias;"Springborn M.A.";;"Georg Eckert Institut for International Textbook Research";"Celler Straße 3";38114;Braunschweig;Deutschland;;;;;;;;;springborn@gei.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10374;Frau;;Michaela;Platte;;"ITW Befestigungssysteme GmbH";"Carl-Zeiss-Straße 19";30966;Hemmingen;Deutschland;;;;;"+49 511-4204304";;;;m.platte@itw-befestigungssysteme.de;;;;;;;;;;;;;;;;;#;;#;10374;;7;;;Umsatzsteuerpflichtig
+10375;;;;;;"Technische Universität Braunschweig";"Schleinitzstraße 23 A";38106;Braunschweig;Deutschland;;;;;;;;;julian.schuette@tu-braunschweig.de;;;;;;;;;;;;;"Institut für Bauwirtschaft und Baubetrieb";;;;#;;#;10375;;7;;;Umsatzsteuerpflichtig
+10376;Frau;;Sabine;Peschek;;;"Schlehenbrink 13";37581;"Bad Gandersheim";Deutschland;;;;;;;;;s-peschek@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10377;Frau;;Fatima;Nasser;;;"Am Wildpfad 11";30657;"Hannover - Isernhagen-Süd";Deutschland;;;;;;;;;mita.n@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10378;Frau;Dipl.-Sozialwiss.;Stefanie;Theil;;"Technische Universität Braunschweig";"Katharinenstr. 3, Raum 106";38106;Braunschweig;Deutschland;;;;;;;;;international-fk3@tu-braunschweig.de;;;;;;;;;;;;"Auslandsstudium Bau, MoVe, Umwelt, Wibau";"Fakultät Architektur, Bauingenieurwesen und Umweltwissenschaften";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10379;Herrn;;Abgar;Barseyten;;"bilacon GmbH";"An der Industriebahn 5";13088;Berlin;Deutschland;;;;;;;;;abgar.barseyten@tentamus.com;;;;;;;;;;;;;;;;;#;;#;10379;;7;;;Umsatzsteuerpflichtig
+10380;Herrn;;Daniil;Pinyagin;;"OVG Real Estate GmbH";"Tauentzienstraße 11";10789;Berlin;Deutschland;;;;;;;;;dp@ovg.eu;;;;;;;;;;;;"Development Manager";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10381;Herrn;;Peter;Rost;;"Martin Braun Backmittel und Essenzen KG";"Tilly straße 17";30459;Hannover;Deutschland;;;;;;;;;p.rost@martinbraun.de;;;;;;;;;;;;"Produktionsleitung Powder";;;;;#;;#;10381;;7;;;Umsatzsteuerpflichtig
+10382;Herrn;;Roland;Paul;;"ASP Baustellenservcie GmbH";"Entenfangweg 7";30419;Hannover;Deutschland;;;;;;;;;asp.paul@email.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10383;Frau;;Alexandra;Keil;;"D/P/S Wolff GmbH";"Mannheimer Str. 11";30880;Laatzen;Deutschland;;;;;0511-978197-10;;;;keil@dps-wolff.de;;;;;;;;;;;;;;;;;#;;#;10383;;7;;;Umsatzsteuerpflichtig
+10384;Frau;;Jana;"Pannicke Dipl.-Ökonomin";;"Hochschulbüro für ChancenVielfalt";"Wilhelm-Busch-Straße 4";30167;Hannover;Deutschland;;;;;;;;;pannicke@chancenvielfalt.uni-hannover.de;;;;;;;;;;;;"Referentin für Gender Mainstreaming";"Leibniz Universität Hannover";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10385;Frau;;Josta;Keil-Grabow;;;"Schlossstraße 503";41238;Mönchengladbach;Deutschland;;;;;;;;;info@josta-art.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10386;Frau;;Sonja;Riedel;;;"Rehwinkel 10i";30926;Seelze;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;10386;;7;;;Umsatzsteuerpflichtig
+10387;Frau;;Eva;Schubert;;"Lehmanns Media GmbH";"Helmholtzstr. 2-9";10587;Berlin;Deutschland;;;;;"+49 (0) 30/617 911 23";;;;eva.schubert@lehmanns.de;;;;;;;;;;;;"siz | service internationale zeitschriften";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10388;Frau;;Lilianna;Grochot;;"Wirtschafts- & Steuerberatung Reinke";"Meinekestraße 27";10719;Berlin;Deutschland;;;;;"030 887 08 54 - 00";;;;info@steuerberatung-reinke.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10389;Herrn;;Michael;Mätschke;;"Sonepar Deutschland GmbH";"Industrieweg 28";30179;Hannover;Deutschland;;;;;;;;;kristin.neitzel@sonepar.de;;;;;;;;;;;;;;;;;#;;#;10389;;7;;;Umsatzsteuerpflichtig
+10390;Herrn;;"Hans J.";Holm;;;"Bernburger Str. 11";30629;Hannover;Deutschland;;;;;;;;;hjjaholm@arcor.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10391;Frau;;Astrid;Voigt;;BRAINFACTORY;"Haußmannstr. 103B";70188;Stuttgart;Deutschland;;;;;;;;;a.voigt@brainfactory.de;;;;;;;;;;;;;;;;;#;;#;10391;;7;;;Umsatzsteuerpflichtig
+10392;Herrn;;Christoph;Tapper;;;"Paretzer Str. 1A";10713;Berlin;Deutschland;;;;;;;;;tapper@zedat.fu-berlin.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10393;Frau;;Jeanette;Hamelmann;;;"Innstr. 7";30519;Hannover;Deutschland;;;;;;;;;Jeanette.Hamelmann@conti.de;;;;;;;;;;;;;;;;;#;;#;10393;;7;;;Umsatzsteuerpflichtig
+10394;Frau;;Fatma;Bal;;"OpusCapita Software GmbH";"Lindemannstraße 79";44137;Dortmund;Deutschland;;;;;;;;;Fatma.Bal@opuscapita.com;;;;;;;;;;;;;;;;;#;;#;10394;;7;;;Umsatzsteuerpflichtig
+10395;Herrn;;Andreas;Müller;;"Befesa Salzschlacke GmbH";"Am Brinker Hafen 6";30179;Hannover;Deutschland;;;;;"+49 (0) 511 6303 144";;;;andreas.mueller@befesa.com;;;;;;;;;;;;Produktionsleiter;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10396;Frau;;Diana;Napolitano;;"Medizinische Hochschule Hannover";"Carl-Neuberg-Str. 1";30625;Hannover;Deutschland;;;;;"+49 511 532 8846";;;;napolitano.diana@mh-hannover.de;;;;;;;;;;;;"Stabsstelle Betriebsorganisation, Innovations- und Qualittätsmanagement";"CF QM Tx / OE 1122";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10397;Frau;;Luisa;Beßer;;;"An der Apostelkirche 4";30161;Hannover;Deutschland;;;;;;;;;luisa.besser@gmail.com;;;;;;;;;;;;;;;;;#;;#;10397;;7;;;Umsatzsteuerpflichtig
+10398;Herrn;Dr.;Heinz;Kamp;;;"Dammstraße 17";30938;Burgwedel;Deutschland;;;;;"05139 6970156";;;;heinz.kamp@icloud.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10399;Frau;;Constance;Bischoff;;;"Klosterfeldstrasse 31";CH-5630;"Muri AG";Schweiz;;;;;;;;;lieblingszwerg82@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10400;Frau;Dr.;Amrei;Flechsig;;;"Am Schatzkampe 33";30161;Hannover;Deutschland;;;;;;;;"0172 438 79 78";AmreiFlechsig@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10401;Herrn;;Nico;Vaes;;"AGILA Haustierversicherung AG";"Breite Straße 6";30159;Hannover;Deutschland;;;;;"0511 54359-332";;;;n.vaes@wertgarantie.com;;;;;;;;;;;;;;;;;#;;#;10401;;7;;;Umsatzsteuerpflichtig
+10402;Frau;;Kirsten;Ohlendorf;;;"Alte Herrenhäuser Str. 48";30419;Hannover;Deutschland;;;;;;;;015228924845;k-ohlendorf@online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10403;Herrn;;Michael;Kulla;;;"Roonstraße 4";30161;Hannover;Deutschland;;;;;;;;;daniela.grabinski@web;;"Daniela Grabinski";;;;;;;;;;;;;;;#;;#;10403;;7;;;Umsatzsteuerpflichtig
+10404;;;;;;"ADAM Audio GmbH";"Rudower Chausee 50";12489;Berlin;Deutschland;;;;;"+49 (0)30 863 00 97-25";;;;tania.otter@adam-audio.de;;;;;;;;;;;;;;;;;#;;#;10404;;7;;;Umsatzsteuerpflichtig
+10405;Frau;;Annett;Findeisen;;"PRS Family Trust GmbH";"Tauentzienstr. 9";10789;Berlin;Deutschland;;;;;"+49 (0)30 886 267 40";;;;a.findeisen@prs-familytrust.de;;;;;;;;;;;;"Europa-Center 19. OG";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10406;Herrn;;Michael;Kulla;;;"Roonstr. 4";30161;Hannover;Deutschland;;;;;;;;;mkulla@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10407;Frau;;Katja;Schade;;;"Echterngrund 15 a";30657;Hannover;Deutschland;;;;;;;;;katja.schade@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10408;Frau;;Katharina;König;;;"Würmstraße 38";82131;Stockdorf;Deutschland;;;;;;;;;queeny3@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10409;Herrn;;Hans;Heinrichsdorff;;;"Hegelstraße 15";30625;Hannover;Deutschland;;;;;;;;;h_heinrichsdorff@hotmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10410;Herrn;;Patrick;Maihöfer;;"Toyota Material Handling Deutschland GmbH";"Hannoversche Straße 113";30916;Isernhagen;Deutschland;;;;;;;;;patrick.maihoefer@de.toyota-industries.eu;;;;;;;;;;;;;;;;;#;;#;10410;;7;;;Umsatzsteuerpflichtig
+10411;Herrn;;Oliver;Warneboldt;;;"Im Dorfe 8";31079;Sibbesse;Deutschland;;;;;"05132 8268 36";;;;warneboldt@t-online.de;;;;;;;;;;;;;;;;;#;;#;10411;;7;;;Umsatzsteuerpflichtig
+10412;Herrn;;Patrick;Witton;;"Emil Witton GmbH";"Alter Flughafen 14";30179;Hannover;Deutschland;;;;;;;;;P.Witton@csp-it.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10413;Frau;;Aurelia;Eggers;;;"Kirchboitzen 42";29664;Walsrode;Deutschland;;;;;"0172 616 73 29";;;;aeggers@online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10414;Herrn;;Heiner;Duensing;;;"Auf den Breiten 1";31535;"Neustadt/OT Mandelsloh";Deutschland;;;;;;;;01729742399;finn7@gmx.net;;;;;;;;;;;;;;;;;#;;#;10414;;7;;;Umsatzsteuerpflichtig
+10415;Frau;;Ruth;Wulf;;;"Rischweg 9";31609;Balge;Deutschland;;;;;;;;"0175 97 93 755";mail@muehlenbruch-einrichtungen.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10416;Herrn;;Dominik;Guyer;;"music support group GmbH";"Brucker Str. 10";82223;Eichenau;Deutschland;;;;;;;;;d.guyer@deutsche-pop.de;;;;;;;;;;;;;;;;;#;;#;10416;;7;;;Umsatzsteuerpflichtig
+10417;;;;;;"Befesa Salzschlacke GmbH";"Am Brinker Hafen 6";30179;Hannover;Deutschland;;;;;;;;;rechnungseingang.bsg@befesa.com;;;;;;;;;;;;;;;;;#;;#;10417;;7;;;Umsatzsteuerpflichtig
+10418;Frau;;Anja;Hartlieb;;"ATP Adhesive Systems GmbH";"Eichenhofer Weg 71";42279;Wuppertal;Deutschland;;;;;;;;;Anja.Hartlieb@atp-ag.ch;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10419;Frau;;Anja;Hartlieb;;"ATP Adhesive Systems GmbH";"Eichenhofer Weg 71";42279;Wuppertal;Deutschland;;;;;"+49 (0)2339/909-751";;;;kai.hupe@atp-ag.ch;;;;;;;;;;;;;;"Kai Hupe";;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10420;Frau;;Ines;Grunwald;;"DHL Freight GmbH";"Stelinger Straße 6";30419;Hannover;Deutschland;;;;;;;;;ines.grunwald@dhl.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10421;Herrn;;Tomas;Busse;;;"Appel Strasse 30";30167;Hannover;Deutschland;;;;;;;;;tomas@englisch-lehrer.com;;"for test puposes only";;;;;;;;;;;;;;;#;;#;10421;;7;;;Umsatzsteuerpflichtig
+10422;Herrn;;Holger;Marquardt;;"EuV Akademie";"Regensburger Straße 12a";10777;Berlin;Deutschland;;;;;;;;;holger.marquardt@cubus-m.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10423;Frau;;Silke;Musfeldt;;"Konzertdirektion Schmid";"Königstraße 36";30175;Hannover;Deutschland;;;;;;;;;silke.musfeldt@kdschmid.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10424;;;"c/o Deutsche Post AG";;;"DHL Freihgt GmbH";;"44113 Dortmund";;Deutschland;;;;;;;;;ute.oleschko@dhl.com;;;;;;;;;;;;"Finance Operations Deutschland";"SSC Accounting Kreditoren";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10425;Herrn;;Oliver;Köhnke;;"Heidelberg Engineering GmbH";"Max Jarecki Str. 8";69115;Heidelberg;Deutschland;;;;;"062 21 - 6463 0";;;"0172 846 7133";oliver.koehnke@heidelbergengineering.de;https://www.heidelbergengineering.com;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10426;Frau;;Mira;Neumaier;;;"Limmerstr. 15c";30451;Hannover;Deutschland;;;;;;;;"0176 70 50 60 60";mira.neumaier@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10427;Herrn;;Walter;Hoppe;;;"Waldhausenstr. 25";30519;Hannover;Deutschland;;;;;;;;"0173 675 4885";walterhoppe@t-online.de;;;;;;;;;;;;"Fachkraft für Arbeitssicherheit";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10428;Herrn;;Christoph;Dirscherl;;;"Ingelheimer Straße 34";28199;Bremen;Deutschland;;;;;;;;;christoph.dirscherl@outlook.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10429;Frau;;Andrea;Kayser;;;"Lindenalleee 8";30657;Hannover;Deutschland;;;;;"0511 563 75 87";;;"0151 1968 6374";kayser.stuttgart@t-online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10430;Frau;;Tanja;Beier;;"TU Braunschweig Fakultät Architektur, Bauingenieurwesen und Umweltwissenschaften";"Katharinenstraße 3";38106;Braunschweig;Deutschland;;;;;"+49 (0) 531 - 391 - 5941";;;;arch@tu-braunschweig.de;;;;;;;;;;;;;;;;;#;;#;10430;;7;;;Umsatzsteuerpflichtig
+10431;Frau;;Sonja;Linne;;"Trotec Laser Deutschland GmbH";"Gutenbergstraße 6";85737;Ismaning;Deutschland;;;;;"+49 51 36 - 97 139 - 11";;;;sonja.linne@troteclaser.com;;;;;;;;;;;;;;;;;#;;#;10431;;7;;;Umsatzsteuerpflichtig
+10432;Herrn;;Andreas;Gartz;;"LEHN.STEIN GmbH";"Löhrstraße 113";56068;Koblenz;Deutschland;;;;;"+49 261 1002574";;;;gartz@lehnstein.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10433;Herrn;;Stefan;Schulze;;"msg GmbH & Co. KG";"Brucker Straße 10";82223;Eichenau;Deutschland;;;;;;;;;l.brunstein@deutsche-pop.de;;;;;;;;;;;;;;;;;#;;#;10433;;7;;;Umsatzsteuerpflichtig
+10434;Herrn;;Raik;Schönfeld;;;"Weberstrasse 7E";30629;Hannover;Deutschland;;;;;;;;"0173 2742 464";raik.schoenfeld@online.de;;Isabell;;;;;;;;;;;;;;;#;;#;10434;;7;;;Umsatzsteuerpflichtig
+10435;Herrn;;René;Bettels;;;"Dorfplatz 2";31177;Harsum;Deutschland;;;;;;;;"0151 - 4051 1164";rene.bettels@outlook.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10436;Frau;;Kerstin;Langhammer;;;"Silberstrasse 20A";30655;Hannover;Deutschland;;;;;;;;"0151 407 87 79 86";info@pure-hair.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10437;Frau;;Nadine;Gaida;;;"Louise Schröder Str. 35";30974;Wennigsen;Deutschland;;;;;;;;"0176 4102 6405";;;;;;;;;;;;;;;;;;#;;#;10437;;7;;;Umsatzsteuerpflichtig
+10438;"Herrn und Frau";;"Hans Herrmann und Meike";Alex;;;"Callinstr, 42";30167;Hannover;Deutschland;;;Hannover;;"0511 279 21 72";;;"0173 - 279 2172";meike.alex@t-online.de;;;;;;;;;;;;;;;;;#;;#;10438;;7;;;Umsatzsteuerpflichtig
+10439;Frau;;Chantal;Wiggert;;;"Rosenstraße 33";31275;Lehrte;Deutschland;;;;;;;;01734058664;c-wiggert@t-online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10440;Herrn;;Martin;Vitt;;"Sanofi-Aventis Deutschland GmbH";"Industriepark Hoechst";65926;"Frankfurt am Main";Deutschland;;;;;;;;;Martin.Vitt@sanofi.com;;;;;;;;;;;;"Medical Devices";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10441;Herrn;;Norbert;Künstner;;Internumis;"Gumpendorferstraße 99";1060;Wien;Österreich;;;;;;;;;johann.kodnar@gmx.at;;;;;ATU48212107;;;;;;;;;;;;#;;#;10441;;7;;;Umsatzsteuerpflichtig
+10442;Frau;;Nadine;Geier;;"Bertrand Services GmbH";"Rendsburger Str. 34";30659;Hannover;Deutschland;;;;;;;;"0176 44700514";Nadine.Geier@de.bertrandt.com;;;;;;;;;;;;;;;;;#;;#;10442;;7;;;Umsatzsteuerpflichtig
+10443;Herrn;;Stefan;Götze;;;"Parallelstr. 23a";12209;Berlin;Deutschland;;;;;;;;;stgoetze@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10444;Frau;;Isabell;Ibing;;;"Iberg 27a";31840;"Hessisch Oldendorf";Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10445;Frau;;Martina;Münkel;;;"Auterweg 26 b";30826;Garbsen;Deutschland;;;;;004915123055416;;;;martina.muenkel@t-online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10446;Herrn;"Dipl. Ing.";Martin;Vitt;;"Sanofi-Aventis Deutschland GmbH";"Industriepark Hoechst";65926;"Frankfurt am Main";Deutschland;;;;;;;;;Martin.Vitt@sanofi.com;;;;;;;;;;;;;"Bldg. K607, Room 6051";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10447;Herrn;;Stephan;Sgorsaly;;;"Heidornstraße 10";30171;Hannover;Deutschland;;;;;;;;;ssgorsaly@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10448;Herrn;;Matthias;Mager;;"PMCS Property Management Services GmbH";"Kurfürstendamm 195";10707;Berlin;Deutschland;;;;;"+49 (30) 206 23-416";;;"+49 (172) 864 21 48";M.Mager@freogroup.com;www.pmcs-freo.com;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10449;Herrn;;Mark;Wichert;;;"Leinstraße 11";31535;Neustadt;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10450;Frau;;Viktoria;Meyer-Kobbe;;;"Lappenberg 4a";31157;Sarstedt;Deutschland;;;;;;;;"0162 7701777";;;;;;;;;;;;;;;;;;#;;#;10450;;7;;;Umsatzsteuerpflichtig
+10451;Herrn;;Tobias;Axtmann;;;"Lister Meile 78";30161;Hannover;Deutschland;;;;;;;;;tobias.axtmann@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10452;;;;;;"Audatex AUTOonline GmbH";"Lorenzweg 5";12099;Berlin;Deutschland;;;;;;;;;zentrale@ax-ao.de;;;;;;;;;;;;;;;;;#;;#;10452;;7;;;Umsatzsteuerpflichtig
+10453;;;;;;"Toyota Material Handling Commercial  Finance AB, Deutschland";"Hannoversche Straße 113";30916;Isernhagen;Deutschland;;;;;;;;;Marc.Buchta@de.toyota-industries.eu;;;;;;;;;;;;;;;;;#;;#;10453;;7;;;Umsatzsteuerpflichtig
+10454;;;;;;"Toyota Material Handling Deutschland GmbH";"Hannoversche Straße 113";30916;Isernhagen;Deutschland;;;;;;;;;kreditoren@de.toyota-industries.eu;;;;;;;;;;;;;;;;;#;;#;10454;;7;;;Umsatzsteuerpflichtig
+10455;Herrn;;Stephan;Schicht;;"Unimir GmbH";"Tolkewitzer Straße 13";01277;Dresden;Deutschland;;;;;;;;;stephan1992dd@icloud.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10456;Herrn;;Steffen;Than;;;"Max-Planck-Str. 11";30974;Wennigsen;Deutschland;;;;;;;;;steffenthan@hotmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10457;Herrn;;Jens;Briskorn;;"Der Retuscheur";"Helmkestraße 5a";30165;Hannover;Deutschland;;;;;;;;;mail@derretuscheur.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10458;Frau;;Judith;Gerstenberg;;"Schauspiel Hannover";"Prinzenstraße 9";30159;Hannover;Deutschland;;;;;;;;01775404864;Judith.Gerstenberg@staatstheater-hannover.de;;;;;;;;;;;;"Leitende Dramaturgin";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10459;Herrn;;André;Fasterding;;;"Am Flachsgraben 9";30657;Hannover;Deutschland;;;;;;;;;andre.fasterding@t-online.de;;;;;;;;;;;;;;;;;#;;#;10459;;7;;;Umsatzsteuerpflichtig
+10460;Herrn;;Marcus;Mainda;;;"Heinrich-Pröve-Winkel 11";29339;Wathlingen;Deutschland;;;;;;;;marcus.mainda@gmail.com;marcus.mainda@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10461;Frau;;Heidrun;Wölk;;;"Richard-Wagner Str. 34";30177;Hannover;Deutschland;;;;;;;;;Heidrun.Woelk@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10462;Herrn;;Marcus;Mainda;;;"Heinrich-Pröve-Winckel 11";29339;Wathlingen;Deutschland;;;;;;;;;marcus.mainda@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10463;Frau;;Heidrun;Wölk;;;"Richard-Wagner-Str. 34";30177;Hannover;Deutschland;;;;;;;;;Heidrun.Woelk@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10464;;;Lisa;Brandt;;;"Grethe-Jürgens-Straße 86";30655;Hannover;Deutschland;;;;;;;;;librandt@icloud.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10465;Herrn;;Steffen;Bohne;;;"Wunstorfer Straße 93";30453;Hannover;Deutschland;;;;;;;;;steffen.bohne@arcor.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10466;Frau;;Anna;Wagner;;;"An der Alten Fabrik 12";30629;Hannover;Deutschland;;;;;;;;;anna.wagner@mailbox.org;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10467;Frau;Dr;Susanne;Böhm-Behrendt;;;"Lönsstraße 12";31515;Wunstorf;Deutschland;;;;;;;;;sbbehrendt@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10468;Herrn;;Tobias;Platte;;"me.mento 3D manufacture GmbH";"Lise-Meitner-Str. 45/A";10589;Berlin;Deutschland;;;;;;;;;t.platte@me-mento3d.com;;;;;;;;;;;;;;;;;#;;#;10468;;7;;;Umsatzsteuerpflichtig
+10469;Herrn;;Nils;Kabisch;;;"Auf dem Dorrn 19";30165;Hannover;Deutschland;;;;;;;;;nilskabisch@hotmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10470;;;;;;"RICOH Deutschland GmbH";"Vahrenwalder Straße 315";30179;Hannover;Deutschland;;;;;;;;;Incoming-Invoices@service.ricoh.de;;;;;;;;;;;;"Ricoh Academy - Personalentwicklung";;;;;#;;#;10470;;7;;;Umsatzsteuerpflichtig
+10471;Herrn;;Norman;Tacking;;"Flughafen Hannover-Langenhagen GmbH";"Postfach 42 02 80";30662;Hannover;Deutschland;;;;;;;;;N.Tacking@hannover-airport.de;;;;;;;;;;;;"Abteilungsleiter Personal- und Organisationsentwicklung";;;;;#;;#;10471;;7;;;Umsatzsteuerpflichtig
+10472;Frau;;Diana;Siems;;"adh-fishing Siems GmbH & Co. KG";"Kirchvordener Str. 54";31228;Peine;Deutschland;;;;;;;;;diana_siems@adh-fishing.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10473;Frau;;Dina;Schmoll;;"COMRAMO KID GmbH";"Bischofsholer Damm 89";30173;Hannover;Deutschland;;;;;;;;;Dina.Schmoll@comramo.de;;;;;;;;;;;;Personalreferentin;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10474;;;;;;"Flughafen Hannover-Langenhagen GmbH";"Postfach 42 02 80";30662;Hannover;Deutschland;;;;;;;;;B.Wassmann@hannover-airport.de;;;;;;;;;;;;;;;;;#;;#;10474;;7;;;Umsatzsteuerpflichtig
+10475;Frau;;Ursula;Grewatsch;;;"Reichhelmstr. 4";30519;Hannover;Deutschland;;;;;0511-4744755;;;;trico@online.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10476;Herrn;;Andreas;Schäfer;;"RTL Radio Center Berlin GmbH";"Kurfürstendamm 207 – 208";10719;Berlin;Deutschland;;;;;;;;;Kathleen.Hallex@rtl-radiovermarktung.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10477;Frau;;Kira;"von Bülow";;;"Minister-Stüve-Str. 17";30449;Hannover;Deutschland;;;;;;;;;kira.vbuelow@googlemail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10478;Frau;;Simone;Weber;;;"Schäferdamm 21";30823;Garbsen;Deutschland;;;;;;;;;simone.muellerweber@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10479;Frau;;Tatjana;Stolz;;;"Magdeburger Str. 1";30179;Hannover;Deutschland;;;;;;;;;tatjana.stolz@ricoh.de;;;;;;;;;;;;;;;;;#;;#;10479;;7;;;Umsatzsteuerpflichtig
+10480;Frau;;Silvia;Riedel;;;"Jordanstr. 59";30173;Hannover;Deutschland;;;;;;;;;Silvia.Riedel@ricoh.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10481;Frau;;Ariane;Wilhelmi;;"yeebase media GmbH";"Kriegerstraße 40";30161;Hannover;Deutschland;;;;;;;;;ariane.wilhelmi@yeebase.com;;;;;;;;;;;;;;;;;#;;#;10481;;7;;;Umsatzsteuerpflichtig
+10482;Frau;;Kerstin;Stinn;;;"Krugstr. 32D";30453;Hannover;Deutschland;;;;;;;;;kerstinstinn@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10483;Frau;Dr;Kristina;Brenner;;;Niebuhrstr.10;10629;Berlin;Deutschland;;;;;;;;;kdrbrenner@outlook.de;;;;;;;;;;;;;;;;;#;;#;10483;;7;;;Umsatzsteuerpflichtig
+10484;Herrn;;Aligi;Foglia;;;"Auf dem Lärchenberge 14d";30161;Hannover;Deutschland;;;;;;;;;foglia.aligi@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10485;Frau;;Claudia;Puglisi;;;"Großer Winkel 17 E";31552;Apelern;Deutschland;;;;;;;;;claudia.puglisi@polizei.niedersachsen.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10486;;;;;;Luftfahrt-Bundesamt;"Herrmann-Blenk-Str. 26";38108;Braunschweig;Deutschland;;;;;;;;;bildungsstelle@lba.de;;;;;;;;;;;;"Zentrale Dienste/Bildungsstelle";;;;;#;;#;10486;;7;;;Umsatzsteuerpflichtig
+10487;Herrn;;Erik;Söchtig;;;"Wennigser Weg 11";31832;Springe;Deutschland;;;;;;;;;erik.soechtig@t-online.de;;;;;;;;;;;;;;;;;#;;#;10487;;7;;;Umsatzsteuerpflichtig
+10488;Frau;Dr.;Birgit;Markus;;;"Günther-Wagner-Allee 43";30177;Hannover;Deutschland;;;;;;;;;bm_markus@web.de;;;;;;;;;;;;;;;;;#;;#;10488;;7;;;Umsatzsteuerpflichtig
+10489;Frau;;Kerstin;Soltysiak;;"Headmatch GmbH & Co.KG";"Friedrichstraße 191";10117;Berlin;Deutschland;;;;;"030-325 320 17";;;;kerstin.soltysiak@headmatch.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10490;Frau;;Lydia;Althaus;;"Wibautec Winter";"Kirchlahe 4a";31275;Lehrte;Deutschland;;;;;;;;;winly.76@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10491;Frau;;Nadine;Rochlitzer;;;"Blumenauer Straße 33";31515;Wunstorf;Deutschland;;;;;;;;;n.rochlitzer@web.de;;;;;;;;;;;;;;;;;#;;#;10491;;7;;;Umsatzsteuerpflichtig
+10492;Frau;;Johanna;Busch;;;"Schinckelstraße 5";22303;Hamburg;Deutschland;;;;;;;;;johanna19busch@gmail.com;;;;;;;;;;;;;;;;;#;;#;10492;;7;;;Umsatzsteuerpflichtig
+10493;Herrn;;Herbert;Dzial;;"H.D. Projektentwicklungs GmbH";"Marburger Straße 17";10789;Berlin;Deutschland;;;;;;;;;herbert.dzial@hd-gruppe.de;;;;;;;;;;;;;;;;;#;;#;10493;;7;;;Umsatzsteuerpflichtig
+10494;Herrn;;Alexandre;Alexandrov;;;"Sonneggstrasse 88";8006;Zurich;Schweiz;;;;Schweiz;;;;;Alexandre.Alexandrov@audatex.ch;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10495;Herrn;;Bonimir;Dolic;;"i2b Intelligence to Business GmbH";"Röntgenstraße 7 + 9";60388;"Frankfurt am Main";Deutschland;;;;;;;;;bonimir.dolic@i-to-b.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10496;Frau;;Anke;Noltemeier;;"Waldgasthaus Entenfang Hannover";"Eilersweg 1";30419;Hannover;Deutschland;;;;;;;;;info@entenfang-hannover.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10497;Herrn;;Arne;Schlüter;;"Centrifuge Invest GmbH";"Kurfürstendamm 170";10707;Berlin;Deutschland;;;;;;;;;a.schlueter@centrifugeholding.com;;;;;;;;;;;;;;;;;#;;#;10497;;7;;;Umsatzsteuerpflichtig
+10498;Herrn;;Kristoffer;Bürsing;;"FSS Consulting GmbH";"Appelstraße 20";30167;Hannover;Deutschland;;;;;;;;;kristoffer-buersing@web.de;;;;;;;;;;;;;;;;;#;;#;10498;;7;;;Umsatzsteuerpflichtig
+10499;Frau;;"Mai Huong";Le;;"Flughafen Hannover-Langenhagen GmbH";"Postfach 42 02 80";30662;Hannover;Deutschland;;;;;;;;;M.H.Le@hannover-airport.de;;;;;;;;;;;;Vertriebskoordination;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10500;Frau;;Annette;Melk;;;"Siemerdingerstr. 38";30655;Hannover;Deutschland;;;;;;;;;Melk.Anette@mh-hannover.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10501;Herrn;;Lukas;Meyer;;"interaid GmbH";"Ullsteinstr. 120";12109;Berlin;Deutschland;;;;;;;;;meyer@interaid.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10502;Frau;;Claudia;Wemheuer;;;"Slicherstr. 1";30163;Hannover;Deutschland;;;;;;;;;claudia.wemheuer@htp-tel.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10503;Herrn;;Timo;Köps;;;"Neues Hagen 17";30974;Wennigsen;Deutschland;;;;;;;;;timo.koeps@freenet.de;;;;;;;;;;;;;;;;;#;;#;10503;;7;;;Umsatzsteuerpflichtig
+10504;Herrn;;Christoph;Böninger;;"iF Design Foundation";"Bahnhofstraße 8";30159;Hannover;Deutschland;;;;;;;;;agentur@hbcom.eu;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10505;Herrn;;Jonathan;Siefke;;;"Leipzigerstraße 31";30179;Hannover;Deutschland;;;;;;;;;jonathan@siefke.online;;;;;;;;;;;;;;;;;#;;#;10505;;7;;;Umsatzsteuerpflichtig
+10506;Herrn;;Sebastian;Albrecht;;;"Südstraße 7";31542;"Bad Nenndorf";Deutschland;;;;;;;;;sebastian.albrecht186@gmail.com;;;;;;;;;;;;;;;;;#;;#;10506;;7;;;Umsatzsteuerpflichtig
+10507;Frau;;Qefsere;Rexhepi;;;"Freda-Wuesthoff-Str. 15";30966;Hemmingen;Deutschland;;;;;;;;;qefi@arcor.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10508;Frau;;Maja;Dziehel;;"Pair Finance GmbH";"Hardenbergstraße 32";10623;Berlin;Deutschland;;;;;;;;;invoice@pairfinance.com;;;;;;;;;;;;;;;;;#;;#;10508;;7;;;Umsatzsteuerpflichtig
+10509;Frau;;Barbara;Bergmann;;"Konrad-Adenauer-Stiftung Europäische und Internationale Zusammenarbeit  Finanz- und Projektverwaltung";"Klingelhöferstraße 23";10785;Berlin;Deutschland;;;;;;;;;Barbara.Bergmann@kas.de;;;;;;;;;;;;;;;;;#;;#;10509;;7;;;Umsatzsteuerpflichtig
+10510;Frau;;Katrin;Bornberg;;"Franke und Bornberg Research GmbH";"Prinzenstraße 16";30159;Hannover;Deutschland;;;;;;;;;Imke.Thierfelder@fb-research.de;;;;;;;;;;;;;;;;;#;;#;10510;;7;;;Umsatzsteuerpflichtig
+10511;Frau;;Kerstin;Prause;;;"Wietstocker Dorfstr 15";14974;Ludwigsfelde;Deutschland;;;;;;;;;kerstin.prause@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10512;Frau;;Kamile;Keskin;;;"Alleestraße 26";30167;Hannover;Deutschland;;;;;;;;;kamilekaskeskin@yahoo.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10513;;;;;;"Technische Universität Braunschweig";"Pockelsstraße 4";38106;Braunschweig;Deutschland;;;;;;;;;;;;;;;;;;;;;"Institut für Tragwerksentwurf";"Juniorprofessur für Digitale Baufabrikation";;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10514;;;;;;"Technische Universität Braunschweig";"Bienroder Weg 81";38106;Braunschweig;Deutschland;;;;;;;;;;;;;;;;;;;;;"Institut für Geodäsie und Photogrammetrie";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10515;Herrn;;Johannes;Schmidt;;;"Bischofsheimer Str. 24";63477;Maintal;Deutschland;;;;;;;;;presse@richterbund-hessen.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10516;Frau;;Ramona;Wellmann;;;"Heidornstraße 18";30171;Hannover;Deutschland;;;;;;;;;wellmann.ramona@gmx.de;;;;;;;;;;;;;;;;;#;;#;10516;;7;;;Umsatzsteuerpflichtig
+10517;Frau;;Majbritt;Kösel;;"usability.de GmbH & Co. KG";"Ricklinger Str. 5B";30449;Hannover;Deutschland;;;;;;;;;majbritt.koesel@usability.de;;;;;;;;;;;;;;;;;#;;#;10517;;7;;;Umsatzsteuerpflichtig
+10518;Herrn;;Frederic;Sieling;;;"Schiratswinkel 10";31319;Sehnde;Deutschland;;;;;;;;;f.sieling@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10519;;;;;;"Fa. Bernd Trittel";"An der Wiese 1";31515;Wunstorf;Deutschland;;;;;;;;;martina.huefner@gmail.com;;;;;;;;;;;;;;;;;#;;#;10519;;7;;;Umsatzsteuerpflichtig
+10520;Frau;;Barbara;Hartmann;;;"Tiestestraße 37";30173;Hannover;Deutschland;;;;;;;;;barbara.hartmann@htp-tel.de;;;;;;;;;;;;;;;;;#;;#;10520;;7;;;Umsatzsteuerpflichtig
+10521;Herrn;;Thomas;Papenheim;;;"Wittkopsweg 65";38518;Gifhorn;Deutschland;;;;;;;;;thomas.papenheim@outlook.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10522;Herrn;;Stefan;Leinweber;;;"Haasemannstraße 6";30449;Hannover;Deutschland;;;;;;;;;stefanleinweber@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10523;Herrn;;Volkan;Bulut;;;"Kampstraße 46";30629;Hannover;Deutschland;;;;;;;;;vol.bul@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10524;;;;;;"DHL Freight GmbH";"Bremer Ring 13";14641;Wustermark;Deutschland;;;;;;;;;Bettina.Hauser@dhl.com;;;;;;;;;;;;;;;;;#;;#;10524;;7;;;Umsatzsteuerpflichtig
+10525;Frau;;Daina;Weszkalnys;;"MELAG Medizintechnik oHG";"Geneststraße 6-10";10829;Berlin;Deutschland;;;;;;;;;Weszkalnys@melag.de;;;;;;;;;;;;Personalmanagement;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10526;Herrn;;Mark;Pattison;;"Language Centre";"In den Erlen 6 b";44309;Dortmund;Deutschland;;;;;;;;;lcentre@t-online.de;;;;;;;;;;;;;;;;;#;;#;10526;;7;;;Umsatzsteuerpflichtig
+10527;Frau;;Ulrike;Aselmeier;;"Deutsche Messe AG";Messegelände;30521;Hannover;Deutschland;;;;;;;;;ulrike.aselmeier@messe.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10528;Frau;Dr;Madlena;Tzolov;;;"Lindenallee 34";306571;Hannover;Deutschland;;;;;;;;;madlenatzolov@aol.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10529;Herrn;;Phillip;Lau;;"Mimeo GmbH";;10719;Berlin;Deutschland;;;;;;;;;buchhaltung@mimeo.com;;;;;;;;;;;;"Kurfürstendamm 201";;;;;#;;#;10529;;7;;;Umsatzsteuerpflichtig
+10530;Frau;;Martina;Beneke;;"gss Schulpartner GmbH";"Kopernikusstraße 23";10245;Berlin;Deutschland;;;;;;;;;mbeneke@gss-schulpartner.de;;;;;;;;;;;;;;;;;#;;#;10530;;7;;;Umsatzsteuerpflichtig
+10531;Herrn;;Robert;John;;"DHL Freight GmbH /Berlin II";"Naumburger Str. 04";12075;Berlin;Deutschland;;;;;;;;;robert.john2@dhl.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10532;Herrn;Dr.;Christian;Brandes;;"Institut für Geologie Leibniz Universität Hannover";"Callinstr. 30";30167;Hannover;Deutschland;;;;;;;;;brandes@geowi.uni-hannover.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10533;Frau;;Magdalena;Bernhardt;;;"Schillerstr. 28";10625;Berlin;Deutschland;;;;;;;;;mjkurzawa@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10534;Herrn;;Stephan;Tillack;;;"Jürgenweg 2A";30419;Hannover;Deutschland;;;;;;;;;stillack@icloud.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10535;;;;;;"ARGE Deutscher Pavillon EXPO 2020 Dubai GbR";"Anna-Schneider-Steig 2";50678;Köln;Deutschland;;;;;;;;;diana.roesch@factsfiction.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10536;Frau;;Luisa;Hartmann;;"Factory C Agentur für Messen & Kommunikation GmbH";"An der Spreeschanze 10";13599;Berlin;Deutschland;;;;;;;;;l.hartmann@factory-c.com;;;;;;;;;;;;"Haus 1";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10537;Herrn;;Fabian;Kleffmann;;"Sprick GmbH Bielefelder Papier- und Wellpappenwerke & Co.";"Hanfstr. 23";33607;Bielefeld;Deutschland;;;;;;;;;f.kleffmann@papier-sprick.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10538;Herrn;;Simon;Gülke;;;"Am Steckenfeld 14";37520;Osterode;Deutschland;;;;;;;;"0172/96 95 256";simon.guelke@yahoo.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10539;Frau;;Elisabeth;Braunagel;;"77 Diamonds";"Kurfürstendamm 11";10719;Berlin;Deutschland;;;;;;;;;elisabeth.braunagel@77diamonds.com;;;;;;;;;;;;"Contora Upper West";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10540;;;;;;"Fraunhofer ITEM";"Nikolai-Fuchs-Str. 1";30625;Hannover;Deutschland;;;;;;;;;rechnung@item.fraunhofer.de;;;;;;;;;;;;;;;;;#;;#;10540;;7;;;Umsatzsteuerpflichtig
+10541;Herrn;"Professor Dr. med. habil.";Helmut;Lill;;"DIAKOVERE Krankenhaus gGmbH  Friederikenstift und Henriettenstift";"Humboldtstraße 5";30169;Hannover;Deutschland;;;;;;;;;Helmut.Lill@diakovere.de;;;;;;;;;;;;"Chefarzt der Klinik für Orthopädie und Unfallchirurgie";;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10542;Frau;;Adelheid;Wessler;;;"Brehmstrasse 54";30173;Hannover;Deutschland;;;;;;;;;adelheidwessler@web.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10543;Herrn;Dr.;Franz-Christian;Jonas;;;"Callinstr. 33";30167;Hannover;Deutschland;;;;;;;;;jonas_fc@arcor.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10544;Herrn;;Gordon;Williamson;;;"Siemensstr. 6";30173;Hannover;Deutschland;;;;;;;;;gordon.williamson@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10545;Herrn;;Thomas;Mathews;;;"Nelkenstr. 6";30167;Hannover;Deutschland;;;;;;;;;t.mathews@posteo.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10546;;;;;;"ExxonMobil Production Deutschland GmbH";"Riethorst 12";30659;Hannover;Deutschland;;;;;;;;;david.morgner@exxonmobil.com;;;;;;;;;;;;;;;;;#;;#;10546;;7;;;Umsatzsteuerpflichtig
+10547;Frau;;Elisabeth;Wiesmann;;;"Levetzowstr. 14";10555;Berlin;Deutschland;;;;;;;;;elisabethwiesmann@posteo.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10548;;;;;;"finverse GmbH";"Hackelersberg 2";21244;"Buchholz i. d. N.";Deutschland;;;;;;;;;hosam.el.miniawy@finverse.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10549;Herrn;;Daniel;Samiez;;;"Rehsprung 4a";31303;Burgdorf;Deutschland;;;;;;;;;samiez.daniel@gmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10550;Herrn;;Dirk;Breitkreuz;;"VIRTIMO AG";"Behrenstr. 18";10117;Berlin;Deutschland;;;;;;;;;dirk.breitkreuz@virtimo.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10551;Frau;;Jacquline;Mlinarcsik;;;"Bissendorferstraße 9";30625;Hannover;Deutschland;;;;;;;;;jacqueline.mlinarcsik@hotmail.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10552;Herrn;;Martin;Badow;;;"Fraunhoferstraße 24";10587;Berlin;Deutschland;;;;;;;;;martin.badow@freenet.de;;;;;;;;;;;;;;;;;#;;#;10552;;7;;;Umsatzsteuerpflichtig
+10553;Frau;;Zainab;Alderwish;;;"Derfflingerstr. 4";30161;Hannover;Deutschland;;;;;;;;;zin83@hotmail.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10554;Herrn;;David;Kuss;;;"Bernstorffstraße 18";13507;Berlin;Deutschland;;;;;;;;;David@kuss12.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10555;Herrn;;Volker;Kuhlemann;;;"In der Steinbreite 73";30455;Hannover;Deutschland;;;;;;;;;vk@s-k-steuerberatung.de;;;;;;;;;;;;;;;;;#;;#;10555;;7;;;Umsatzsteuerpflichtig
+10556;Herrn;;Holger;Glatzel;;;"Am Wöhlbach 9E";31832;Springe;Deutschland;;;;;;;;;Holger.Glatzel@t-online.de;;;;;;;;;;;;;;;;;#;;#;10556;;7;;;Umsatzsteuerpflichtig
+10557;Frau;;Doris;Wiese;;;"Osterstr. 9";30989;Gehrden;Deutschland;;;;;;;;;doris.wiese@gebaeudereinigung-scheidler.de;;;;;;;;;;;;;;;;;#;;#;10557;;7;;;Umsatzsteuerpflichtig
+10558;Frau;;Susanne;Gebauer;;;"Fischerweg 53";31515;Wunstorf;Deutschland;;;;;;;;;susannegebauer@gmx.de;;;;;;;;;;;;;;;;;#;;#;10558;;7;;;Umsatzsteuerpflichtig
+10559;Herrn;;Lennart;Christel;;"offmade GmbH";"Schlüterstraße 39";10629;Berlin;Deutschland;;;;;;;;;lennart@offmade.io;;;;;;;;;;;;;;;;;#;;#;10559;;7;;;Umsatzsteuerpflichtig
+10560;Herrn;;Sebastian;Kolmanz;;;"Im Ostereschfeld 5b";30823;Garbsen;Deutschland;;;;;;;;;s.kolmanz@outlook.de;;;;;;;;;;;;;;;;;#;;#;10560;;7;;;Umsatzsteuerpflichtig
+10561;Frau;;Rosana;Vigodski;;;"Pommersche Straße 12A";10707;Berlin;Deutschland;;;;;;;;;rosanav@hotmail.de;;;;;;;;;;;;;;;;;#;;#;10561;;7;;;Umsatzsteuerpflichtig
+10562;;;;;;"Ed. Züblin AG";"Albstadtweg 5";70567;Stuttgart;Deutschland;;;;;;;;;anke.rothfuss@zueblin.de;;;;;;;;;;;;"Direktion Stuttgart";"Bereich Ingenieurhochbau";;;;#;;#;10562;;7;;;Umsatzsteuerpflichtig
+10563;Frau;Dr.;Vivien;Weiß;;;"Fiedelerstraße 35a";30519;Hannover;Deutschland;;;;;;;;;vivienweiss@gmx.de;;;;;;;;;;;;;;;;;#;;#;10563;;7;;;Umsatzsteuerpflichtig
+10564;;;;;;"Ed. Züblin AG";"Albstadtweg 5";70567;Stuttgart;Deutschland;;;;;;;;;tim.rengers@zueblin.de;;;;;;;;;;;;"Direktion Stuttgart";"Bereich Ingenieurhochbau";;;;#;;#;10564;;7;;;Umsatzsteuerpflichtig
+10565;Herrn;;Daud;Tozo;;"Autohaus Tozo";"Borsigring 49a";31319;Sehnde;Deutschland;;;;;05138/7099630;;;0172/7711528;daud@autohaustozo.de;;;;;;;;;;;;;;;;;#;;#;10565;;7;;;Umsatzsteuerpflichtig
+10566;Herrn;;Ralf;Könnecke;;"Industrieausrüstungen e. K.";"Abbeile 16";31311;Uetze;Deutschland;;;;;;;;;office@industrietechnik-koennecke.de;;;;;;;;;;;;;;;;;#;;#;10566;;7;;;Umsatzsteuerpflichtig
+10567;;;Henrike;Strobl;;;"Leberstraße 57";10829;Berlin;Deutschland;;;;;;;;;henrikestrobl@gmail.com;;;;;;;;;;;;;;;;;#;;#;10567;;7;;;Umsatzsteuerpflichtig
+10568;Herrn;;Alican;Simsek;;;"Käthe-Vordtriede-Weg 5";30457;Hannover;Deutschland;;;;;;;;;alican.simsek@gmx.de;;;;;;;;;;;;;;;;;#;;#;10568;;7;;;Umsatzsteuerpflichtig
+10569;Herrn;;Ralf;Reese;;"Vier GmbH";"Hamburger Allee 23";30161;Hannover;Deutschland;;;;;;;;;rechnung@vier.ai;;;;;;;;;;;;;;;;;#;;#;10569;;7;;;Umsatzsteuerpflichtig
+10570;Herrn;;Jonas;Gerdts;;;"Parkstraße 1";31542;"Bad Nenndorf";Deutschland;;;;;;;;;jonasgerdts@gmail.com;;;;;;;;;;;;;;;;;#;;#;10570;;7;;;Umsatzsteuerpflichtig
+10571;Herrn;;Thorsten;Hanker;;;"Podbielskistraße 61";30177;Hannover;Deutschland;;;;;;;;;thorsten.hanker@gmx.de;;;;;;;;;;;;;;;;;#;;#;10571;;7;;;Umsatzsteuerpflichtig
+10572;Herrn;;Thomas;Zahl;;"Glamox GmbH";"Daimlerring 25";31135;Hildesheim;Deutschland;;;;;;;;;Invoice.gsg@glamox.com;;;;;;;;;;;;;;;;;#;;#;10572;;7;;;Umsatzsteuerpflichtig
+10573;Herrn;;Florian;Burgdorf;;;"Oerier Straße 14";31157;Schliekum;Deutschland;;;;;;;;;f.burgdorf@ostfalia.de;;;;;;;;;;;;;;;;;#;;#;10573;;7;;;Umsatzsteuerpflichtig
+10574;Frau;;Yvonne;Langeloh;;;"Hirtenwiese 1";30916;Isernhagen;Deutschland;;;;;;;;;yvonne.langeloh@db.com;;;;;;;;;;;;;;;;;#;;#;10574;;7;;;Umsatzsteuerpflichtig
+10575;;;;;;"Bundesanstalt für Geowissenschaften";"Wilhelmstraße 25-30";13593;"Berlin (Spandau)";Deutschland;;;;;;;;;Daniela.Grabowski@bgr.de;;;;;;;;;;;;"Rohstoffe (BGR) -Dienstber. Berlin";;;;;#;;#;10575;;7;;;Umsatzsteuerpflichtig
+10576;Herrn;;Thomas;Schlicht;;;"Am Steelchen 31";41517;Grevenbroich;Deutschland;;;;;;;;;thomas.schlicht@posteo.de;;;;;;;;;;;;;;;;;#;;#;10576;;7;;;Umsatzsteuerpflichtig
+10577;;;;;;"Spryker Systems GmbH";"Heidestrasse 9-10";10557;Berlin;Deutschland;;;;;;;;;invoices@spryker.com;;;;;;;;;;;;;;;;;#;;#;10577;;7;;;Umsatzsteuerpflichtig
+10578;Frau;;Franziska;Kurth;;;"Sallstraße 85";30171;Hannover;Deutschland;;;;;;;;;fkurth@cisco.com;;;;;;;;;;;;;;;;;#;;#;10578;;7;;;Umsatzsteuerpflichtig
+10579;Frau;;Ninette;Böhle;;;"Buschstrasse 54";53113;Bonn;Deutschland;;;;;;;;;ninetteboehle@gmx.de;;;;;;;;;;;;;;;;;#;;#;10579;;7;;;Umsatzsteuerpflichtig
+10580;Herrn;;Tobias;Schmidt-Lippert;;"Rega und Partner Industriemontagen GmbH";"Oldenburger Allee 4";30659;Hannover;Deutschland;;;;;;;;;tobias.schmidt@regaundpartner.de;;;;;;;;;;;;;;;;;#;;#;10580;;7;;;Umsatzsteuerpflichtig
+10581;Herrn;Dr.;Matian;"van Soest";;"Universität zu Köln";Albertus-Magnus-Platz;50931;Köln;Deutschland;;;;;;;;;m.vansoest@uni-bonn.de;;;;;;;;;;;;"SFB-TRR 228 ""Future Rural Africa""";;;;;#;;#;10581;;7;;;Umsatzsteuerpflichtig
+10582;Herrn;;Benjamin;Schantze;;;"Elisenstraße 61";30451;Hannover;Deutschland;;;;;;;;;Benjamin.Schantze@gmail.com;;;;;;;;;;;;;;;;;#;;#;10582;;7;;;Umsatzsteuerpflichtig
+10583;Frau;;Bettina;Rohde;;;"Pfarrstr. 61";30459;Hannover;Deutschland;;;;;;;;;bsohns@gmx.net;;;;;;;;;;;;;;;;;#;;#;10583;;7;;;Umsatzsteuerpflichtig
+10584;Frau;;Anke;Lührmann;;;"TiesteStr. 11";30171;Hannover;Deutschland;;;;;;;;;luehrmann.anke@gmx.de;;;;;;;;;;;;;;;;;#;;#;10584;;7;;;Umsatzsteuerpflichtig
+10585;Frau;;Michaela;Wilhelmi;;;"Rubensstraße 16";30916;Isernhagen;Deutschland;;;;;;;;;wilhelmi.michaela@mh-hannover.de;;;;;;;;;;;;;;;;;#;;#;10585;;7;;;Umsatzsteuerpflichtig
+10586;Frau;;Ricarda;Probst;;"Styleheads Gesellschaft für Entertainment mbH";"Frankfurter Allee 13-15,";10247;Berlin;Deutschland;;;;;;;;;ricarda.probst@styleheads.de;;;;;;;;;;;;;;;;;#;;#;10586;;7;;;Umsatzsteuerpflichtig
+10587;Frau;;Emelie;Cordes;;;"Seegraspfad 2a";30926;Seelze ;Deutschland;;;;;;;;;emeliecordes@web.de;;;;;;;;;;;;;;;;;#;;#;10587;;7;;;Umsatzsteuerpflichtig
+10588;;;;;;"Rhenus Home Delivery GmbH";"Industriestraße 12-14";15366;Hoppegarten;Deutschland;;;;;;;;;Rechnungen.RHD@de.rhenus.com;;;;;;;;;;;;"z.Hd. Patrick Renziehausen";;;;;#;;#;10588;;7;;;Umsatzsteuerpflichtig
+10589;Frau;;Katja;Rolletschek;;"Neues Wohnen im Kiez GmbH";"Kopernikusstr. 23";10245;Berlin;Deutschland;;;;;;;;;krolletschek@nwik.de;;;;;;;;;;;;Bereichsleitung;;;;;#;;#;10589;;7;;;Umsatzsteuerpflichtig
+10590;Frau;;Wiebke;Seidel;;"Stiftung Preußische Schlösser und Gärten Berlin-Brandenburg";"Postfach 60 14 62";14414;Potsdam;Deutschland;;;;;;;;;w.seidel@spsg.de;;;;;;;;;;;;Generalverwaltung;"Referat Personal";;;;#;;#;10590;;7;;;Umsatzsteuerpflichtig
+10591;Frau;;Iris;Sudy;;;"Zinzendorfstr. 7";10555;Berlin;Deutschland;;;;;;;;;iris.sudy@googlemail.com;;;;;;;;;;;;;;;;;#;;#;10591;;7;;;Umsatzsteuerpflichtig
+10592;Herrn;;Caspar;Pauli;;;"Kienitzer Straße 8";12053;Berlin;Deutschland;;;;;;;;;caspar-pauli@web.de;;;;;;;;;;;;;;;;;#;;#;10592;;7;;;Umsatzsteuerpflichtig
+10593;Herrn;;Enrico;Köppl;;;"Sterntalerstr. 14";31275;Lehrte;Deutschland;;;;;;;;;e.koeppl@gmx.de;;;;;;;;;;;;;;;;;#;;#;10593;;7;;;Umsatzsteuerpflichtig
+10594;Frau;;Melanie;Nehl;;;"Stefan-George-Ring 55";81929;München;Deutschland;;;;;;;;;nehl@rechtsanwalt-nehl.de;;;;;;;;;;;;Rechtsanwältin;"Fachanwältin für Arbeitsrecht";;;;#;;#;10594;;7;;;Umsatzsteuerpflichtig
+10595;Frau;;Katja;Rolletschek;;"Neues Wohnen im Kiez GmbH";"Kopernikusstr. 23,";10245;Berlin;Deutschland;;;;;;;;;krolletschek@nwik.de;;;;;;;;;;;;Bereichsleitung;;;;;#;;#;10595;;7;;;Umsatzsteuerpflichtig
+10596;;;;;;"REMONDIS Aqua Industrie GmbH & Co. KG";;"Postfach 10 00 33";"01956 Senftenberg";Deutschland;;;;;;;;;;;;;;;;;;;;;"International Aquisition (1009011991)";;;;;#;;#;10596;;7;;;Umsatzsteuerpflichtig
+10597;Frau;;Anja;Scharff;;"CSS AG";"Friedrich-Dietz-Str. 1";36093;Künzell;Deutschland;;;;;;;;;rechnungseingang@css.de;;;;;;;;;;;;;;;;;#;;#;10597;;7;;;Umsatzsteuerpflichtig
+10598;Frau;;Lisa;Jäger;;;"Hallesche Straße 4";10963;Berlin;Deutschland;;;;;;;;;lmspohnholtz@gmail.com;;;;;;;;;;;;;;;;;#;;#;10598;;7;;;Umsatzsteuerpflichtig
+10599;Frau;;Sarah;Kauk;;;"Freiligrathstraße 3";30171;Hannover;Deutschland;;;;;;;;;Sarah.Kauk@gmx.net;;;;;;;;;;;;;;;;;#;;#;10599;;7;;;Umsatzsteuerpflichtig
+10600;Frau;;Tanja;Jeswani;;"Grapevine Marketing GmbH";"Tengstraße 9";80798;München;Deutschland;;;;;;;;;beck@grapevine-marketing.com;;;;;;;;;;;;;;;;;#;;#;10600;;7;;;Umsatzsteuerpflichtig
+10601;Herrn;;Carsten;Tworuschka;;;"Friedrich-Ebert-Straße 5";30459;Hannover;Deutschland;;;;;;;;;c.tworuschka@yahoo.de;;;;;;;;;;;;;;;;;#;;#;10601;;7;;;Umsatzsteuerpflichtig
+10602;;;;;;"Apogee Deutschland GmbH";"Magdeburger Straße 5";30880;Laatzen;Deutschland;;;;;;;;;karin.daher@apogeecorp.com;;;;;;;;;;;;;;;;;#;;#;10602;;7;;;Umsatzsteuerpflichtig
+10603;Frau;;Julia;Bertram;;;Genossenschaftsstr.8;29356;Bröckel;Deutschland;;;;;;;;;julia_bertram@hotmail.de;;;;;;;;;;;;;;;;;#;;#;10603;;7;;;Umsatzsteuerpflichtig
+10604;Herrn;;"Svensen Patrick";Rossmann;;"ASISTIM GmbH";"Theaterstr. 3";30159;Hannover;Deutschland;;;;;;;;;rossmann@asistim.com;;;;;;;;;;;;;;;;;#;;#;10604;;7;;;Umsatzsteuerpflichtig
+10605;;;Isabelle;Nölke;;;"Hesemannstr. 23";30655;Hannover;Deutschland;;;;;;;;;isabelle.noelke@gmx.de;;;;;;;;;;;;;;;;;#;;#;10605;;7;;;Umsatzsteuerpflichtig
+10606;Herrn;;Johannes;Fent;;;"Walter-Bohle-Weg 13";30938;Burgwedel;Deutschland;;;;;;;;;johannes.fent@web.de;;;;;;;;;;;;;;;;;#;;#;10606;;7;;;Umsatzsteuerpflichtig
+10607;Herrn;;"Guenter G.";Krawinkel;;;"Langensalzastraße 1";30169;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;10607;;7;;;Umsatzsteuerpflichtig
+10608;Frau;;Sarah;Schiesser;;;"Gaudystr. 23";10437;Berlin;Deutschland;;;;;;;;;sarah.schiesser@googlemail.com;;;;;;;;;;;;;;;;;#;;#;10608;;7;;;Umsatzsteuerpflichtig
+10609;Frau;;Kerstin;Fahrenfeld-Etzmuß;;;"Graham-Bell-Weg 44";30827;Garbsen;Deutschland;;;;;;;;;kerstin.fahrenfeld-etzmuss@gmx.de;;;;;;;;;;;;;;;;;#;;#;10609;;7;;;Umsatzsteuerpflichtig
+10610;;;;;;"Büro Gerhard Schröder";"Hindenburgstrasse 6";30175;Hannover;Deutschland;;;;;;;;;miskovic@kanzlei-bkadschroeder.com;;;;;;;;;;;;;;;;;#;;#;10610;;7;;;Umsatzsteuerpflichtig
+10611;;;;;;"adelphi consult GmbH";"Alt-Moabit 91";10559;Berlin;Deutschland;;;;;;;;;fuchs@adelphi.de;;;;;;;;;;;;;;;;;#;;#;10611;;7;;;Umsatzsteuerpflichtig
+10612;Herrn;;Maik;Tegelbeckers;;;"Friedensstraße 19";39619;Arendsee;Deutschland;;;;;;;;;maiktegelbeckers@aol.com;;;;;;;;;;;;;;;;;#;;#;10612;;7;;;Umsatzsteuerpflichtig
+10613;Frau;;"Nina Jasmin";Gongala;;;"Quartiersweg 7";10829;Berlin;Deutschland;;;;;;;;;nina.gongala@googlemail.com;;;;;;;;;;;;;;;;;#;;#;10613;;7;;;Umsatzsteuerpflichtig
+10614;Herrn;Dr.;Andreas;Eberth;;"Leibniz Universität Hannover";"Am Kleinen Felde 30";30167;Hannover;Deutschland;;;;;;;;;eberth@idn.uni-hannover.de;;;;;;;;;;;;"Institut für Didaktik der Naturwissenschaften";"Didaktik der Geographie";;;;#;;#;10614;;7;;;Umsatzsteuerpflichtig
+10615;Herrn;;Friedhelm;Hahn;;;"Limmerstr. 73";30451;Hannover;Deutschland;;;;;;;;;info@friedhelmhahn.de;;;;;;;;;;;;;;;;;#;;#;10615;;7;;;Umsatzsteuerpflichtig
+10616;Frau;;Benita;Piechaczek;;"UPJ e.V. Netzwerk für Corporate Citizenship und CSR";"Brunnenstr. 181";10119;Berlin;Deutschland;;;;;;;;;benita.piechaczek@upj.de;;;;;;;;;;;;;;;;;#;;#;10616;;7;;;Umsatzsteuerpflichtig
+10617;;;;;;"AccorInvest Germany GmbH";"Willy-Brandt-Allee 3";30169;Hannover;Deutschland;;;;;;;;;H1016-GM@accor.com;;;;;;;;;;;;"Mercure Hotel Hannover City";;;;;#;;#;10617;;7;;;Umsatzsteuerpflichtig
+10618;Herrn;;Götz;Wenker;;"Götz Wenker Consulting";"Prüßentrift 86";30657;Hannover;Deutschland;;;;;;;;;goetz@wenker-consulting.de;;;;;;;;;;;;;;;;;#;;#;10618;;7;;;Umsatzsteuerpflichtig
+10619;Herrn;;THOMAS;FISCHNALLER;;"KRAUS FISCHNALLER ARCHITEKTEN";"KURFÜRSTENSTRASSE 19";;10785;Deutschland;;;;;;;;;TF@KRAUSFISCHNALLER.COM;;;;;;;;;;;;;;;;;#;;#;10619;;7;;;Umsatzsteuerpflichtig
+10620;Frau;;Alina;Goretzki;;;"Hildesheimer Str. 117";30173;Hannover;Deutschland;;;;;;;;;goretzki.alina@web.de;;;;;;;;;;;;;;;;;#;;#;10620;;7;;;Umsatzsteuerpflichtig
+10621;Herrn;;Joachim;Scholtz;;"SCHOLTZ NEUMANN PÖTZSCH  Rentenberater Sozietät";"Haubachstraße 33";"10585 Berlin";;Deutschland;;;;;;;;;js@rentenrechtler.de;;;;;;;;;;;;;;;;;#;;#;10621;;7;;;Umsatzsteuerpflichtig
+10622;Frau;;Julia;Meyer;;;"Flüggestraße 14";"30161 Hannover";;Deutschland;;;;;;;;;julmeyer@t-online.de;;;;;;;;;;;;;;;;;#;;#;10622;;7;;;Umsatzsteuerpflichtig
+10623;Herrn;;Hendrik;Vogts;;"SPE Bikes GmbH";"Hildesheimer Straße 393";30519;Hannover;Deutschland;;;;;;;;;h.vogts@emotion-technologies.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10624;Herrn;;Ersan;Omay;;"GO! Express & Logistics (Nordost) GmbH";"Adam-von-Trott-Straße 1";13627;Berlin;Deutschland;;;;;;;;;andrea.zientek@general-overnight.com;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10625;Herrn;;Hendrik;Vogts;;"SPE Bikes GmbH";"Hildesheimer Str. 393";30519;Hannover;Deutschland;;;;;;;;;h.vogts@emotion-technologies.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10626;;;;;;"DIE BOTSCHAFT Communication GmbH";"Kastanienallee 97";10435;Berlin;Deutschland;;;;;;;;;h.prochno@die-botschaft.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10627;Herrn;;Martin;Soethe;;"ILFA Industrieelektronik und  Leiterplattenfertigung aller Art GmbH";"Lohweg 3";30559;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10628;;;;;;"TROESTER GmbH & Co. KG";"Am Brabrinke 1-4";30519;Hannover;Deutschland;;;;;;;;;buchhaltung@troester.de;;;;;;;;;;;;;;;;;#;;#;10628;;7;;;Umsatzsteuerpflichtig
+10629;;;;;;"GETEC ENERGIE GmbH";"An der Börse 4";30159;Hannover;Deutschland;;;;;;;;;jane.weber@getec-energie.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10630;;;;;;"Sinolytics GmbH";"Besselstr. 13";10969;Berlin;Deutschland;;;;;;;;;gabriele.hemmersbach@sinolytics.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10631;Herrn;Dr.;Malte;Krüger;;;"Böttcherstr. 11";30419;Hannover;Deutschland;;;;;;;;;krueger-malte1@gmx.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10632;Frau;;Ulrike;Stöckert;;;"Carl-Schurz-Str. 27";53721;Siegburg;Deutschland;;;;;;;;;stoeckert@fh-aachen.de;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10633;Frau;;Katharina;Steffen;;"Horváth & Partner GmbH";"Hamburger Allee 2-4";60486;Frankfurt;Deutschland;;;;;;;;;SStoeckl@horvath-partners.com;;;;;;;;;;;;;WestendGate;;;;#;;#;10633;;7;;;Umsatzsteuerpflichtig
+10634;Frau;;Alexandra;Karger;;"die.interaktiven GmbH & Co. KG";"Am Leitz-Park 4";35578;Wetzlar;Deutschland;;;;;;;;;alexandra.karger@die-interaktiven.de;;;;;;;;;;;;;;;;;#;;#;10634;;7;;;Umsatzsteuerpflichtig
+10635;;;;;;"Institut für Fabrikanlagen und Logistik";"An der Universität 2";30823;Garbsen;Deutschland;;;;;;;;;Philipp@ifa.uni-hannover.de;;;;;;;;;;;;;;;;;#;;#;10635;;7;;;Umsatzsteuerpflichtig
+10636;Herrn;;Benjamin;Kraft;;;"Martinstraße 2";30659;Hannover;Deutschland;;;;;;;;;benny.kraft@gmx.net;;;;;;;;;;;;;;;;;#;;#;;;7;;;Umsatzsteuerpflichtig
+10637;;;;;;"Friedrich-Schiller-Universität Jena";"Leutragraben 1";07743;Jena;Deutschland;;;;;;;;;;;;;;;;;;;;;"Dezernat Finanzen und Beschaffung";;;;;#;;#;10637;;7;;;Umsatzsteuerpflichtig
+10638;Herrn;;Mark;Ciderey;;"Ambic Equipment Limited";"1 Parkside, Avenue 2, Station Lane";"OX28 4YF";Witney;"Vereinigtes Königreich (UK)";;;;;;;;;MarkCinderey@ambic.co.uk;;;;;;;;;;;;;;;;;#;;#;10638;;7;;;Umsatzsteuerpflichtig
+10639;Frau;Dr.;Nurkan;Ünlü;;;"Hannoversche Straße 138f";30823;Garbsen;Deutschland;;;;;;;;;dr.nurkanunlu@outlook.de;;;;;;;;;;;;;;;;;#;;#;10639;;7;;;Umsatzsteuerpflichtig
+10640;Herrn;;Sebastian;Jahn;;;"Zum Ravenhorst 301";46147;Oberhausen;Deutschland;;;;;;;;;Sebi.Ja@web.de;;;;;;;;;;;;;;;;;#;;#;10640;;7;;;Umsatzsteuerpflichtig
+10641;;;;;;"Emrich Business Consulting GmbH";"Landshuter Straße 41";85716;"München, Unterschleißheim";Deutschland;;;;;;;;;a.jagla@emrich-bc.com;;;;;;;;;;;;;;;;;#;;#;10641;;7;;;Umsatzsteuerpflichtig
+10642;;;;;;"Focke & Co. (GmbH & Co. KG)";"Siemensstraße 10";27283;Verden;Deutschland;;;;;;;;;Alexandra.Koenig@focke.de;;;;;;;;;;;;;;;;;#;;#;10642;;7;;;Umsatzsteuerpflichtig
+10643;Herrn;;Dustin;Scheerle;;;"Mozartstraße 1";30900;Wedemark;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;10643;;7;;;Umsatzsteuerpflichtig
+10644;;;;;;"Technetix GmbH";"Bogenstraße 34";22926;Ahrensburg;Deutschland;;;;;;;;;holger.woeste@technetix.com;;;;;;;;;;;;;;;;;#;;#;10644;;7;;;Umsatzsteuerpflichtig
+10645;Frau;"Prof. Dr.";Ina;Blümel;;;"Dreyerstraße 4";30169;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;10645;;7;;;Umsatzsteuerpflichtig
+10646;Herrn;;Maximilian;Föse;;"Soulfood Music Distribution GmbH";"Van-der-Smissen-Str. 3";22767;Hamburg;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;10646;;7;;;Umsatzsteuerpflichtig
+10647;;;;;;"MTU Maintenance Hannover GmbH";"Münchner Straße 31";30855;Langenhagen;Deutschland;;;;;;;;;Fabian.Scharnhorst@web.de;;;;;;;;;;;;;;;;;#;;#;10647;;7;;;Umsatzsteuerpflichtig
+10648;Frau;"Prof. Dr.";Marion;Reiser;;;"Carl-Zeiss-Str. 3";07743;Jena;Deutschland;;;;;;;;;rechnungseingang@uni-jena.de;;;;;;;;;;;;"Institut für Politikwissenschaft Friedrich-Schiller-Universität Jena";;;;;#;;#;10648;;7;;;Umsatzsteuerpflichtig
+10649;Frau;;Catherine;Pech;;;"Ringstraße 1";78475;Konstanz;Deutschland;;;;;;;;;kti.pech@googlemail.com;;;;;;;;;;;;;;;;;#;;#;10649;;7;;;Umsatzsteuerpflichtig
+10650;Frau;;Catherine;Pech;;;"Ringstraße 1";78475;Konstanz;Deutschland;;;;;;;;;kti.pech@googlemail.com;;;;;;;;;;;;;;;;;#;;#;10650;;7;;;Umsatzsteuerpflichtig
+10651;;;;;;abtipper.de;"Fernroder Str. 9";30161;Hannover;Deutschland;;;;;;;;;jclaussen@abtipper.de;;;;;;;;;;;;;;;;;#;;#;10651;;7;;;Umsatzsteuerpflichtig
+10652;;;;;;"NeXtWind Management GmbH";"M​arburger Strasse 3";10789;Berlin;Deutschland;;;;;;;;;mirjam.mueller@nextwind.de;;;;;;;;;;;;;;;;;#;;#;10652;;7;;;Umsatzsteuerpflichtig
+10653;Frau;;Tanja;Eberstein;;;"Goethestr. 7";30952;Ronnenberg;Deutschland;;;;;;;;;tanjaeberstein@gmail.com;;;;;;;;;;;;;;;;;#;;#;10653;;7;;;Umsatzsteuerpflichtig
+10654;Eheleute;;"Marina und Frank";Tikwe;;;"Hasendamm 85";31275;Lehrte;Deutschland;;;;;;;;;marinatikwe@gmail.com;;;;;;;;;;;;;;;;;#;;#;10654;;7;;;Umsatzsteuerpflichtig
+10655;;;;;;"Acnos Pharma";"Reichsstr. 103";14052;Berlin;Deutschland;;;;;;;;;backoffice@acnospharma.de;;;;;;;;;;;;;Administration;;;;#;;#;10655;;7;;;Umsatzsteuerpflichtig
+10656;;;;;;"VERMILION ENERGY GERMANY GmbH & Co. KG";"Baumschulenallee 16";30625;Hannover;Deutschland;;;;;;;;;buchhaltung@vermilionenergy.com;;;;;;;;;;;;;;;;;#;;#;10656;;7;;;Umsatzsteuerpflichtig
+10657;Frau;;Anne-Kathrin;Kinzel-Meschter;;"Weizenbaum-Institut e.V.";"Hardenbergstraße 32";10623;Berlin;Deutschland;;;;;;;;;anne.kinzelmeschter@weizenbaum-institut.de;;;;;;;;;;;;;;;;;#;;#;10657;;7;;;Umsatzsteuerpflichtig
+10658;Frau;;Maria;Mitari;;"Komische Oper Berlin";"Bismarckstraße 110";10625;Berlin;Deutschland;;;;;;;;;m.mitari@komische-oper-berlin.de;;;;;;;;;;;;@Schillertheater;;;;;#;;#;10658;;7;;;Umsatzsteuerpflichtig
+10659;;;;;;"Acnos Pharma GmbH";"Gewerbepark Brand 21";52078;Aachen;Deutschland;;;;;;;;;backoffice@acnospharma.de;;;;;;;;;;;;;;;;;#;;#;10659;;7;;;Umsatzsteuerpflichtig
+10660;Herrn;;Frank;Koberstein;;;"Thomas-Mann-Weg 20";30659;Hannover;Deutschland;;;;;;;;;bk2001hann@gmail.com;;;;;;;;;;;;;;;;;#;;#;10660;;7;;;Umsatzsteuerpflichtig
+10661;Herrn;;Bernd;Ramien;;"M.I.G. - Music GmbH";"Hildesheimer Strasse 83";30169;Hannover;Deutschland;;;;;;;;;bernd.ramien@mig-music.de;;;;;;;;;;;;"A & R Katalog Marketing";;;;;#;;#;10661;;7;;;Umsatzsteuerpflichtig
+10662;;;Victor;Lasetzki;;"Le Buzz GmbH";"Podbielskistr. 269";30655;Hannover;Deutschland;;;;;;;;;v.lasetzki@lebuzz.de;;;;;;;;;;;;"Head of Social Media";;;;;#;;#;10662;;7;;;Umsatzsteuerpflichtig
+10663;Herrn;;Felix;Glöckner;;"Swiss Life Deutschland Holding GmbH";"Swiss-Life-Platz 1";30659;Hannover;Deutschland;;;;;;;;;felix.gloeckner@swisslife.de;;;;;;;;;;;;"Recht, Compliance & Public Affairs";;;;;#;;#;10663;;7;;;Umsatzsteuerpflichtig
+10664;Herrn;;Thomas;Gritzka;;"BBL Logistik GmbH";"Entenfangweg 7-9";30419;Hannover;Deutschland;;;;;;;;;t.gritzka@bbl-logistik-gruppe.de;;;;;;;;;;;;;;;;;#;;#;10664;;7;;;Umsatzsteuerpflichtig
+10665;Herrn;;Markus;Henning;;"kraftwerk Kraft-Wärme-Kopplung GmbH";"Am Lindener Hafen 3";30453;Hannover;Deutschland;;;;;;;;;Markus.Henning@kwk.info;;;;;;;;;;;;;;;;;#;;#;10665;;7;;;Umsatzsteuerpflichtig
+10666;Frau;;Anne-Kathrin;Kinzel-Meschter;;"Weizenbaum-Institut e.V.";"Hardenbergstraße 32";10623;Berlin;Deutschland;;;;;;;;;anne.kinzel-meschter@weizenbaum-institut.de;;;;;;;;;;;;"Leiterin Bereich Personal";;;;;#;;#;10666;;7;;;Umsatzsteuerpflichtig
+10667;;;;;;"Gesinform GmbH";"Moltkestr. 13";79098;Freiburg;Deutschland;;;;;;;;;d.schaeffer@gesinform.de;;;;;;;;;;;;;;;;;#;;#;10667;;7;;;Umsatzsteuerpflichtig
+10668;Herrn;;Paul;Kurze;;"Innovationszentrum Niedersachsen GmbH";"Schillerstraße 32";30159;Hannover;Deutschland;;;;;;;;;vergabe@nds.de;;;;;;;;;;;;"Projektmanager PR & Social Media";;;;;#;;#;10668;;7;;;Umsatzsteuerpflichtig
+10669;Frau;;Elvira;Eismann;;;"Schützenstraße 33";63450;Hanau;Deutschland;;;;;;;;;elvira.eismann@gmx.de;;;;;;;;;;;;;;;;;#;;#;10669;;7;;;Umsatzsteuerpflichtig
+10670;;;;;;"Compugroup Medical Deutschland AG";"Karl-Wiechert-Allee 64";30625;Hannover;Deutschland;;;;;;;;;sedat.ediz@cgm.com;;;;;;;;;;;;;;;;;#;;#;10670;;7;;;Umsatzsteuerpflichtig
+10671;Herrn;;Henrik;Pfeiffer;;;"Hauptstr. 214";89343;Jettingen-Scheppach;Deutschland;;;;;;;;;mail@henrikpfeiffer.com;;;;;;;;;;;;"Creative Direction and Copy";;;;;#;;#;10671;;7;;;Umsatzsteuerpflichtig
+10672;Frau;;Jutta;Geringhoff;;"Geringhoff Consulting";"Krefelder Straße 20";10555;Berlin;Deutschland;;;;;;;;;info@geringhoff-consulting.de;;;;;;;;;;;;;;;;;#;;#;10672;;7;;;Umsatzsteuerpflichtig
+10673;;;;;;"Berformance Group AG";"Thurgauerstrasse 80";8050;Zürich;Schweiz;;;;;;;;;christian.lux@berformance.com;;;;;;;;;;;;;;;;;#;;#;10673;;7;;;Umsatzsteuerpflichtig
+10674;Herrn;;Paul;Kurze;;"Startup Niedersachsen";"Schillerstraße 32";30159;Hannover;Deutschland;;;;;;;;;p.kurze@nds.de;;;;;;;;;;;;"Projektmanager PR & Social Media";"Innovationszentrum Niedersachsen GmbH";;;;#;;#;10674;;7;;;Umsatzsteuerpflichtig
+10675;Frau;;Jeanette;Deloch;;;"Baseler Str. 108";12205;Berlin;Deutschland;;;;;;;;;jdeloch@gmx.de;;;;;;;;;;;;;;;;;#;;#;10675;;7;;;Umsatzsteuerpflichtig
+10676;Frau;;Britta;Wölke;;;"Geißblattweg 4";30559;Hannover;Deutschland;;;;;;;;;woelke.britta@gmail.com;;;;;;;;;;;;;;;;;#;;#;10676;;7;;;Umsatzsteuerpflichtig
+10677;;;;;;"webcom Management Holding GmbH";"Bahnhofstraße 28";36448;"Bad Liebenstein";Deutschland;;;;;;;;;s.andrejewski@webcom-holding.de;;;;;;;;;;;;;;;;;#;;#;10677;;7;;;Umsatzsteuerpflichtig
+10678;;;;;;"SV Kaufmännischer Service GmbH & Co. KG";"Karlstraße 16";88212;Ravensburg;Deutschland;;;;;;;;;s.jankowski@sv-gruppe.de;;;;;;;;;;;;;;;;;#;;#;10678;;7;;;Umsatzsteuerpflichtig
+10679;;;;;;"Siemens AG";"Werner-von-Siemens-Str. 1";30880;Laatzen;Deutschland;;;;;;;;;annika.friedenstab@siemens.com;;;;;;;;;;;;"RC-DE SI RDE NORD EXM HVR&BWG PM-2";"Niederlassung Hannover";;;;#;;#;10679;;7;;;Umsatzsteuerpflichtig
+10680;;;;;;"Max-Planck-Institut für Kolloid- und Grenzflächenforschung";"Am Mühlenberg 1";14476;Potsdam-Golm;Deutschland;;;;;;;;;Marena.Meier@mpikg.mpg.de;;;;;;;;;;;;;;;;;#;;#;10680;;7;;;Umsatzsteuerpflichtig
+10681;;;;;;"Max-Planck-Institut für Kolloid- und Grenzflächenforschung";"Am Mühlenberg 1";14476;Potsdam-Golm;Deutschland;;;;;;;;;Marena.Meier@mpikg.mpg.de;;;;;;;;;;;;;;;;;#;;#;10681;;7;;;Umsatzsteuerpflichtig
+10682;;;;;;"Siemens AG";;DE-91021;Erlangen;Deutschland;;;;;;;;;invoice7039bt.de@siemens.com;;;;;;;;;;;;"ARE 7039";"Postfach 33 04";;;;#;;#;10682;;7;;;Umsatzsteuerpflichtig
+10683;Frau;;Nicola;Schrenick;;;"Siekeweg 22";12309;Berlin;Deutschland;;;;;;;;;nschrenick@deloitte.de;;;;;;;;;;;;;;;;;#;;#;10683;;7;;;Umsatzsteuerpflichtig
+10684;;;;;;"Purpose Green Real Estate GmbH";"Joachimsthaler Straße 1";10623;Berlin;Deutschland;;;;;;;;;aleksandra.bielska@purpose-green.com;;;;;;;;;;;;;;;;;#;;#;10684;;7;;;Umsatzsteuerpflichtig
+10685;Herrn;Dr.;Detlef;Rüdiger;;;"An der Engelsfuhr 91";51467;"Bergisch Gladbach";Deutschland;;;;;;;;;de55rue@live.de;;;;;;;;;;;;;;;;;#;;#;10685;;7;;;Umsatzsteuerpflichtig
+10686;Herrn;;Louis;Timm;;"Menzel Elektromotoren GmbH";"Am Alten Walzwerk 2";"16761 Hennigsdorf";;Deutschland;;;;;;;;;lt@menzel-motors.com;;;;;;;;;;;;;;;;;#;;#;10686;;7;;;Umsatzsteuerpflichtig
+10687;Frau;;Shirley;Straub;;;"Blumenhagenstrasse 12";30167;Hannover;Deutschland;;;;;;;;;;;;;;;;;;;;;;;;;;#;;#;10687;;7;;;Umsatzsteuerpflichtig
+10688;Herrn;;Gerrit;Waldmann;;;"Bonifatiusplatz 4";30161;Hannover;Deutschland;;;;;;;;;gerrit.waldmann@gmail.com;;;;;;;;;;;;;;;;;#;;#;10688;;7;;;Umsatzsteuerpflichtig
+10689;Frau;"Prof. Dr.";Silja;Kotte;;;"Würzburger Strasse 45";63743;Aschaffenburg;Deutschland;;;;;;;;;Silja.Kotte@th-ab.de;;;;;;;;;;;;"Professorin für Wirtschaftspsychologie Fakultät Wirtschaft und Recht";"Technische Hochschule Aschaffenburg";;;;#;;#;10689;;7;;;Umsatzsteuerpflichtig
+10690;;;;;;"AirITSystems GmbH";"Benkendorffstr. 6";30855;Langenhagen;Deutschland;;;;;;;;;T.Badelt@airitsystems.de;;;;;;;;;;;;;;;;;#;;#;10690;;7;;;Umsatzsteuerpflichtig
+10691;Herrn;;Felix;Glöckner;;;"Hänselriede 3";30419;Hannover;Deutschland;;;;;;;;;felix.gloeckner@gmail.com;;;;;;;;;;;;;;;;;#;;#;10691;;7;;;Umsatzsteuerpflichtig
+10692;Herrn;;Marco;Fenske;;;"Hannoversche Straße 47 B";30629;Hannover;Deutschland;;;;;;;;;post@marcofenske.de;;;;;;;;;;;;;;;;;#;;#;10692;;7;;;Umsatzsteuerpflichtig
+10693;;;;;;"advita Holding GmbH";"Kantstraße 151";10623;Berlin;Deutschland;;;;;;;;;jutta.geringhoff@advita.de;;;;;;;;;;;;;;;;;#;;#;10693;;7;;;Umsatzsteuerpflichtig
+10694;;;;;;"advita Holding GmbH";"Kantstrasse 151";10623;Berlin;Deutschland;;;;;;;;;Claudia.Schulz@advita.de;;;;;;;;;;;;;;;;;#;;#;10694;;7;;;Umsatzsteuerpflichtig
+10695;Frau;;Theresa;Rothschild;;;"Breitenlehn 10";09127;Chemnitz;Deutschland;;;;;;;;;Theresa_Rothschild@gmx.de;;;;;;;;;;;;;;;;;#;;#;10695;;7;;;Umsatzsteuerpflichtig
+10696;Frau;;Ariane;Brenssell;;;"Saaringer Dorfstr. 4";14776;"Brandenburg an der Havel/OT Saaringen";Deutschland;;;;;;;;;ariane.brenssell@fu-berlin.de;;;;;;;;;;;;;;;;;#;;#;10696;;7;;;Umsatzsteuerpflichtig
+10697;Frau;;Armgard;Wippler;;;"Fritschestr. 55";10627;Berlin;Deutschland;;;;;;;;;armgard.wippler@gmx.de;;;;;;;;;;;;;;;;;#;;#;10697;;7;;;Umsatzsteuerpflichtig
+10698;Frau;;Agnieszka;Brandes;;;"Heinrichstr. 4A";31303;Burgdorf;Deutschland;;;;;;;;;Brandes@nordholding.de;;;;;;;;;;;;;;;;;#;;#;10698;;7;;;Umsatzsteuerpflichtig
+10699;Frau;;Sarah;Düing;;;"Friedrich Sötebier Weg 4 G";30974;Wennigsen;Deutschland;;;;;;;;;sarah.dueing@lavera.de;;;;;;;;;;;;;;;;;#;;#;10699;;7;;;Umsatzsteuerpflichtig
+10700;;;;;;"Laverana GmbH & Co. KG";"Lavesstraße 65";30159;Hannover;Deutschland;;;;;;;;;sarah.dueing@lavera.de;;;;;;;;;;;;;;;;;#;;#;10700;;7;;;Umsatzsteuerpflichtig
+10701;;;;;;"FERI AG";"Rathausplatz 8-10";61348;"Bad Homburg";Deutschland;;;;;;;;;Chiara.Himmel@feri.de;;;;;;;;;;;;"Haus am Park";;;;;#;;#;10701;;7;;;Umsatzsteuerpflichtig
+10702;;;;;;"Laverana GmbH & Co. KG";"Lavesstraße 65";30159;Hannover;Deutschland;;;;;;;;;sarah.dueing@lavera.de;;;;;;;;;;;;;;;;;#;;#;10702;;7;;;Umsatzsteuerpflichtig
+10703;Frau;;Lisa;Schulze;;"Oxygen Development";"Am Mühlenfelde 7";30938;Burgwedel;Deutschland;;;;;;;;;lschulze@oxygendevelopment.com;;;;;;;;;;;;;;;;;#;;#;10703;;7;;;Umsatzsteuerpflichtig
+10704;;;;;;"TenneT TSO GmbH";"Eisenbahnlängsweg 2 a";31275;Lehrte;Deutschland;;;;;;;;;marco.harms@tennet.eu;;;;;;;;;;;;;;;;;#;;#;10704;;7;;;Umsatzsteuerpflichtig
+10705;Frau;Dr.;Cornelia;Rossi-Broy;;;"Lentzeallee 97";14195;Berlin;Deutschland;;;;;;;;;rossi-broy@online.de;;;;;;;;;;;;;;;;;#;;#;10705;;7;;;Umsatzsteuerpflichtig
+10706;Herrn;Dr.;Peter;Stieve;;"GKC STEUERBERATUNGSGESELLSCHAFT MBH & CO. KG";"Adelheidstraße 4 / 5";30171;Hannover;Deutschland;;;;;;;;;Stieve@gkc-stb.de;;;;;;;;;;;;;;;;;#;;#;10706;;7;;;Umsatzsteuerpflichtig
+10707;Frau;;Maria;Köhne;;;"Kiautschoustr. 4";13353;Berlin;Deutschland;;;;;;;;;koehne.kontakt@googlemail.com;;;;;;;;;;;;;;;;;#;;#;10707;;7;;;Umsatzsteuerpflichtig
+10708;Herrn;;Christian;Biering;;"C.Biering Fliesenlegermeisterbetrieb";"Am Kinderdorf 48";14089;Berlin;Deutschland;;;;;;;;;info@biering-fliesen.de;;;;;;;;;;;;;;;;;#;;#;10708;;7;;;Umsatzsteuerpflichtig
+10709;Herrn;;Daniel;Thompson;;;"Normannenstr 38,";10367;Berlin;Deutschland;;;;;;;;;daniel.thompson@adam-audio.de;;;;;;;;;;;;;;;;;#;;#;10709;;7;;;Umsatzsteuerpflichtig
+10710;Frau;;Simone;Mayer;;;"Alleenstraße 64";73230;"Kirchheim Teck";Deutschland;;;;;;;;;sim.mayer@t-online.de;;;;;;;;;;;;;;;;;#;;#;10710;;7;;;Umsatzsteuerpflichtig
+10711;Herrn;;Marco;Harms;;"TenneT TSO GmbH";"Eisenbahnlängsweg 2 a";31275;Lehrte;Deutschland;;;;;;;;;marco.harms@tennet.eu;;;;;;;;;;;;;;;;;#;;#;10711;;7;;;Umsatzsteuerpflichtig
+10712;Herrn;;Steven;Rau;;"DTAD GmbH";"Greifswalder Straße 156";10409;Berlin;Deutschland;;;;;;;;;steven.rau@dtad.com;;;;;;;;;;;;;;;;;#;;#;10712;;7;;;Umsatzsteuerpflichtig
+10713;Frau;;Natalja;Kalisch;;;"Saarbrücker Str 19";81379;München;Deutschland;;;;;;;;;nataljakalisch@googlemail.com;;;;;;;;;;;;;;;;;#;;#;10713;;7;;;Umsatzsteuerpflichtig

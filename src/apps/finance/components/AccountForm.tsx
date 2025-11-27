@@ -44,17 +44,17 @@ export default function AccountForm({ account, onSave, onClose }: AccountFormPro
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
         <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-neutral-800">
+          <h2 className="text-xl font-semibold text-dark-blue">
             {account ? 'Edit Account' : 'Add Account'}
           </h2>
-          <button onClick={onClose} className="p-1 hover:bg-neutral-100 rounded">
-            <X className="w-5 h-5 text-neutral-500" />
+          <button onClick={onClose} className="p-1 hover:bg-light-gray rounded">
+            <X className="w-5 h-5 text-gray" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-2">
+            <label className="block text-sm font-medium text-gray mb-2">
               Account Name
             </label>
             <Input
@@ -67,13 +67,13 @@ export default function AccountForm({ account, onSave, onClose }: AccountFormPro
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-2">
+            <label className="block text-sm font-medium text-gray mb-2">
               Account Type
             </label>
             <select
               value={accountType}
               onChange={(e) => setAccountType(e.target.value as 'bank' | 'loan' | 'savings')}
-              className="flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+              className="flex h-10 w-full rounded-md border border-light-gray bg-white px-3 py-2 text-sm"
               required
             >
               <option value="bank">Bank Account</option>
@@ -83,7 +83,7 @@ export default function AccountForm({ account, onSave, onClose }: AccountFormPro
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-2">
+            <label className="block text-sm font-medium text-gray mb-2">
               Current Balance (€)
             </label>
             <Input
@@ -94,7 +94,7 @@ export default function AccountForm({ account, onSave, onClose }: AccountFormPro
               placeholder="0.00"
               required
             />
-            <p className="text-xs text-neutral-500 mt-1">
+            <p className="text-xs text-gray mt-1">
               For loans, enter as a negative number (e.g., -10000)
             </p>
           </div>
@@ -107,7 +107,7 @@ export default function AccountForm({ account, onSave, onClose }: AccountFormPro
               onChange={(e) => setIsPrivate(e.target.checked)}
               className="w-4 h-4"
             />
-            <label htmlFor="isPrivate" className="text-sm text-neutral-700">
+            <label htmlFor="isPrivate" className="text-sm text-gray">
               Private (hidden from shared users)
             </label>
           </div>

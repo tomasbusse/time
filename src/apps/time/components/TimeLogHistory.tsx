@@ -49,11 +49,11 @@ export default function TimeLogHistory({
   if (loggedEntries.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-md p-12 text-center">
-        <Clock className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-neutral-800 mb-2">
+        <Clock className="w-16 h-16 text-light-gray mx-auto mb-4" />
+        <h3 className="text-lg font-semibold text-dark-blue mb-2">
           No time logged yet
         </h3>
-        <p className="text-neutral-600">
+        <p className="text-gray">
           Start a timer and log your time to see your history here
         </p>
       </div>
@@ -62,7 +62,7 @@ export default function TimeLogHistory({
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-semibold text-neutral-800 mb-6">Time Log History</h2>
+      <h2 className="text-xl font-semibold text-dark-blue mb-6">Time Log History</h2>
 
       <div className="space-y-6">
         {sortedDates.map((date) => {
@@ -73,12 +73,12 @@ export default function TimeLogHistory({
             <div key={date}>
               <div className="flex items-center justify-between mb-3 pb-2 border-b">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-neutral-500" />
-                  <h3 className="font-semibold text-neutral-800">
+                  <Calendar className="w-4 h-4 text-gray" />
+                  <h3 className="font-semibold text-dark-blue">
                     {format(new Date(date), 'EEEE, MMMM d, yyyy')}
                   </h3>
                 </div>
-                <span className="text-sm text-neutral-600">
+                <span className="text-sm text-gray">
                   Total: <span className="font-semibold">{formatDuration(dayTotal)}</span>
                 </span>
               </div>
@@ -87,14 +87,14 @@ export default function TimeLogHistory({
                 {entries.map((entry) => (
                   <div
                     key={entry.id}
-                    className="border border-neutral-200 rounded-lg p-4 hover:bg-neutral-50 transition-colors"
+                    className="border border-light-gray rounded-lg p-4 hover:bg-off-white transition-colors"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h4 className="font-medium text-neutral-800 mb-1">
+                        <h4 className="font-medium text-dark-blue mb-1">
                           {entry.taskName}
                         </h4>
-                        <div className="flex items-center gap-4 text-sm text-neutral-600">
+                        <div className="flex items-center gap-4 text-sm text-gray">
                           <div className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
                             <span>
@@ -105,13 +105,13 @@ export default function TimeLogHistory({
                       </div>
 
                       <div className="text-right">
-                        <div className="text-lg font-semibold text-blue-600">
+                        <div className="text-lg font-semibold text-custom-brown">
                           {formatDuration(entry.elapsedTime)}
                         </div>
                         {onViewDetails && (
                           <button
                             onClick={() => onViewDetails(entry.id)}
-                            className="text-xs text-blue-600 hover:text-blue-700 mt-1"
+                            className="text-xs text-custom-brown hover:text-custom-brown mt-1"
                           >
                             View Details
                           </button>
@@ -128,25 +128,25 @@ export default function TimeLogHistory({
 
       <div className="mt-6 pt-6 border-t">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="bg-neutral-50 rounded-lg p-4">
-            <div className="text-sm text-neutral-500">Total Entries</div>
-            <div className="text-2xl font-semibold text-neutral-800">
+          <div className="bg-off-white rounded-lg p-4">
+            <div className="text-sm text-gray">Total Entries</div>
+            <div className="text-2xl font-semibold text-dark-blue">
               {loggedEntries.length}
             </div>
           </div>
 
-          <div className="bg-neutral-50 rounded-lg p-4">
-            <div className="text-sm text-neutral-500">Total Time</div>
-            <div className="text-2xl font-semibold text-neutral-800">
+          <div className="bg-off-white rounded-lg p-4">
+            <div className="text-sm text-gray">Total Time</div>
+            <div className="text-2xl font-semibold text-dark-blue">
               {formatDuration(
                 loggedEntries.reduce((total, entry) => total + entry.elapsedTime, 0)
               )}
             </div>
           </div>
 
-          <div className="bg-neutral-50 rounded-lg p-4">
-            <div className="text-sm text-neutral-500">Avg Session</div>
-            <div className="text-2xl font-semibold text-neutral-800">
+          <div className="bg-off-white rounded-lg p-4">
+            <div className="text-sm text-gray">Avg Session</div>
+            <div className="text-2xl font-semibold text-dark-blue">
               {formatDuration(
                 Math.round(
                   loggedEntries.reduce((total, entry) => total + entry.elapsedTime, 0) /

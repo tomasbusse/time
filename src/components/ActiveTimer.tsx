@@ -34,32 +34,32 @@ export function ActiveTimer({ taskTitle, startTime, onStop, compact = false }: A
 
   if (compact) {
     return (
-      <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
-        <Clock className="w-4 h-4 text-blue-600 animate-pulse" />
+      <div className="flex items-center gap-2 bg-custom-brown/10 border border-custom-brown/40 rounded-lg px-3 py-2">
+        <Clock className="w-4 h-4 text-custom-brown animate-pulse" />
         <div className="flex-1 min-w-0">
-          <div className="text-xs text-blue-700 font-medium truncate">{taskTitle}</div>
-          <div className="text-sm font-mono font-bold text-blue-900">{formatTime()}</div>
+          <div className="text-xs text-custom-brown font-medium truncate">{taskTitle}</div>
+          <div className="text-sm font-mono font-bold text-dark-blue">{formatTime()}</div>
         </div>
         <button
           onClick={onStop}
-          className="p-1 hover:bg-blue-100 rounded transition-colors"
+          className="p-1 hover:bg-light-gray rounded transition-colors"
           title="Stop timer"
         >
-          <Square className="w-4 h-4 text-blue-600 fill-blue-600" />
+          <Square className="w-4 h-4 text-custom-brown fill-custom-brown" />
         </button>
       </div>
     )
   }
 
   return (
-    <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white shadow-lg">
+    <div className="bg-[#B6B2B5] rounded-lg p-6 text-dark-blue shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center animate-pulse">
+          <div className="w-10 h-10 bg-dark-blue/20 rounded-full flex items-center justify-center animate-pulse">
             <Clock className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-sm text-blue-100">Active Timer</div>
+            <div className="text-sm text-dark-blue/80">Active Timer</div>
             <div className="font-semibold text-lg line-clamp-1">{taskTitle}</div>
           </div>
         </div>
@@ -69,7 +69,7 @@ export function ActiveTimer({ taskTitle, startTime, onStop, compact = false }: A
         <div className="text-5xl font-mono font-bold tracking-tight">
           {formatTime()}
         </div>
-        <div className="text-sm text-blue-100 mt-2">
+        <div className="text-sm text-dark-blue/80 mt-2">
           {hours > 0 && `${hours} hour${hours !== 1 ? 's' : ''} `}
           {minutes > 0 && `${minutes} minute${minutes !== 1 ? 's' : ''} `}
           {seconds} second{seconds !== 1 ? 's' : ''}
@@ -78,9 +78,9 @@ export function ActiveTimer({ taskTitle, startTime, onStop, compact = false }: A
 
       <Button
         onClick={onStop}
-        className="w-full bg-white/20 hover:bg-white/30 text-white border border-white/30"
+        className="w-full bg-dark-blue/20 hover:bg-dark-blue/30 text-dark-blue border border-dark-blue/30"
       >
-        <Square className="w-4 h-4 mr-2 fill-white" />
+        <Square className="w-4 h-4 mr-2 fill-dark-blue" />
         Stop Timer
       </Button>
     </div>

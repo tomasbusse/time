@@ -1,4 +1,5 @@
 import { mutation, query } from "./_generated/server";
+import { api } from "./_generated/api";
 
 export const setupDefaultData = mutation({
   args: {},
@@ -151,11 +152,39 @@ export const setupDefaultData = mutation({
 export const getDefaultWorkspace = query({
   args: {},
   handler: async (ctx) => {
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_email", (q) => q.eq("email", "demo@productivity.app"))
-      .first();
-
+    // Try multiple approaches to find the authenticated user
+    
+    // Approach 1: Convex built-in auth (for non-OAuth users)
+    let user = null;
+    const identity = await ctx.auth.getUserIdentity();
+    
+    if (identity && identity.email) {
+      user = await ctx.db
+        .query("users")
+        .withIndex("by_email", (q) => q.eq("email", identity.email!))
+        .first();
+    }
+    
+    // Approach 2: If no user from Convex auth, get the most recent OAuth user
+    if (!user) {
+      const recentToken = await ctx.db
+        .query("userTokens")
+        .order("desc") // Most recent first
+        .first();
+      
+      if (recentToken) {
+        user = await ctx.db.get(recentToken.userId);
+      }
+    }
+    
+    // Approach 3: Fallback - get any existing user (for demo/testing)
+    if (!user) {
+      user = await ctx.db
+        .query("users")
+        .order("desc") // Most recent first
+        .first();
+    }
+    
     if (!user) {
       return null;
     }
@@ -169,6 +198,7 @@ export const getDefaultWorkspace = query({
       userId: user._id,
       workspaceId: workspace?._id,
       userName: user.name,
+      workspace: workspace,
     };
   },
 });

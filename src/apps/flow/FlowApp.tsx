@@ -204,13 +204,13 @@ export default function FlowApp() {
   const selectedTask = selectedTaskId ? tasks.find(t => t._id === selectedTaskId) : null
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-off-white">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200">
+      <div className="bg-white border-b border-light-gray">
         <div className="max-w-7xl mx-auto px-8 py-6">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-800 mb-4"
+            className="inline-flex items-center gap-2 text-gray hover:text-dark-blue mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
@@ -218,20 +218,20 @@ export default function FlowApp() {
 
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-slate-800 mb-2">Flow</h1>
-              <p className="text-slate-600">
+              <h1 className="text-3xl font-bold text-dark-blue mb-2">Flow</h1>
+              <p className="text-gray">
                 Sophisticated task management with advanced filtering and organization.
               </p>
             </div>
 
             {activeTab === 'tasks' && (
               <div className="flex items-center gap-4">
-                <div className="text-sm text-slate-500">
+                <div className="text-sm text-gray">
                   {taskStats.completed} / {taskStats.total} completed
                 </div>
                 <Button 
                   onClick={() => handleCreateTask('todo')}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-dark-blue hover:bg-dark-blue"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   New Task
@@ -247,12 +247,12 @@ export default function FlowApp() {
                 onClick={() => setActiveTab('tasks')}
                 className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'tasks'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                    ? 'border-custom-brown text-custom-brown'
+                    : 'border-transparent text-gray hover:text-gray hover:border-light-gray'
                 }`}
               >
                 Tasks
-                <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-light-gray text-dark-blue">
                   {taskStats.total}
                 </span>
               </button>
@@ -260,12 +260,12 @@ export default function FlowApp() {
                 onClick={() => setActiveTab('ideas')}
                 className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'ideas'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                    ? 'border-custom-brown text-custom-brown'
+                    : 'border-transparent text-gray hover:text-gray hover:border-light-gray'
                 }`}
               >
                 Ideas
-                <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-light-gray text-dark-blue">
                   {ideas.filter((i) => i.status !== 'archived').length}
                 </span>
               </button>

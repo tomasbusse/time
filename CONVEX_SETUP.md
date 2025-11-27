@@ -36,6 +36,44 @@ Add to `.env`:
 VITE_CONVEX_URL=https://your-project-name.convex.cloud
 ```
 
+
+### 4. Secure server environment variables (OAuth + API keys)
+
+The Convex backend reads sensitive credentials from Convex environment variables (not from source code):
+
+- GOOGLE_CLIENT_ID
+- GOOGLE_CLIENT_SECRET
+- GOOGLE_REDIRECT_URI (optional; defaults to http://localhost:5174/auth/google/callback)
+- API_KEYS_MASTER_KEY (base64-encoded 32 bytes; used to encrypt user API keys at rest)
+
+Generate a strong encryption key and set variables for your dev deployment:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+# copy the output as <BASE64_32_BYTES>
+
+npx convex env set dev API_KEYS_MASTER_KEY "<BASE64_32_BYTES>"
+npx convex env set dev GOOGLE_CLIENT_ID "<your_client_id>.apps.googleusercontent.com"
+npx convex env set dev GOOGLE_CLIENT_SECRET "<your_client_secret>"
+npx convex env set dev GOOGLE_REDIRECT_URI "http://localhost:5174/auth/google/callback"
+```
+
+When you deploy to production, set the same variables for the prod deployment with your production values (e.g., your production domain as redirect URI):
+
+```bash
+npx convex env set prod API_KEYS_MASTER_KEY "<BASE64_32_BYTES>"
+npx convex env set prod GOOGLE_CLIENT_ID "<prod_client_id>.apps.googleusercontent.com"
+npx convex env set prod GOOGLE_CLIENT_SECRET "<prod_client_secret>"
+npx convex env set prod GOOGLE_REDIRECT_URI "https://your-domain.com/auth/google/callback"
+```
+
+Verify values via:
+
+```bash
+npx convex env list dev
+npx convex env list prod
+```
+
 ## Database Schema
 
 The schema is defined in `convex/schema.ts` with the following tables:

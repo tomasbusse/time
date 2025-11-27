@@ -59,18 +59,18 @@ export default function IdeaDetailModal({
 
   const getPriorityColor = (priority?: string): string => {
     switch (priority) {
-      case 'high': return 'bg-red-100 text-red-700 border-red-200'
+      case 'high': return 'bg-light-gray text-red-700 border-light-gray'
       case 'medium': return 'bg-yellow-100 text-yellow-700 border-yellow-200'
-      case 'low': return 'bg-green-100 text-green-700 border-green-200'
-      default: return 'bg-gray-100 text-gray-700 border-gray-200'
+      case 'low': return 'bg-light-gray text-green-700 border-light-gray'
+      default: return 'bg-light-gray text-gray border-light-gray'
     }
   }
 
   const getStatusColor = (status: string): string => {
     const colors = {
-      todo: 'bg-gray-100 text-gray-700',
-      in_progress: 'bg-blue-100 text-blue-700',
-      completed: 'bg-green-100 text-green-700',
+      todo: 'bg-light-gray text-gray',
+      in_progress: 'bg-light-gray text-custom-brown',
+      completed: 'bg-light-gray text-green-700',
     }
     return colors[status as keyof typeof colors] || colors.todo
   }
@@ -112,14 +112,14 @@ export default function IdeaDetailModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200">
+        <div className="flex items-center justify-between p-6 border-b border-light-gray">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
               <Lightbulb className="w-5 h-5 text-yellow-600" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-slate-800">{idea.title}</h2>
-              <p className="text-sm text-slate-500 capitalize">{idea.status} • Created from idea</p>
+              <h2 className="text-xl font-semibold text-dark-blue">{idea.title}</h2>
+              <p className="text-sm text-gray capitalize">{idea.status} • Created from idea</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -133,9 +133,9 @@ export default function IdeaDetailModal({
             </Button>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-light-gray rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-slate-500" />
+              <X className="w-5 h-5 text-gray" />
             </button>
           </div>
         </div>
@@ -148,12 +148,12 @@ export default function IdeaDetailModal({
               {/* Description */}
               {(idea.description || idea.richDescription) && (
                 <div>
-                  <h3 className="text-sm font-medium text-slate-700 mb-2">Description</h3>
+                  <h3 className="text-sm font-medium text-gray mb-2">Description</h3>
                   {idea.description && (
-                    <p className="text-sm text-slate-600 mb-3">{idea.description}</p>
+                    <p className="text-sm text-gray mb-3">{idea.description}</p>
                   )}
                   {idea.richDescription && (
-                    <div className="text-sm text-slate-600 bg-slate-50 p-3 rounded-lg">
+                    <div className="text-sm text-gray bg-off-white p-3 rounded-lg">
                       <pre className="whitespace-pre-wrap font-sans">{idea.richDescription}</pre>
                     </div>
                   )}
@@ -164,8 +164,8 @@ export default function IdeaDetailModal({
               <div className="grid grid-cols-2 gap-4">
                 {idea.category && (
                   <div>
-                    <h3 className="text-sm font-medium text-slate-700 mb-2">Category</h3>
-                    <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-lg">
+                    <h3 className="text-sm font-medium text-gray mb-2">Category</h3>
+                    <span className="inline-block px-3 py-1 bg-light-gray text-custom-brown text-sm rounded-lg">
                       {idea.category}
                     </span>
                   </div>
@@ -173,7 +173,7 @@ export default function IdeaDetailModal({
 
                 {idea.priority && (
                   <div>
-                    <h3 className="text-sm font-medium text-slate-700 mb-2">Priority</h3>
+                    <h3 className="text-sm font-medium text-gray mb-2">Priority</h3>
                     <span className={cn(
                       "inline-flex items-center gap-1 px-3 py-1 text-sm rounded-lg border capitalize",
                       getPriorityColor(idea.priority)
@@ -188,12 +188,12 @@ export default function IdeaDetailModal({
               {/* Tags */}
               {idea.tags && idea.tags.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-medium text-slate-700 mb-2">Tags</h3>
+                  <h3 className="text-sm font-medium text-gray mb-2">Tags</h3>
                   <div className="flex flex-wrap gap-2">
                     {idea.tags.map((tag, index) => (
                       <span
                         key={index}
-                        className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-lg"
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-light-gray text-gray text-sm rounded-lg"
                       >
                         <Tag className="w-3 h-3" />
                         {tag}
@@ -206,7 +206,7 @@ export default function IdeaDetailModal({
               {/* Attachments */}
               {idea.attachments && idea.attachments.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-medium text-slate-700 mb-2">Attachments</h3>
+                  <h3 className="text-sm font-medium text-gray mb-2">Attachments</h3>
                   <div className="space-y-2">
                     {idea.attachments.map((attachment, index) => (
                       <a
@@ -214,10 +214,10 @@ export default function IdeaDetailModal({
                         href={attachment.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                        className="flex items-center gap-2 p-3 bg-off-white rounded-lg hover:bg-light-gray transition-colors"
                       >
-                        <Paperclip className="w-4 h-4 text-slate-500" />
-                        <span className="text-sm text-slate-700">{attachment.name}</span>
+                        <Paperclip className="w-4 h-4 text-gray" />
+                        <span className="text-sm text-gray">{attachment.name}</span>
                       </a>
                     ))}
                   </div>
@@ -230,14 +230,14 @@ export default function IdeaDetailModal({
               {/* Existing Tasks */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium text-slate-800">
+                  <h3 className="text-lg font-medium text-dark-blue">
                     Related Tasks ({relatedTasks.length})
                   </h3>
                 </div>
 
                 {relatedTasks.length === 0 ? (
-                  <div className="text-center py-8 text-slate-400 bg-slate-50 rounded-lg">
-                    <Lightbulb className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+                  <div className="text-center py-8 text-gray bg-off-white rounded-lg">
+                    <Lightbulb className="w-8 h-8 mx-auto mb-2 text-light-gray" />
                     <p className="text-sm">No tasks created from this idea yet</p>
                   </div>
                 ) : (
@@ -245,11 +245,11 @@ export default function IdeaDetailModal({
                     {relatedTasks.map((task) => (
                       <div
                         key={task.id}
-                        className="p-4 border border-slate-200 rounded-lg hover:shadow-sm transition-shadow cursor-pointer"
+                        className="p-4 border border-light-gray rounded-lg hover:shadow-sm transition-shadow cursor-pointer"
                         onClick={() => onViewTask(task.id)}
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-medium text-slate-800 flex-1">{task.title}</h4>
+                          <h4 className="font-medium text-dark-blue flex-1">{task.title}</h4>
                           <span className={cn(
                             "text-xs px-2 py-1 rounded-full ml-2",
                             getStatusColor(task.status)
@@ -265,7 +265,7 @@ export default function IdeaDetailModal({
                             <Flag className="w-3 h-3 inline mr-1" />
                             {task.priority}
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-gray">
                             {new Date(task.createdAt).toLocaleDateString()}
                           </span>
                         </div>
@@ -276,8 +276,8 @@ export default function IdeaDetailModal({
               </div>
 
               {/* Create New Tasks */}
-              <div className="border-t border-slate-200 pt-6">
-                <h3 className="text-lg font-medium text-slate-800 mb-4">Create Tasks</h3>
+              <div className="border-t border-light-gray pt-6">
+                <h3 className="text-lg font-medium text-dark-blue mb-4">Create Tasks</h3>
                 <div className="space-y-3">
                   {newTaskTitles.map((title, index) => (
                     <div key={index} className="flex gap-2">
@@ -286,12 +286,12 @@ export default function IdeaDetailModal({
                         value={title}
                         onChange={(e) => updateTaskTitle(index, e.target.value)}
                         placeholder={`Task ${index + 1} title...`}
-                        className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="flex-1 px-3 py-2 border border-light-gray rounded-lg focus:ring-2 focus:ring-custom-brown focus:border-custom-brown"
                       />
                       {newTaskTitles.length > 1 && (
                         <button
                           onClick={() => removeTaskTitle(index)}
-                          className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                          className="p-2 text-gray hover:text-red-500 transition-colors"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -312,7 +312,7 @@ export default function IdeaDetailModal({
                     <Button
                       onClick={handleCreateTasks}
                       disabled={isSubmitting || newTaskTitles.every(title => !title.trim())}
-                      className="bg-blue-600 hover:bg-blue-700"
+                      className="bg-dark-blue hover:bg-dark-blue"
                     >
                       {isSubmitting ? 'Creating...' : 'Create Tasks'}
                     </Button>

@@ -1,143 +1,110 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowLeft, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
-import { format, addDays, subDays, startOfWeek, addWeeks, subWeeks } from 'date-fns'
-import { Button } from '@/components/ui/Button'
-import TimerWidget from './components/TimerWidget'
-import TimeAllocationCard from './components/TimeAllocationCard'
-import TaskSelector from './components/TaskSelector'
-import WeeklyOverview from './components/WeeklyOverview'
-import TimeLogHistory from './components/TimeLogHistory'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { format, addDays, subDays, startOfWeek, addWeeks, subWeeks, getWeek } from 'date-fns';
+import { Button } from '@/components/ui/Button';
+import TimerWidget from './components/TimerWidget';
+import TimeAllocationCard from './components/TimeAllocationCard';
+import TaskSelector from './components/TaskSelector';
+import WeeklyOverview from './components/WeeklyOverview';
+import TimeLogHistory from './components/TimeLogHistory';
+import EditAllocationModal from './components/EditAllocationModal';
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
+import { useWorkspace } from '@/lib/WorkspaceContext';
+import { Doc, Id } from '../../../convex/_generated/dataModel';
 
-type TabType = 'daily' | 'weekly' | 'history'
-
-interface TimeAllocation {
-  id: string
-  taskName: string
-  allocatedDuration: number
-  timeSpent: number
-  category?: string
-  date: string
-}
-
-interface LogEntry {
-  id: string
-  taskName: string
-  date: string
-  elapsedTime: number
-  sessionStart: number
-  sessionEnd: number
-}
+type TabType = 'daily' | 'weekly' | 'history';
 
 export default function TimeApp() {
-  const [activeTab, setActiveTab] = useState<TabType>('daily')
-  const [selectedDate, setSelectedDate] = useState(new Date())
-  const [weekStart, setWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }))
-  const [showTaskSelector, setShowTaskSelector] = useState(false)
-  const [activeTimer, setActiveTimer] = useState<TimeAllocation | null>(null)
+  const { workspaceId, userId } = useWorkspace();
+  const [activeTab, setActiveTab] = useState<TabType>('daily');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [weekStart, setWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
+  const [showTaskSelector, setShowTaskSelector] = useState(false);
+  const [editingAllocation, setEditingAllocation] = useState<Doc<'timeAllocations'> | null>(null);
+  const [activeTimer, setActiveTimer] = useState<Doc<'timeAllocations'> | null>(null);
 
-  const [allocations, setAllocations] = useState<TimeAllocation[]>([
-    {
-      id: '1',
-      taskName: 'Book flights for vacation',
-      allocatedDuration: 120,
-      timeSpent: 45,
-      category: 'Personal',
-      date: format(new Date(), 'yyyy-MM-dd'),
-    },
-    {
-      id: '2',
-      taskName: 'Design the Flow mini-app UI',
-      allocatedDuration: 180,
-      timeSpent: 90,
-      category: 'Work',
-      date: format(new Date(), 'yyyy-MM-dd'),
-    },
-  ])
+  const allocations = useQuery(
+    api.timeAllocations.list,
+    workspaceId ? { workspaceId, date: format(selectedDate, 'yyyy-MM-dd') } : 'skip'
+  );
 
-  const [logEntries, setLogEntries] = useState<LogEntry[]>([
-    {
-      id: '1',
-      taskName: 'Book flights for vacation',
-      date: format(new Date(), 'yyyy-MM-dd'),
-      elapsedTime: 45,
-      sessionStart: Date.now() - 45 * 60 * 1000,
-      sessionEnd: Date.now(),
-    },
-  ])
+  const tasks = useQuery(api.flow.listTasks, workspaceId ? { workspaceId } : 'skip');
 
-  const mockTasks = [
-    { id: '1', name: 'Book flights for vacation', category: 'Personal' },
-    { id: '2', name: 'Design the Flow mini-app UI', category: 'Work' },
-    { id: '3', name: 'Develop task creation form', category: 'Work' },
-    { id: '4', name: 'Workout session', category: 'Health' },
-    { id: '5', name: 'Read documentation', category: 'Learning' },
-  ]
+  const createAllocation = useMutation(api.timeAllocations.create);
+  const updateAllocation = useMutation(api.timeAllocations.update);
+  const deleteAllocation = useMutation(api.timeAllocations.remove);
+  const logTime = useMutation(api.timeAllocations.logTime);
 
-  const todayAllocations = allocations.filter(
-    (allocation) => allocation.date === format(selectedDate, 'yyyy-MM-dd')
-  )
+  const [logEntries, setLogEntries] = useState<any[]>([]); // Replace with Convex query
 
-  const handleAddAllocation = (_taskId: string, taskName: string, duration: number) => {
-    const newAllocation: TimeAllocation = {
-      id: Date.now().toString(),
-      taskName,
-      allocatedDuration: duration,
-      timeSpent: 0,
+  const handleAddAllocation = (data: Partial<Doc<'timeAllocations'>>) => {
+    if (!workspaceId || !userId || !data.taskName || !data.allocatedDuration || !data.taskId) return;
+    createAllocation({
+      workspaceId,
+      userId,
       date: format(selectedDate, 'yyyy-MM-dd'),
-    }
-    setAllocations([...allocations, newAllocation])
-  }
+      weekNumber: getWeek(selectedDate),
+      taskName: data.taskName,
+      taskId: data.taskId,
+      allocatedDuration: data.allocatedDuration,
+      isRecurring: data.isRecurring,
+      recurrenceType: data.recurrenceType,
+      recurrenceInterval: data.recurrenceInterval,
+      recurrenceEndDate: data.recurrenceEndDate,
+    });
+  };
 
-  const handleStartTimer = (allocation: TimeAllocation) => {
-    setActiveTimer(allocation)
-  }
+  const handleUpdateAllocation = (id: string, data: Partial<Doc<'timeAllocations'>>) => {
+    updateAllocation({ id: id as Id<'timeAllocations'>, ...data });
+  };
+
+  const handleDeleteAllocation = (id: string) => {
+    deleteAllocation({ id: id as Id<'timeAllocations'> });
+  };
+
+  const handleStartTimer = (allocation: Doc<'timeAllocations'>) => {
+    setActiveTimer(allocation);
+  };
 
   const handleStopTimer = (elapsedSeconds: number) => {
-    if (activeTimer) {
-      const elapsedMinutes = Math.floor(elapsedSeconds / 60)
-      
-      setAllocations(
-        allocations.map((a) =>
-          a.id === activeTimer.id
-            ? { ...a, timeSpent: a.timeSpent + elapsedMinutes }
-            : a
-        )
-      )
-
-      const newLogEntry: LogEntry = {
-        id: Date.now().toString(),
-        taskName: activeTimer.taskName,
-        date: format(new Date(), 'yyyy-MM-dd'),
-        elapsedTime: elapsedMinutes,
+    if (activeTimer && workspaceId && userId) {
+      const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+      logTime({
+        workspaceId,
+        userId,
+        allocationId: activeTimer._id,
         sessionStart: Date.now() - elapsedSeconds * 1000,
         sessionEnd: Date.now(),
-      }
-      setLogEntries([newLogEntry, ...logEntries])
-      setActiveTimer(null)
+        elapsedTime: elapsedMinutes,
+      });
+      // Note: timeSpent on allocation will be updated via a Convex function later
+      setActiveTimer(null);
     }
-  }
+  };
 
-  const weekAllocations = allocations.map((a) => ({
-    date: a.date,
-    taskName: a.taskName,
-    duration: a.allocatedDuration,
-    category: a.category,
-  }))
+  const weekAllocations =
+    allocations?.map((a) => ({
+      date: a.date,
+      taskName: a.taskName,
+      duration: a.allocatedDuration,
+      category: a.category,
+    })) ?? [];
 
   return (
-    <div className="min-h-screen bg-neutral-50 p-8">
+    <div className="min-h-screen bg-off-white p-8">
       <div className="max-w-6xl mx-auto">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-800 mb-6"
+          className="inline-flex items-center gap-2 text-gray hover:text-dark-blue mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </Link>
 
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-neutral-800">Time</h1>
+          <h1 className="text-3xl font-bold text-dark-blue">Time</h1>
           {activeTab === 'daily' && (
             <Button onClick={() => setShowTaskSelector(true)}>
               <Plus className="w-4 h-4 mr-2" />
@@ -147,14 +114,14 @@ export default function TimeApp() {
         </div>
 
         <div className="bg-white rounded-lg shadow-md mb-6">
-          <div className="border-b border-neutral-200">
+          <div className="border-b border-light-gray">
             <div className="flex">
               <button
                 onClick={() => setActiveTab('daily')}
                 className={`px-6 py-3 font-medium transition-colors ${
                   activeTab === 'daily'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
+                    ? 'text-custom-brown border-b-2 border-custom-brown'
+                    : 'text-gray hover:text-dark-blue'
                 }`}
               >
                 Daily
@@ -163,8 +130,8 @@ export default function TimeApp() {
                 onClick={() => setActiveTab('weekly')}
                 className={`px-6 py-3 font-medium transition-colors ${
                   activeTab === 'weekly'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
+                    ? 'text-custom-brown border-b-2 border-custom-brown'
+                    : 'text-gray hover:text-dark-blue'
                 }`}
               >
                 Weekly
@@ -173,8 +140,8 @@ export default function TimeApp() {
                 onClick={() => setActiveTab('history')}
                 className={`px-6 py-3 font-medium transition-colors ${
                   activeTab === 'history'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-neutral-600 hover:text-neutral-800'
+                    ? 'text-custom-brown border-b-2 border-custom-brown'
+                    : 'text-gray hover:text-dark-blue'
                 }`}
               >
                 History
@@ -189,16 +156,16 @@ export default function TimeApp() {
               <div className="flex items-center justify-between mb-6">
                 <button
                   onClick={() => setSelectedDate(subDays(selectedDate, 1))}
-                  className="p-2 hover:bg-neutral-100 rounded"
+                  className="p-2 hover:bg-light-gray rounded"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
-                <h2 className="text-xl font-semibold text-neutral-800">
+                <h2 className="text-xl font-semibold text-dark-blue">
                   {format(selectedDate, 'EEEE, MMMM d, yyyy')}
                 </h2>
                 <button
                   onClick={() => setSelectedDate(addDays(selectedDate, 1))}
-                  className="p-2 hover:bg-neutral-100 rounded"
+                  className="p-2 hover:bg-light-gray rounded"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -214,23 +181,24 @@ export default function TimeApp() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {todayAllocations.map((allocation) => (
+              {allocations?.map((allocation) => (
                 <TimeAllocationCard
-                  key={allocation.id}
+                  key={allocation._id}
                   taskName={allocation.taskName}
                   allocatedDuration={allocation.allocatedDuration}
-                  timeSpent={allocation.timeSpent}
+                  timeSpent={allocation.timeSpent ?? 0}
                   category={allocation.category}
+                  isRecurring={allocation.isRecurring}
                   onStartTimer={() => handleStartTimer(allocation)}
+                  onEdit={() => setEditingAllocation(allocation)}
+                  onDelete={() => handleDeleteAllocation(allocation._id)}
                 />
               ))}
             </div>
 
-            {todayAllocations.length === 0 && !activeTimer && (
+            {allocations?.length === 0 && !activeTimer && (
               <div className="bg-white rounded-lg shadow-md p-12 text-center">
-                <p className="text-neutral-600 mb-4">
-                  No time allocations for today
-                </p>
+                <p className="text-gray mb-4">No time allocations for today</p>
                 <Button onClick={() => setShowTaskSelector(true)}>
                   <Plus className="w-4 h-4 mr-2" />
                   Add Your First Allocation
@@ -251,7 +219,7 @@ export default function TimeApp() {
               </button>
               <button
                 onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))}
-                className="px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-white rounded shadow-md"
+                className="px-4 py-2 text-sm font-medium text-gray hover:bg-white rounded shadow-md"
               >
                 This Week
               </button>
@@ -280,12 +248,23 @@ export default function TimeApp() {
 
         {showTaskSelector && (
           <TaskSelector
-            tasks={mockTasks}
-            onSelectTask={handleAddAllocation}
+            tasks={tasks || []}
+            onSelectTask={(data) => handleAddAllocation(data)}
             onClose={() => setShowTaskSelector(false)}
+          />
+        )}
+
+        {editingAllocation && (
+          <EditAllocationModal
+            allocation={editingAllocation}
+            onClose={() => setEditingAllocation(null)}
+            onSave={(id, data) => {
+              handleUpdateAllocation(id, data);
+              setEditingAllocation(null);
+            }}
           />
         )}
       </div>
     </div>
-  )
+  );
 }
