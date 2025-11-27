@@ -2,13 +2,13 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { useState } from 'react'
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn, useUser } from '@clerk/clerk-react'
 import { ConvexReactClient } from 'convex/react'
-import { ConvexProvider } from 'convex/react'
+import { ConvexProvider, useQuery } from 'convex/react'
 import { WorkspaceProvider } from './lib/WorkspaceContext'
 import { Sidebar } from './components/Sidebar'
 import { TopBar } from './components/TopBar'
 import AppRoutes from './routes'
 import { useWorkspace } from './lib/WorkspaceContext'
-import { isEmailAllowed } from './lib/allowlist'
+import { api } from '../convex/_generated/api'
 
 const convexUrl = import.meta.env.VITE_CONVEX_URL || 'https://placeholder.convex.cloud'
 const convex = new ConvexReactClient(convexUrl)
@@ -18,10 +18,11 @@ function AppContent() {
   const { userId, isLoading, workspaceId } = useWorkspace();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { user } = useUser();
+  const authorizedEmails = useQuery(api.auth.listAuthorizedEmails) || [];
 
   console.log('AppContent - userId:', userId, 'workspaceId:', workspaceId, 'isLoading:', isLoading);
 
-  if (isLoading) {
+  if (isLoading || authorizedEmails === undefined) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-off-white">
         <div className="text-center">
@@ -34,8 +35,10 @@ function AppContent() {
   }
 
   // Check if user's email is allowed
-  const userEmail = user?.primaryEmailAddress?.emailAddress;
-  if (!isEmailAllowed(userEmail)) {
+  const userEmail = user?.primaryEmailAddress?.emailAddress?.toLowerCase();
+  const isAllowed = authorizedEmails.some(ae => ae.email.toLowerCase() === userEmail);
+
+  if (!isAllowed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-off-white">
         <div className="max-w-md text-center p-8 bg-white rounded-lg shadow-lg">

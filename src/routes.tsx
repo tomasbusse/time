@@ -7,6 +7,7 @@ import InvoiceApp from './apps/invoices/InvoiceApp'
 import ProductivityApp from './apps/productivity/ProductivityApp'
 import AdminPanel from './pages/AdminPanel'
 import AuthorizedUsersPage from './apps/admin/AuthorizedUsersPage'
+import AllowedUsersSettings from './pages/AllowedUsersSettings'
 import TempDeletePage from './pages/TempDeletePage'
 import LoginPage from './pages/LoginPage'
 import SettingsPage from './pages/SettingsPage'
@@ -25,6 +26,7 @@ export default function AppRoutes() {
       <Route path="/admin" element={<AdminPanel />} />
       <Route path="/admin/users" element={<AuthorizedUsersPage />} />
       <Route path="/settings" element={<SettingsPage />} />
+      <Route path="/settings/users" element={<AllowedUsersSettings />} />
       <Route path="/temp-delete" element={<TempDeletePage />} />
       <Route path="/login" element={<LoginPage />} />
     </Routes>

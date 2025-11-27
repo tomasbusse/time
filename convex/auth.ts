@@ -21,16 +21,10 @@ export const isEmailAuthorized = query({
     },
 });
 
-// List all authorized emails (admin only)
+// List all authorized emails
 export const listAuthorizedEmails = query({
     args: {},
     handler: async (ctx) => {
-        const userId = await auth.getUserId(ctx);
-        if (!userId) throw new Error("Not authenticated");
-
-        const user = await ctx.db.get(userId);
-        if (!user?.isAdmin) throw new Error("Admin access required");
-
         return await ctx.db.query("authorizedEmails").collect();
     },
 });
