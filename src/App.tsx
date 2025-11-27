@@ -1,16 +1,17 @@
 import { BrowserRouter as Router } from 'react-router-dom'
 import { useState } from 'react'
-import { ConvexAuthProvider } from "@convex-dev/auth/react";
+import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react'
 import { ConvexReactClient } from 'convex/react'
+import { ConvexProvider } from 'convex/react'
 import { WorkspaceProvider } from './lib/WorkspaceContext'
 import { Sidebar } from './components/Sidebar'
 import { TopBar } from './components/TopBar'
 import AppRoutes from './routes'
-import LoginPage from './pages/LoginPage'
 import { useWorkspace } from './lib/WorkspaceContext'
 
 const convexUrl = import.meta.env.VITE_CONVEX_URL || 'https://placeholder.convex.cloud'
 const convex = new ConvexReactClient(convexUrl)
+const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY!
 
 function AppContent() {
   const { userId, isLoading, workspaceId } = useWorkspace();
@@ -28,11 +29,6 @@ function AppContent() {
         </div>
       </div>
     );
-  }
-
-  // Show login page if not authenticated
-  if (!userId) {
-    return <LoginPage />;
   }
 
   return (
@@ -56,11 +52,18 @@ function AppContent() {
 
 function App() {
   return (
-    <ConvexAuthProvider client={convex}>
-      <WorkspaceProvider>
-        <AppContent />
-      </WorkspaceProvider>
-    </ConvexAuthProvider>
+    <ClerkProvider publishableKey={clerkPubKey}>
+      <ConvexProvider client={convex}>
+        <SignedIn>
+          <WorkspaceProvider>
+            <AppContent />
+          </WorkspaceProvider>
+        </SignedIn>
+        <SignedOut>
+          <RedirectToSignIn />
+        </SignedOut>
+      </ConvexProvider>
+    </ClerkProvider>
   )
 }
 

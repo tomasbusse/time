@@ -12,6 +12,7 @@ import type * as adminCleanup from "../adminCleanup.js";
 import type * as apiKeys from "../apiKeys.js";
 import type * as archive from "../archive.js";
 import type * as attendanceReports from "../attendanceReports.js";
+import type * as auth from "../auth.js";
 import type * as budget from "../budget.js";
 import type * as calendar from "../calendar.js";
 import type * as companySettings from "../companySettings.js";
@@ -62,6 +63,7 @@ declare const fullApi: ApiFromModules<{
   apiKeys: typeof apiKeys;
   archive: typeof archive;
   attendanceReports: typeof attendanceReports;
+  auth: typeof auth;
   budget: typeof budget;
   calendar: typeof calendar;
   companySettings: typeof companySettings;

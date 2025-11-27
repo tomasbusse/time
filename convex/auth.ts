@@ -1,7 +1,12 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { auth } from "./auth.config";
+import { convexAuth } from "@convex-dev/auth/server";
+import { Password } from "@convex-dev/auth/providers/Password";
 import { Id } from "./_generated/dataModel";
+
+export const { auth, signIn, signOut, store } = convexAuth({
+    providers: [Password],
+});
 
 // Check if email is authorized
 export const isEmailAuthorized = query({

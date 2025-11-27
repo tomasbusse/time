@@ -16,15 +16,15 @@ export default defineSchema({
   authSessions: defineTable({
     userId: v.id("users"),
     expirationTime: v.number(),
-  }).index("by_user", ["userId"]),
+  }).index("userId", ["userId"]),
 
   authAccounts: defineTable({
     userId: v.id("users"),
     provider: v.string(),
     providerAccountId: v.string(),
   })
-    .index("by_user_provider", ["userId", "provider"])
-    .index("by_provider_account", ["provider", "providerAccountId"]),
+    .index("userIdAndProvider", ["userId", "provider"])
+    .index("providerAndAccountId", ["provider", "providerAccountId"]),
 
   // Whitelist for authorized emails
   authorizedEmails: defineTable({
