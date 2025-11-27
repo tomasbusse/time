@@ -8,24 +8,24 @@ export default function CompanySettingsPage({ onBack }: { onBack?: () => void })
     const { workspaceId } = useWorkspace();
     const settings = useQuery(api.companySettings.getSettings, workspaceId ? { workspaceId } : "skip");
     const updateSettings = useMutation(api.companySettings.updateSettings);
-    const generateUploadUrl = useMutation(api.companySettings.generateLogoUploadUrl);
+    const generateUploadUrl = useMutation(api.companySettings.generateUploadUrl);
 
     const [formData, setFormData] = useState({
         companyName: "",
-        street: "",
+        addressLine1: "",
         zipCode: "",
         city: "",
         country: "Germany",
-        taxId: "", // Steuernummer
+        taxNumber: "", // Steuernummer
         vatId: "", // USt-IdNr.
         email: "",
-        phone: "",
+        phone1: "",
         website: "",
         bankName: "",
         iban: "",
         bic: "",
         accountHolder: "",
-        defaultEmailTemplate: "Sehr geehrte Damen und Herren,\n\nanbei erhalten Sie die Rechnung {invoiceNumber} vom {date}.\n\nBitte überweisen Sie den Betrag von {totalAmount} bis zum {dueDate} auf das unten angegebene Konto.\n\nMit freundlichen Grüßen,\n{companyName}",
+        emailBodyTemplate: "Sehr geehrte Damen und Herren,\n\nanbei erhalten Sie die Rechnung {invoiceNumber} vom {date}.\n\nBitte überweisen Sie den Betrag von {totalAmount} bis zum {dueDate} auf das unten angegebene Konto.\n\nMit freundlichen Grüßen,\n{companyName}",
         logoStorageId: undefined as string | undefined,
         logoUrl: undefined as string | undefined,
     });
@@ -38,20 +38,20 @@ export default function CompanySettingsPage({ onBack }: { onBack?: () => void })
         if (settings) {
             setFormData({
                 companyName: settings.companyName || "",
-                street: settings.street || "",
+                addressLine1: settings.addressLine1 || "",
                 zipCode: settings.zipCode || "",
                 city: settings.city || "",
                 country: settings.country || "Germany",
-                taxId: settings.taxId || "",
+                taxNumber: settings.taxNumber || "",
                 vatId: settings.vatId || "",
                 email: settings.email || "",
-                phone: settings.phone || "",
+                phone1: settings.phone1 || "",
                 website: settings.website || "",
                 bankName: settings.bankName || "",
                 iban: settings.iban || "",
                 bic: settings.bic || "",
                 accountHolder: settings.accountHolder || "",
-                defaultEmailTemplate: settings.defaultEmailTemplate || formData.defaultEmailTemplate,
+                emailBodyTemplate: settings.emailBodyTemplate || formData.emailBodyTemplate,
                 logoStorageId: settings.logoStorageId,
                 logoUrl: settings.logoUrl,
             });
@@ -184,8 +184,8 @@ export default function CompanySettingsPage({ onBack }: { onBack?: () => void })
                                 <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Street & Number</label>
                                 <input
                                     type="text"
-                                    value={formData.street}
-                                    onChange={e => setFormData({ ...formData, street: e.target.value })}
+                                    value={formData.addressLine1}
+                                    onChange={e => setFormData({ ...formData, addressLine1: e.target.value })}
                                     className="w-full p-3 rounded-lg border border-gray-200 focus:border-[#A78573] focus:ring-1 focus:ring-[#A78573] outline-none transition-all"
                                 />
                             </div>
@@ -242,8 +242,8 @@ export default function CompanySettingsPage({ onBack }: { onBack?: () => void })
                                 <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tax ID (Steuernummer)</label>
                                 <input
                                     type="text"
-                                    value={formData.taxId}
-                                    onChange={e => setFormData({ ...formData, taxId: e.target.value })}
+                                    value={formData.taxNumber}
+                                    onChange={e => setFormData({ ...formData, taxNumber: e.target.value })}
                                     className="w-full p-3 rounded-lg border border-gray-200 focus:border-[#A78573] focus:ring-1 focus:ring-[#A78573] outline-none transition-all"
                                 />
                             </div>
@@ -310,8 +310,8 @@ export default function CompanySettingsPage({ onBack }: { onBack?: () => void })
                                 Available placeholders: <code className="bg-gray-200 px-1 rounded">{`{invoiceNumber}`}</code>, <code className="bg-gray-200 px-1 rounded">{`{date}`}</code>, <code className="bg-gray-200 px-1 rounded">{`{dueDate}`}</code>, <code className="bg-gray-200 px-1 rounded">{`{totalAmount}`}</code>, <code className="bg-gray-200 px-1 rounded">{`{companyName}`}</code>
                             </div>
                             <textarea
-                                value={formData.defaultEmailTemplate}
-                                onChange={e => setFormData({ ...formData, defaultEmailTemplate: e.target.value })}
+                                value={formData.emailBodyTemplate}
+                                onChange={e => setFormData({ ...formData, emailBodyTemplate: e.target.value })}
                                 className="w-full p-3 rounded-lg border border-gray-200 focus:border-[#A78573] focus:ring-1 focus:ring-[#A78573] outline-none transition-all h-48 font-mono text-sm"
                             />
                         </div>

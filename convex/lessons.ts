@@ -355,7 +355,7 @@ export const reassignLesson = mutation({
         const lesson = await ctx.db.get(args.lessonId);
         if (!lesson) throw new Error("Lesson not found");
 
-        const oldTeacher = await ctx.db.get(lesson.teacherId);
+        const oldTeacher = lesson.teacherId ? await ctx.db.get(lesson.teacherId) : null;
         const newTeacher = await ctx.db.get(args.newTeacherId);
         if (!newTeacher) throw new Error("New teacher not found");
 
@@ -505,7 +505,7 @@ export const getLessonStudents = query({
         const lesson = await ctx.db.get(lessonId);
         if (!lesson) throw new Error("Lesson not found");
 
-        let students = [];
+        let students: any[] = [];
 
         if (lesson.groupId) {
             // Fetch all students in this group
@@ -545,7 +545,7 @@ export const getLessonContext = query({
         const students = lesson.groupId
             ? await ctx.db
                 .query("students")
-                .withIndex("by_group", (q) => q.eq("groupId", lesson.groupId))
+                .withIndex("by_group", (q) => q.eq("groupId", lesson.groupId!))
                 .filter((q) => q.eq(q.field("isActive"), true))
                 .collect()
             : lesson.studentId

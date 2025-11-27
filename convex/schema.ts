@@ -44,9 +44,16 @@ export default defineSchema({
     userId: v.id("users"),
     workspaceId: v.id("workspaces"),
     taskId: v.optional(v.id("tasks")),
+    parentAllocationId: v.optional(v.id("timeAllocations")),
+    isRecurring: v.optional(v.boolean()),
+    recurrenceType: v.optional(v.string()),
+    recurrenceInterval: v.optional(v.number()),
+    recurrenceEndDate: v.optional(v.string()),
+    recurrenceCount: v.optional(v.number()),
     taskName: v.string(),
     date: v.string(),
     allocatedDuration: v.number(),
+    timeSpent: v.optional(v.number()),
     weekNumber: v.number(),
     createdAt: v.number(),
   })
@@ -236,7 +243,7 @@ export default defineSchema({
     billingCycle: v.union(v.literal("monthly"), v.literal("yearly")),
     nextBillingDate: v.string(),
     isActive: v.boolean(),
-    type: v.optional(v.union(v.literal("subscription"), v.literal("bill"), v.literal("rent"), v.literal("utility"), v.literal("insurance"), v.literal("other"))),
+    type: v.optional(v.union(v.literal("subscription"), v.literal("bill"), v.literal("rent"), v.literal("utility"), v.literal("insurance"), v.literal("loan"), v.literal("other"))),
     classification: v.optional(v.union(v.literal("business"), v.literal("private"))),
     category: v.optional(v.union(
       v.literal("ai"),
@@ -294,6 +301,10 @@ export default defineSchema({
     isArchived: v.optional(v.boolean()),
     isRecurring: v.optional(v.boolean()),
     recurrenceType: v.optional(v.string()),
+    recurrenceInterval: v.optional(v.number()),
+    recurrenceEndDate: v.optional(v.string()),
+    recurrenceCount: v.optional(v.number()),
+    parentTaskId: v.optional(v.id("tasks")),
     estimatedHours: v.optional(v.number()),
 
     // Time allocation fields
@@ -620,6 +631,7 @@ export default defineSchema({
     invoiceId: v.id("invoices"),
     userId: v.id("users"),
     action: v.string(),
+    details: v.optional(v.string()),
     timestamp: v.number(),
   })
     .index("by_workspace", ["workspaceId"])
@@ -649,7 +661,9 @@ export default defineSchema({
     phone1: v.optional(v.string()),
     phone2: v.optional(v.string()),
     website: v.optional(v.string()),
+    accountHolder: v.optional(v.string()),
     logoStorageId: v.optional(v.string()),
+    logoUrl: v.optional(v.string()),
     emailSubjectTemplate: v.optional(v.string()),
     emailBodyTemplate: v.optional(v.string()),
     paymentInstructionTemplate: v.optional(v.string()),
@@ -678,6 +692,7 @@ export default defineSchema({
   lessons: defineTable({
     workspaceId: v.id("workspaces"),
     customerId: v.id("customers"),
+    studentId: v.optional(v.id("students")),
     title: v.string(),
     start: v.number(),
     end: v.number(),
@@ -686,18 +701,22 @@ export default defineSchema({
     invoiceId: v.optional(v.id("invoices")),
     googleEventId: v.optional(v.string()),
     type: v.optional(v.string()),
+    notes: v.optional(v.string()),
     status: v.optional(v.string()),
-    teacherId: v.optional(v.string()),
+    teacherId: v.optional(v.id("users")),
     cancelledAt: v.optional(v.number()),
     cancelledBy: v.optional(v.string()),
-    groupId: v.optional(v.string()),
+    cancellationReason: v.optional(v.string()),
+    groupId: v.optional(v.id("studentGroups")),
     meetingLink: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("by_workspace", ["workspaceId"])
     .index("by_customer", ["customerId"])
-    .index("by_invoice", ["invoiceId"]),
+    .index("by_invoice", ["invoiceId"])
+    .index("by_teacher", ["teacherId"])
+    .index("by_group", ["groupId"]),
 
   // ========== BUDGET TABLES (Restored and Verified) ==========
   budgetIncome: defineTable({
@@ -762,4 +781,131 @@ export default defineSchema({
     createdAt: v.optional(v.number()),
   })
     .index("by_userId", ["userId"]),
+  // Students table
+  students: defineTable({
+    workspaceId: v.id("workspaces"),
+    customerId: v.id("customers"),
+    groupId: v.optional(v.id("studentGroups")),
+    firstName: v.string(),
+    lastName: v.string(),
+    email: v.string(),
+    phone: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    isActive: v.optional(v.boolean()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_customer", ["customerId"])
+    .index("by_group", ["groupId"]),
+
+  // Student Groups table
+  studentGroups: defineTable({
+    workspaceId: v.id("workspaces"),
+    customerId: v.id("customers"),
+    name: v.string(),
+    defaultTeacherId: v.optional(v.id("users")),
+    notes: v.optional(v.string()),
+    isActive: v.optional(v.boolean()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_customer", ["customerId"]),
+
+  // Attendance Reports table
+  attendanceReports: defineTable({
+    workspaceId: v.id("workspaces"),
+    lessonId: v.id("lessons"),
+    customerId: v.id("customers"),
+    groupId: v.optional(v.id("studentGroups")),
+    studentsPresent: v.array(v.id("students")),
+    studentsAbsent: v.array(v.id("students")),
+    generalNotes: v.optional(v.string()),
+    studentProgress: v.optional(v.array(v.object({
+      studentId: v.id("students"),
+      progressNotes: v.string(),
+      skillLevel: v.optional(v.union(
+        v.literal("beginner"),
+        v.literal("intermediate"),
+        v.literal("advanced"),
+        v.literal("proficient")
+      )),
+    }))),
+    reportDate: v.number(),
+    createdBy: v.id("users"),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_lesson", ["lessonId"])
+    .index("by_customer", ["customerId"])
+    .index("by_group", ["groupId"]),
+
+  // Dashboard Layouts table
+  dashboardLayouts: defineTable({
+    workspaceId: v.id("workspaces"),
+    userId: v.id("users"),
+    layoutName: v.string(),
+    layout: v.array(v.object({
+      i: v.string(),
+      x: v.number(),
+      y: v.number(),
+      w: v.number(),
+      h: v.number(),
+      minW: v.optional(v.number()),
+      maxW: v.optional(v.number()),
+      minH: v.optional(v.number()),
+      maxH: v.optional(v.number()),
+      isDraggable: v.optional(v.boolean()),
+      isResizable: v.optional(v.boolean()),
+    })),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace_user", ["workspaceId", "userId"])
+    .index("by_workspace_user_name", ["workspaceId", "userId", "layoutName"]),
+
+  // User Invitations table
+  userInvitations: defineTable({
+    workspaceId: v.id("workspaces"),
+    invitedBy: v.id("users"),
+    email: v.string(),
+    status: v.union(v.literal("pending"), v.literal("accepted"), v.literal("revoked")),
+    role: v.union(v.literal("user"), v.literal("admin")),
+    invitedAt: v.number(),
+    expiresAt: v.number(),
+    acceptedAt: v.optional(v.number()),
+    revokedAt: v.optional(v.number()),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_email", ["email"]),
+
+  // API Keys table
+  apiKeys: defineTable({
+    userId: v.id("users"),
+    serviceName: v.string(),
+    apiKey: v.string(), // Encrypted
+    isActive: v.boolean(),
+    lastTested: v.optional(v.number()),
+    testStatus: v.optional(v.union(v.literal("success"), v.literal("failed"), v.literal("untested"))),
+    testError: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_service", ["userId", "serviceName"]),
+
+  // Archived Invoices table
+  archivedInvoices: defineTable({
+    workspaceId: v.id("workspaces"),
+    invoiceId: v.id("invoices"),
+    invoiceNumber: v.string(),
+    pdfStorageId: v.id("_storage"),
+    archivedAt: v.number(),
+    retentionUntil: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_invoice", ["invoiceId"]),
 });

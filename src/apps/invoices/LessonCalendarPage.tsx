@@ -12,15 +12,9 @@ import {
     Edit2,
     Trash2,
     CheckCircle2,
-    XCircle,
-    MapPin,
-    Monitor,
-    MoreHorizontal
 } from "lucide-react";
 import LessonModal from "../calendar/components/LessonModal";
-import LessonStatusControl from "../calendar/components/LessonStatusControl";
 import ExportLessonsModal from "./components/ExportLessonsModal";
-import { downloadICS } from "../../lib/calendarExport";
 
 export default function LessonCalendarPage() {
     const { workspaceId } = useWorkspace();
@@ -39,7 +33,6 @@ export default function LessonCalendarPage() {
         workspaceId ? { workspaceId } : "skip"
     );
     const users = useQuery(api.users.listUsers);
-    const currentUser = useQuery(api.users.getCurrentUser);
 
     const deleteLesson = useMutation(api.lessons.deleteLesson);
     const deleteLessons = useMutation(api.lessons.deleteLessons);
@@ -146,7 +139,7 @@ export default function LessonCalendarPage() {
     const handleDeleteSelected = async () => {
         if (confirm(`Are you sure you want to delete ${selectedLessonIds.size} lessons?`)) {
             try {
-                await deleteLessons({ lessonIds: Array.from(selectedLessonIds) as any });
+                await deleteLessons({ lessonIds: Array.from(selectedLessonIds) as any[] });
                 setSelectedLessonIds(new Set());
             } catch (error) {
                 alert("Failed to delete lessons: " + error);
@@ -270,13 +263,9 @@ export default function LessonCalendarPage() {
                 {filteredLessons.map((lesson) => {
                     const isSelected = selectedLessonIds.has(lesson._id);
                     const rate = getLessonRate(lesson);
-                    const teacherName = getTeacherName(lesson.teacherId);
+                    const teacherName = getTeacherName(lesson.teacherId || "");
                     const customerName = getCustomerName(lesson.customerId);
                     const date = new Date(lesson.start);
-
-                    // Determine status (mock logic for now, adjust based on real data)
-                    const isAttended = false; // Replace with real check
-                    const isCancelled = false; // Replace with real check
 
                     return (
                         <div
@@ -409,7 +398,6 @@ export default function LessonCalendarPage() {
             <ExportLessonsModal
                 isOpen={isExportModalOpen}
                 onClose={() => setIsExportModalOpen(false)}
-                lessons={filteredLessons}
             />
         </div>
     );

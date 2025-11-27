@@ -111,7 +111,7 @@ export const createInvoice = mutation({
                     .withIndex("by_workspace", (q: any) => q.eq("workspaceId", args.workspaceId))
                     .first();
 
-                if (settings && sequentialNumber >= settings.nextInvoiceNumber) {
+                if (settings && sequentialNumber >= (settings.nextInvoiceNumber || 0)) {
                     await ctx.db.patch(settings._id, {
                         nextInvoiceNumber: sequentialNumber + 1,
                         updatedAt: Date.now(),

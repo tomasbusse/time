@@ -12,8 +12,11 @@ export const createProduct = mutation({
         taxRate: v.number(),
     },
     handler: async (ctx, args) => {
+        const { price, ...rest } = args;
         const productId = await ctx.db.insert("products", {
-            ...args,
+            ...rest,
+            unitPrice: price,
+            isActive: true,
             createdAt: Date.now(),
             updatedAt: Date.now(),
         });
@@ -30,13 +33,20 @@ export const updateProduct = mutation({
         price: v.optional(v.number()),
         unit: v.optional(v.string()),
         taxRate: v.optional(v.number()),
+        isActive: v.optional(v.boolean()),
     },
     handler: async (ctx, args) => {
-        const { id, ...updates } = args;
-        await ctx.db.patch(id, {
+        const { id, price, ...updates } = args;
+        const patch: any = {
             ...updates,
             updatedAt: Date.now(),
-        });
+        };
+
+        if (price !== undefined) {
+            patch.unitPrice = price;
+        }
+
+        await ctx.db.patch(id, patch);
     },
 });
 
