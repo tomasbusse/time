@@ -1,6 +1,6 @@
 import { BrowserRouter as Router } from 'react-router-dom'
 import { useState } from 'react'
-import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react'
+import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn, useUser } from '@clerk/clerk-react'
 import { ConvexReactClient } from 'convex/react'
 import { ConvexProvider } from 'convex/react'
 import { WorkspaceProvider } from './lib/WorkspaceContext'
@@ -8,6 +8,7 @@ import { Sidebar } from './components/Sidebar'
 import { TopBar } from './components/TopBar'
 import AppRoutes from './routes'
 import { useWorkspace } from './lib/WorkspaceContext'
+import { isEmailAllowed } from './lib/allowlist'
 
 const convexUrl = import.meta.env.VITE_CONVEX_URL || 'https://placeholder.convex.cloud'
 const convex = new ConvexReactClient(convexUrl)
@@ -16,6 +17,7 @@ const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY!
 function AppContent() {
   const { userId, isLoading, workspaceId } = useWorkspace();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const { user } = useUser();
 
   console.log('AppContent - userId:', userId, 'workspaceId:', workspaceId, 'isLoading:', isLoading);
 
@@ -26,6 +28,24 @@ function AppContent() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-brown mx-auto mb-4"></div>
           <p className="text-gray">Loading workspace data...</p>
           <p className="text-gray-400 text-sm mt-2">Connecting to Convex...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if user's email is allowed
+  const userEmail = user?.primaryEmailAddress?.emailAddress;
+  if (!isEmailAllowed(userEmail)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-off-white">
+        <div className="max-w-md text-center p-8 bg-white rounded-lg shadow-lg">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h1>
+          <p className="text-gray-700 mb-4">
+            Your email <strong>{userEmail}</strong> is not authorized to access this application.
+          </p>
+          <p className="text-gray-600 text-sm">
+            Please contact the administrator if you believe this is an error.
+          </p>
         </div>
       </div>
     );
