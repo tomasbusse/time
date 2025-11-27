@@ -298,9 +298,9 @@ export default function FinanceApp() {
               onSubmit={async (data) => {
                 if (!workspaceId || !userId) return
                 if (editingSub) {
-                  await updateSubscription({ id: editingSub.id as any, ...data, ownerId: userId as any })
+                  await updateSubscription({ id: editingSub.id as any, ...(data as any), ownerId: userId as any })
                 } else {
-                  await createSubscription({ workspaceId: workspaceId as any, ownerId: userId as any, ...data })
+                  await createSubscription({ workspaceId: workspaceId as any, ownerId: userId as any, ...(data as any) })
                 }
                 setShowSubModal(false)
                 setEditingSub(undefined)
