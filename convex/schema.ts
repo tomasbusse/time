@@ -7,7 +7,31 @@ export default defineSchema({
     name: v.string(),
     isAdmin: v.boolean(),
     role: v.optional(v.string()),
+    emailVerified: v.optional(v.number()),
+    image: v.optional(v.string()),
     createdAt: v.number(),
+  }).index("by_email", ["email"]),
+
+  // Convex Auth tables
+  authSessions: defineTable({
+    userId: v.id("users"),
+    expirationTime: v.number(),
+  }).index("by_user", ["userId"]),
+
+  authAccounts: defineTable({
+    userId: v.id("users"),
+    provider: v.string(),
+    providerAccountId: v.string(),
+  })
+    .index("by_user_provider", ["userId", "provider"])
+    .index("by_provider_account", ["provider", "providerAccountId"]),
+
+  // Whitelist for authorized emails
+  authorizedEmails: defineTable({
+    email: v.string(),
+    addedBy: v.id("users"),
+    addedAt: v.number(),
+    notes: v.optional(v.string()),
   }).index("by_email", ["email"]),
 
   workspaces: defineTable({

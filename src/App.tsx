@@ -30,10 +30,10 @@ function AppContent() {
     );
   }
 
-  // Temporarily bypass login for development
-  // if (!userId) {
-  //   return <LoginPage />;
-  // }
+  // Show login page if not authenticated
+  if (!userId) {
+    return <LoginPage />;
+  }
 
   return (
     <Router>
