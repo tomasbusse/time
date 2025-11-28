@@ -1,5 +1,5 @@
-import { createContext, useContext, ReactNode, useEffect } from 'react'
-import { useQuery, useMutation } from 'convex/react'
+import { createContext, useContext, ReactNode } from 'react'
+import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import type { Doc, Id } from '../../convex/_generated/dataModel'
 
@@ -22,21 +22,8 @@ const WorkspaceContext = createContext<WorkspaceContextType>({
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   // Get workspace data from Convex
   const workspaceData = useQuery(api.setup.getDefaultWorkspace)
-  const ensureWorkspace = useMutation(api.setup.ensureWorkspaceExists)
 
   console.log('WorkspaceProvider - workspaceData:', workspaceData);
-
-  // If user exists but no workspace, create one
-  useEffect(() => {
-    if (workspaceData && workspaceData.userId && !workspaceData.workspaceId) {
-      console.log('No workspace found for user, creating one...');
-      ensureWorkspace().then(() => {
-        console.log('Workspace created successfully');
-      }).catch((error) => {
-        console.error('Failed to create workspace:', error);
-      });
-    }
-  }, [workspaceData, ensureWorkspace]);
 
   const value: WorkspaceContextType = {
     userId: workspaceData?.userId || null,
@@ -57,13 +44,26 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     )
   }
 
-  // Show loading while workspace is being created
+  // Show error if user exists but no workspace
   if (value.userId && !value.workspaceId) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-off-white">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-brown mx-auto mb-4"></div>
-          <p className="text-gray">Setting up your workspace...</p>
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-dark-blue mb-4">Workspace Not Found</h2>
+          <p className="text-gray mb-6">
+            Your account exists but doesn't have a workspace associated with it.
+            Please contact support or run the setup script.
+          </p>
+          <div className="bg-light-gray p-4 rounded-lg text-left">
+            <p className="text-sm font-mono text-dark-blue mb-2">Run in Convex dashboard:</p>
+            <code className="text-xs bg-white p-2 rounded block">
+              await ctx.runMutation(api.users.createAccount, &#123;<br/>
+              &nbsp;&nbsp;email: "{workspaceData?.userName || 'your-email'}@example.com",<br/>
+              &nbsp;&nbsp;name: "{workspaceData?.userName || 'Your Name'}"<br/>
+              &#125;)
+            </code>
+          </div>
         </div>
       </div>
     )
