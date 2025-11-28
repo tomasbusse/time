@@ -75,19 +75,31 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
       {/* Mobile Overlay - Full Screen Solid Color */}
       <div
-        className={`fixed inset-0 bg-custom-off-white z-40 lg:hidden transition-transform duration-300 ease-in-out ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-0 bg-off-white z-50 lg:hidden transition-transform duration-300 ease-in-out ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
       >
-        <div className="flex flex-col h-full pt-16 px-6 pb-6">
-          {/* Mobile Clock */}
-          <div className="flex justify-center mb-8">
+        <div className="flex flex-col h-full pt-8 px-6 pb-6 relative">
+
+          {/* Close Button (Absolute Top Left) */}
+          <button
+            onClick={() => setIsMobileOpen(false)}
+            className="absolute top-6 left-6 p-2 text-dark-blue hover:bg-black/5 rounded-full transition-colors"
+          >
+            <X className="w-8 h-8" />
+          </button>
+
+          {/* Mobile Clock - Centered & Lower */}
+          <div className="flex justify-center mt-12 mb-8">
             <div className="scale-125">
               <RoundClock isCollapsed={false} />
             </div>
           </div>
 
+          {/* Menu Title */}
+          <h2 className="text-4xl font-bold text-dark-blue mb-8 px-2">Menu</h2>
+
           {/* Mobile Navigation */}
-          <nav className="flex-1 space-y-4">
+          <nav className="flex-1 space-y-2">
             {navItems.map((item) => {
               const Icon = item.icon
               const active = isActive(item.path)
@@ -97,12 +109,12 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMobileOpen(false)}
-                  className={`flex items-center gap-4 px-6 py-4 rounded-xl text-lg font-medium transition-all duration-200 ${active
-                      ? 'bg-custom-brown text-white shadow-lg transform scale-105'
-                      : 'bg-white text-dark-blue hover:bg-white/60 shadow-sm'
+                  className={`flex items-center gap-4 px-4 py-4 rounded-xl text-xl font-medium transition-all duration-200 border-b border-dark-blue/10 ${active
+                      ? 'text-dark-blue bg-black/5'
+                      : 'text-dark-blue hover:bg-black/5'
                     }`}
                 >
-                  <Icon className={`w-6 h-6 ${active ? 'text-white' : 'text-custom-brown'}`} />
+                  <Icon className={`w-6 h-6 ${active ? 'text-dark-blue' : 'text-dark-blue/70'}`} />
                   <span>{item.name}</span>
                 </Link>
               )
@@ -110,14 +122,14 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           </nav>
 
           {/* Mobile Settings */}
-          <div className="mt-auto pt-6 border-t border-dark-blue/10">
+          <div className="mt-auto pt-6">
             <Link
               to="/settings"
               onClick={() => setIsMobileOpen(false)}
-              className="flex items-center gap-4 px-6 py-4 rounded-xl bg-white text-dark-blue hover:bg-white/60 shadow-sm transition-all duration-200"
+              className="flex items-center gap-4 px-4 py-4 rounded-xl text-xl font-medium text-dark-blue hover:bg-black/5 transition-all duration-200"
             >
-              <Settings className="w-6 h-6 text-custom-brown" />
-              <span className="text-lg font-medium">Settings</span>
+              <Settings className="w-6 h-6 text-dark-blue/70" />
+              <span>Settings</span>
             </Link>
           </div>
         </div>
@@ -158,8 +170,8 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                   key={item.path}
                   to={item.path}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${active
-                      ? 'bg-light-gray/20 backdrop-blur-sm text-dark-blue shadow-md'
-                      : 'text-dark-blue hover:bg-light-gray/10 hover:text-dark-blue'
+                    ? 'bg-light-gray/20 backdrop-blur-sm text-dark-blue shadow-md'
+                    : 'text-dark-blue hover:bg-light-gray/10 hover:text-dark-blue'
                     }`}
                   title={isCollapsed ? item.name : ''}
                 >
