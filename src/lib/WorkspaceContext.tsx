@@ -24,6 +24,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const workspaceData = useQuery(api.setup.getDefaultWorkspace)
 
   console.log('WorkspaceProvider - workspaceData:', workspaceData);
+  console.log('WorkspaceProvider - userId:', workspaceData?.userId);
+  console.log('WorkspaceProvider - workspaceId:', workspaceData?.workspaceId);
 
   const value: WorkspaceContextType = {
     userId: workspaceData?.userId || null,
@@ -39,31 +41,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-brown mx-auto mb-4"></div>
           <p className="text-gray">Loading workspace...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Show error if user exists but no workspace
-  if (value.userId && !value.workspaceId) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-off-white">
-        <div className="text-center max-w-md mx-auto p-6">
-          <div className="text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-dark-blue mb-4">Workspace Not Found</h2>
-          <p className="text-gray mb-6">
-            Your account exists but doesn't have a workspace associated with it.
-            Please contact support or run the setup script.
-          </p>
-          <div className="bg-light-gray p-4 rounded-lg text-left">
-            <p className="text-sm font-mono text-dark-blue mb-2">Run in Convex dashboard:</p>
-            <code className="text-xs bg-white p-2 rounded block">
-              await ctx.runMutation(api.users.createAccount, &#123;<br/>
-              &nbsp;&nbsp;email: "{workspaceData?.userName || 'your-email'}@example.com",<br/>
-              &nbsp;&nbsp;name: "{workspaceData?.userName || 'Your Name'}"<br/>
-              &#125;)
-            </code>
-          </div>
         </div>
       </div>
     )
