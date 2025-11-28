@@ -75,10 +75,10 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
       {/* Mobile Overlay - Full Screen Solid Color */}
       <div
-        className={`fixed inset-0 bg-off-white z-50 lg:hidden transition-transform duration-300 ease-in-out ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-0 bg-off-white z-50 lg:hidden transition-transform duration-300 ease-in-out overflow-y-auto ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
       >
-        <div className="flex flex-col h-full pt-8 px-6 pb-6 relative">
+        <div className="flex flex-col min-h-full pt-8 px-6 pb-6 relative">
 
           {/* Close Button (Absolute Top Left) */}
           <button
@@ -110,8 +110,8 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                   to={item.path}
                   onClick={() => setIsMobileOpen(false)}
                   className={`flex items-center gap-4 px-4 py-4 rounded-xl text-xl font-medium transition-all duration-200 border-b border-dark-blue/10 ${active
-                      ? 'text-dark-blue bg-black/5'
-                      : 'text-dark-blue hover:bg-black/5'
+                    ? 'text-dark-blue bg-black/5'
+                    : 'text-dark-blue hover:bg-black/5'
                     }`}
                 >
                   <Icon className={`w-6 h-6 ${active ? 'text-dark-blue' : 'text-dark-blue/70'}`} />
