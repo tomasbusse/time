@@ -63,7 +63,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-white rounded-lg shadow-lg hover:bg-light-gray transition-colors"
+        className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg hover:bg-white transition-colors"
         aria-label="Toggle menu"
       >
         {isMobileOpen ? (
@@ -73,19 +73,60 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         )}
       </button>
 
-      {/* Mobile Overlay */}
-      {isMobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setIsMobileOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
+      {/* Mobile Overlay - Full Screen Solid Color */}
       <div
-        className={`fixed lg:sticky left-0 top-0 h-screen bg-gray-300 shadow-lg transition-all duration-300 z-50 ${isCollapsed ? 'w-20' : 'w-64'
-          } ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
-          } lg:translate-x-0`}
+        className={`fixed inset-0 bg-custom-off-white z-40 lg:hidden transition-transform duration-300 ease-in-out ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+      >
+        <div className="flex flex-col h-full pt-16 px-6 pb-6">
+          {/* Mobile Clock */}
+          <div className="flex justify-center mb-8">
+            <div className="scale-125">
+              <RoundClock isCollapsed={false} />
+            </div>
+          </div>
+
+          {/* Mobile Navigation */}
+          <nav className="flex-1 space-y-4">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const active = isActive(item.path)
+
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setIsMobileOpen(false)}
+                  className={`flex items-center gap-4 px-6 py-4 rounded-xl text-lg font-medium transition-all duration-200 ${active
+                      ? 'bg-custom-brown text-white shadow-lg transform scale-105'
+                      : 'bg-white text-dark-blue hover:bg-white/60 shadow-sm'
+                    }`}
+                >
+                  <Icon className={`w-6 h-6 ${active ? 'text-white' : 'text-custom-brown'}`} />
+                  <span>{item.name}</span>
+                </Link>
+              )
+            })}
+          </nav>
+
+          {/* Mobile Settings */}
+          <div className="mt-auto pt-6 border-t border-dark-blue/10">
+            <Link
+              to="/settings"
+              onClick={() => setIsMobileOpen(false)}
+              className="flex items-center gap-4 px-6 py-4 rounded-xl bg-white text-dark-blue hover:bg-white/60 shadow-sm transition-all duration-200"
+            >
+              <Settings className="w-6 h-6 text-custom-brown" />
+              <span className="text-lg font-medium">Settings</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Sidebar */}
+      <div
+        className={`hidden lg:block fixed lg:sticky left-0 top-0 h-screen bg-gray-300 shadow-lg transition-all duration-300 z-50 ${isCollapsed ? 'w-20' : 'w-64'
+          }`}
       >
         <div className="flex flex-col h-full">
           {/* Clock */}
@@ -117,8 +158,8 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                   key={item.path}
                   to={item.path}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${active
-                    ? 'bg-light-gray/20 backdrop-blur-sm text-dark-blue shadow-md'
-                    : 'text-dark-blue hover:bg-light-gray/10 hover:text-dark-blue'
+                      ? 'bg-light-gray/20 backdrop-blur-sm text-dark-blue shadow-md'
+                      : 'text-dark-blue hover:bg-light-gray/10 hover:text-dark-blue'
                     }`}
                   title={isCollapsed ? item.name : ''}
                 >
