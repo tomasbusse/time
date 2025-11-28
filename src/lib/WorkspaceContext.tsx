@@ -1,5 +1,5 @@
-import { createContext, useContext, ReactNode } from 'react'
-import { useQuery } from 'convex/react'
+import { createContext, useContext, ReactNode, useEffect } from 'react'
+import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import type { Doc, Id } from '../../convex/_generated/dataModel'
 
@@ -22,8 +22,21 @@ const WorkspaceContext = createContext<WorkspaceContextType>({
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   // Get workspace data from Convex
   const workspaceData = useQuery(api.setup.getDefaultWorkspace)
+  const ensureWorkspace = useMutation(api.setup.ensureWorkspaceExists)
 
   console.log('WorkspaceProvider - workspaceData:', workspaceData);
+
+  // If user exists but no workspace, create one
+  useEffect(() => {
+    if (workspaceData && workspaceData.userId && !workspaceData.workspaceId) {
+      console.log('No workspace found for user, creating one...');
+      ensureWorkspace().then(() => {
+        console.log('Workspace created successfully');
+      }).catch((error) => {
+        console.error('Failed to create workspace:', error);
+      });
+    }
+  }, [workspaceData, ensureWorkspace]);
 
   const value: WorkspaceContextType = {
     userId: workspaceData?.userId || null,
@@ -39,6 +52,18 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-brown mx-auto mb-4"></div>
           <p className="text-gray">Loading workspace...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show loading while workspace is being created
+  if (value.userId && !value.workspaceId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-off-white">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-brown mx-auto mb-4"></div>
+          <p className="text-gray">Setting up your workspace...</p>
         </div>
       </div>
     )

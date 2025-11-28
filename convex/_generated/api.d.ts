@@ -24,6 +24,7 @@ import type * as debug_check from "../debug_check.js";
 import type * as email from "../email.js";
 import type * as equityMonitoring from "../equityMonitoring.js";
 import type * as finance from "../finance.js";
+import type * as fixWorkspace from "../fixWorkspace.js";
 import type * as flow from "../flow.js";
 import type * as food from "../food.js";
 import type * as groups from "../groups.js";
@@ -75,6 +76,7 @@ declare const fullApi: ApiFromModules<{
   email: typeof email;
   equityMonitoring: typeof equityMonitoring;
   finance: typeof finance;
+  fixWorkspace: typeof fixWorkspace;
   flow: typeof flow;
   food: typeof food;
   groups: typeof groups;
