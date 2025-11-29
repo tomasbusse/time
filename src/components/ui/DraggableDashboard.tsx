@@ -8,6 +8,7 @@ import { InvoicesDashboardWidget } from './InvoicesDashboardWidget'
 import { TasksDashboardWidget } from './TasksDashboardWidget'
 import { DraftInvoicesDashboardWidget } from './DraftInvoicesDashboardWidget'
 import { QuickLessonCreate } from './QuickLessonCreate'
+import { QuickMenuWidget } from './QuickMenuWidget'
 import type { Id } from '../../../convex/_generated/dataModel'
 
 interface DraggableDashboardProps {
@@ -57,93 +58,101 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
 
       {/* Overview Tab */}
       {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Financial Overview */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            <h3 className="text-base font-semibold text-dark-blue mb-4">Financial Overview</h3>
-            <div className="flex-1">
-              <FinancialOverviewWidget />
+        <div className="space-y-6">
+          {/* Quick Menu */}
+          <div>
+            <h3 className="text-base font-semibold text-dark-blue mb-4">Quick Menu</h3>
+            <QuickMenuWidget />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Financial Overview */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+              <h3 className="text-base font-semibold text-dark-blue mb-4">Financial Overview</h3>
+              <div className="flex-1">
+                <FinancialOverviewWidget />
+              </div>
             </div>
-          </div>
 
-          {/* Subscriptions */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between">
-            <h3 className="text-base font-semibold text-dark-blue mb-2">Subscriptions</h3>
-            {finance ? (
-              <div>
-                <div className="text-3xl font-bold text-dark-blue">
-                  €{finance.monthlyTotal.toFixed(2)}
-                  <span className="text-sm font-normal text-gray-600 ml-1">/mo</span>
+            {/* Subscriptions */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between">
+              <h3 className="text-base font-semibold text-dark-blue mb-2">Subscriptions</h3>
+              {finance ? (
+                <div>
+                  <div className="text-3xl font-bold text-dark-blue">
+                    €{finance.monthlyTotal.toFixed(2)}
+                    <span className="text-sm font-normal text-gray-600 ml-1">/mo</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formatCurrency(finance.yearlyTotal)}/year
+                  </p>
+                  <div className="mt-4">
+                    <Link to="/finance" className="text-custom-brown hover:text-brown text-sm font-medium flex items-center gap-1">
+                      Manage →
+                    </Link>
+                  </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  {formatCurrency(finance.yearlyTotal)}/year
-                </p>
-                <div className="mt-4">
-                  <Link to="/finance" className="text-custom-brown hover:text-brown text-sm font-medium flex items-center gap-1">
-                    Manage →
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-6 text-gray-400 text-sm">Loading...</div>
-            )}
-          </div>
-
-          {/* Shopping Lists */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            <h3 className="text-base font-semibold text-dark-blue mb-4">Shopping Lists</h3>
-            {Array.isArray(lists) && lists.length > 0 ? (
-              <div className="space-y-3 flex-1">
-                {lists.slice(0, 3).map((list: any) => {
-                  const total = Array.isArray(list.items) ? list.items.length : 0
-                  const completed = Array.isArray(list.items) ? list.items.filter((i: any) => i.completed).length : 0
-
-                  return (
-                    <div key={list._id} className="space-y-1">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium text-dark-blue truncate">{list.name}</span>
-                        <span className="text-xs text-gray-500">{completed}/{total}</span>
-                      </div>
-                      <div className="w-full bg-gray-100 rounded-full h-1.5">
-                        <div
-                          className="bg-custom-brown h-1.5 rounded-full transition-all"
-                          style={{ width: `${total > 0 ? (completed / total) * 100 : 0}%` }}
-                        />
-                      </div>
-                    </div>
-                  )
-                })}
-                <Link to="/food" className="text-custom-brown hover:text-brown text-sm font-medium mt-auto block pt-2">
-                  View all →
-                </Link>
-              </div>
-            ) : (
-              <div className="flex-1 flex items-center justify-center">
-                <div className="text-center text-gray-400 text-sm">No shopping lists</div>
-              </div>
-            )}
-          </div>
-
-          {/* Tasks & Timer - Spans 2 columns */}
-          <div className="md:col-span-2 lg:col-span-2 row-span-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            <h3 className="text-base font-semibold text-dark-blue mb-4">Tasks & Timer</h3>
-            <div className="flex-1">
-              {workspaceId ? (
-                <TasksDashboardWidget workspaceId={workspaceId} />
               ) : (
                 <div className="text-center py-6 text-gray-400 text-sm">Loading...</div>
               )}
             </div>
-          </div>
 
-          {/* Quick Create Lesson */}
-          <div className="md:col-span-1 lg:col-span-1 row-span-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            <h3 className="text-base font-semibold text-dark-blue mb-4">Quick Lesson</h3>
-            {workspaceId && userId ? (
-              <QuickLessonCreate workspaceId={workspaceId} userId={userId} />
-            ) : (
-              <div className="text-center py-6 text-gray-400 text-sm">Loading...</div>
-            )}
+            {/* Shopping Lists */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+              <h3 className="text-base font-semibold text-dark-blue mb-4">Shopping Lists</h3>
+              {Array.isArray(lists) && lists.length > 0 ? (
+                <div className="space-y-3 flex-1">
+                  {lists.slice(0, 3).map((list: any) => {
+                    const total = Array.isArray(list.items) ? list.items.length : 0
+                    const completed = Array.isArray(list.items) ? list.items.filter((i: any) => i.completed).length : 0
+
+                    return (
+                      <div key={list._id} className="space-y-1">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="font-medium text-dark-blue truncate">{list.name}</span>
+                          <span className="text-xs text-gray-500">{completed}/{total}</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-1.5">
+                          <div
+                            className="bg-custom-brown h-1.5 rounded-full transition-all"
+                            style={{ width: `${total > 0 ? (completed / total) * 100 : 0}%` }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                  <Link to="/food" className="text-custom-brown hover:text-brown text-sm font-medium mt-auto block pt-2">
+                    View all →
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center text-gray-400 text-sm">No shopping lists</div>
+                </div>
+              )}
+            </div>
+
+            {/* Tasks & Timer - Spans 2 columns */}
+            <div className="md:col-span-2 lg:col-span-2 row-span-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+              <h3 className="text-base font-semibold text-dark-blue mb-4">Tasks & Timer</h3>
+              <div className="flex-1">
+                {workspaceId ? (
+                  <TasksDashboardWidget workspaceId={workspaceId} />
+                ) : (
+                  <div className="text-center py-6 text-gray-400 text-sm">Loading...</div>
+                )}
+              </div>
+            </div>
+
+            {/* Quick Create Lesson */}
+            <div className="md:col-span-1 lg:col-span-1 row-span-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+              <h3 className="text-base font-semibold text-dark-blue mb-4">Quick Lesson</h3>
+              {workspaceId && userId ? (
+                <QuickLessonCreate workspaceId={workspaceId} userId={userId} />
+              ) : (
+                <div className="text-center py-6 text-gray-400 text-sm">Loading...</div>
+              )}
+            </div>
           </div>
         </div>
       )}
