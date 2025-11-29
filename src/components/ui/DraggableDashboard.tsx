@@ -10,6 +10,8 @@ import { DraftInvoicesDashboardWidget } from './DraftInvoicesDashboardWidget'
 import { QuickLessonCreate } from './QuickLessonCreate'
 import { QuickMenuWidget, DashboardView } from './QuickMenuWidget'
 import { DailyTasksWidget } from './DailyTasksWidget'
+import { DashboardTasksList } from './DashboardTasksList'
+import { DashboardIdeasList } from './DashboardIdeasList'
 import { BottomNavigation } from '../BottomNavigation'
 import type { Id } from '../../../convex/_generated/dataModel'
 
@@ -61,19 +63,17 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
           <DailyTasksWidget workspaceId={workspaceId!} />
         )}
 
-        {selectedView === 'tasks' && (
+        {selectedView === 'tasks' && workspaceId && (
           <div className="px-4 lg:px-0">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Your Tasks</h3>
-            {/* Task list will go here */}
-            <p className="text-gray-500">Task list component coming soon...</p>
+            <DashboardTasksList workspaceId={workspaceId} />
           </div>
         )}
 
-        {selectedView === 'ideas' && (
+        {selectedView === 'ideas' && workspaceId && (
           <div className="px-4 lg:px-0">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Your Ideas</h3>
-            {/* Ideas list will go here */}
-            <p className="text-gray-500">Ideas list component coming soon...</p>
+            <DashboardIdeasList workspaceId={workspaceId} />
           </div>
         )}
 
