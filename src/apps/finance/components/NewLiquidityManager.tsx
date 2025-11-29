@@ -4,7 +4,7 @@ import { api } from '../../../../convex/_generated/api';
 import { useWorkspace } from '@/lib/WorkspaceContext';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Target, Plus, Edit2, Banknote, Trash2, Calendar, BarChart } from 'lucide-react';
+import { Target, Plus, Edit2, Banknote, Trash2, Calendar, BarChart, ChevronUp, ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { MonthlyBalanceEntry } from './MonthlyBalanceEntry';
 import { LiquidityHistoryChart } from './LiquidityHistoryChart';
@@ -121,17 +121,39 @@ export default function NewLiquidityManager() {
   // Create/Update goal mutation
   const upsertGoal = useMutation(api.simpleFinance.upsertEquityGoal)
   const deleteAsset = useMutation(api.simpleFinance.deleteSimpleAsset);
+  const reorderAssets = useMutation(api.simpleFinance.reorderSimpleAssets);
+
+  const handleMoveUp = async (index: number) => {
+    if (index === 0 || !workspaceId) return;
+    const account = bankAccounts[index];
+    await reorderAssets({
+      workspaceId,
+      assetId: account._id as any,
+      newSortOrder: index - 1.5, // Place between previous items
+    });
+  };
+
+  const handleMoveDown = async (index: number) => {
+    if (index === bankAccounts.length - 1 || !workspaceId) return;
+    const account = bankAccounts[index];
+    await reorderAssets({
+      workspaceId,
+      assetId: account._id as any,
+      newSortOrder: index + 1.5, // Place between next items
+    });
+  };
 
   // Memoize calculations to prevent re-renders
   const { bankAccounts, allAccounts, currentLiquidity, targetEquity, missingAmount, progress } = React.useMemo(() => {
     const allAccounts = simpleAssets || [];
-    const filteredBankAccounts = allAccounts.filter(asset =>
-      asset.type === 'bank_account'
-    );
+    // Filter to ONLY show bank accounts (exclude property, vehicles, etc.) and sort by order
+    const filteredBankAccounts = allAccounts
+      .filter(asset => asset.type === 'bank_account')
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
     // Calculate current liquidity based on the selected month's balances only
     const monthlyLiquidity = (monthlyBalances || []).reduce((sum, balance) => sum + balance.balance, 0);
-    
+
     // Use the month-specific liquidity for all calculations
     const equityTarget = goalData?.targetEquity || 0;
     const missing = Math.max(equityTarget - monthlyLiquidity, 0);
@@ -164,14 +186,14 @@ export default function NewLiquidityManager() {
   // Handle goal creation/update
   const handleSaveGoal = async () => {
     if (!workspaceId || !userId || !goalAmount || Number(goalAmount) <= 0) return
-    
+
     await upsertGoal({
       workspaceId: workspaceId as any,
       ownerId: userId as any,
       targetEquity: Number(goalAmount),
       targetDate: targetDate || undefined,
     })
-    
+
     setShowGoalModal(false)
     setGoalAmount('')
     setTargetDate('')
@@ -220,14 +242,14 @@ export default function NewLiquidityManager() {
               <Target className="w-5 h-5" style={{ color: '#384C5A' }} />
             </Button>
           </div>
-          
+
           {/* Month indicator */}
           <div className="text-center mt-4">
             <div className="text-xs" style={{ color: '#A78573' }}>
               Data shown for: <strong>{formatMonth(selectedMonth)}</strong>
             </div>
           </div>
-          
+
           {targetEquity > 0 && (
             <div className="w-full rounded-full h-2.5 mt-4" style={{ backgroundColor: '#DDDEE3' }}>
               <div className="h-2.5 rounded-full" style={{ width: `${Math.min(progress, 100)}%`, backgroundColor: '#384C5A' }}></div>
@@ -270,15 +292,37 @@ export default function NewLiquidityManager() {
             <CardTitle>Bank Accounts</CardTitle>
           </CardHeader>
           <CardContent>
-            {allAccounts.length > 0 ? (
+            {bankAccounts.length > 0 ? (
               <div className="space-y-3">
-                {allAccounts.map((account) => (
+                {bankAccounts.map((account, index) => (
                   <div key={account._id} className="flex justify-between items-center p-3 rounded-lg" style={{ backgroundColor: '#F1F5EE' }}>
-                    <div>
-                      <div className="font-medium" style={{ color: '#384C5A' }}>{account.name}</div>
-                      <div className="text-sm" style={{ color: '#B6B2B5' }}>{account.type.replace('_', ' ')}</div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-col gap-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleMoveUp(index)}
+                          disabled={index === 0}
+                          className="p-1 h-6"
+                        >
+                          <ChevronUp className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleMoveDown(index)}
+                          disabled={index === bankAccounts.length - 1}
+                          className="p-1 h-6"
+                        >
+                          <ChevronDown className="w-3 h-3" />
+                        </Button>
+                      </div>
+                      <div>
+                        <div className="font-medium" style={{ color: '#384C5A' }}>{account.name}</div>
+                        <div className="text-sm" style={{ color: '#B6B2B5' }}>{account.type.replace('_', ' ')}</div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                       <Button size="sm" variant="outline" onClick={() => { setEditingAsset(account); setShowAssetForm(true); }}>
                         <Edit2 className="w-4 h-4" />
                       </Button>

@@ -533,6 +533,7 @@ export default defineSchema({
     currentValue: v.number(),
     purchaseValue: v.optional(v.number()),
     purchaseDate: v.optional(v.string()),
+    sortOrder: v.optional(v.number()),
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_workspace", ["workspaceId"]),

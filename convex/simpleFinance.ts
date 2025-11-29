@@ -69,6 +69,37 @@ export const deleteSimpleAsset = mutation({
   },
 });
 
+export const reorderSimpleAssets = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+    assetId: v.id("simpleAssets"),
+    newSortOrder: v.number(),
+  },
+  handler: async (ctx, args) => {
+    // Update the sort order for the moved asset
+    await ctx.db.patch(args.assetId, {
+      sortOrder: args.newSortOrder,
+      updatedAt: Date.now(),
+    });
+
+    // Get all assets for this workspace
+    const assets = await ctx.db
+      .query("simpleAssets")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .collect();
+
+    // Reassign sort orders to prevent gaps
+    const sorted = assets.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    for (let i = 0; i < sorted.length; i++) {
+      if (sorted[i].sortOrder !== i) {
+        await ctx.db.patch(sorted[i]._id, { sortOrder: i });
+      }
+    }
+
+    return args.assetId;
+  },
+});
+
 // ========== SIMPLE LIABILITY MANAGEMENT ==========
 
 export const createSimpleLiability = mutation({
