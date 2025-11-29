@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery } from 'convex/react'
+import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { FinancialOverviewWidget } from './FinancialOverviewWidget'
 import { formatCurrency } from '@/lib/utils'
@@ -14,6 +14,8 @@ import { DashboardTasksList } from './DashboardTasksList'
 import { DashboardIdeasList } from './DashboardIdeasList'
 import { BottomNavigation } from '../BottomNavigation'
 import type { Id } from '../../../convex/_generated/dataModel'
+import TaskDetailModal from '../../apps/flow/components/TaskDetailModal'
+import IdeaFormModal from '../../apps/flow/components/IdeaFormModal'
 
 interface DraggableDashboardProps {
   workspaceId: Id<"workspaces"> | null
@@ -25,6 +27,14 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
   // Dashboard view state
   const [selectedView, setSelectedView] = useState<DashboardView>('default')
 
+  // Modal states
+  const [showTaskModal, setShowTaskModal] = useState(false)
+  const [showIdeaModal, setShowIdeaModal] = useState(false)
+
+  // Mutations
+  const createTask = useMutation(api.flow.createTask)
+  const createIdea = useMutation(api.flow.createIdea)
+
   // We can keep the tab state for desktop if we want, but for mobile we are focusing on the new design
   const [activeTab, setActiveTab] = useState<'overview' | 'invoices'>('overview')
 
@@ -33,6 +43,47 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
   const lists = useQuery(api.food.listShoppingLists, workspaceId ? { workspaceId } : 'skip') as any[] | 'skip' | undefined
 
   const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
+  const handleFabClick = () => {
+    if (selectedView === 'tasks') {
+      setShowTaskModal(true)
+    } else if (selectedView === 'ideas') {
+      setShowIdeaModal(true)
+    } else {
+      // Default behavior: open task modal if on default view
+      if (selectedView === 'default') {
+        setShowTaskModal(true)
+      }
+    }
+  }
+
+  const handleSaveTask = async (taskData: any) => {
+    if (!workspaceId) return
+    await createTask({
+      workspaceId,
+      title: taskData.title,
+      description: taskData.description,
+      status: 'todo',
+      priority: taskData.priority || 'medium',
+      dueDate: taskData.dueDate,
+      tags: taskData.tags,
+    })
+    setShowTaskModal(false)
+  }
+
+  const handleSaveIdea = async (ideaData: any) => {
+    if (!workspaceId) return
+    await createIdea({
+      workspaceId,
+      title: ideaData.title,
+      description: ideaData.description,
+      richDescription: ideaData.richDescription,
+      category: ideaData.category || 'other',
+      tags: ideaData.tags,
+      priority: ideaData.priority || 'medium',
+    })
+    setShowIdeaModal(false)
+  }
 
   return (
     <div className="min-h-screen bg-custom-off-white pb-24 lg:pb-8">
@@ -98,38 +149,44 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
           {/* Financial Overview */}
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
             <h3 className="text-base font-semibold text-dark-blue mb-4">Financial Overview</h3>
-            <div className="flex-1">
-              <FinancialOverviewWidget />
-            </div>
+            <FinancialOverviewWidget workspaceId={workspaceId} />
           </div>
 
-          {/* Subscriptions */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between">
-            <h3 className="text-base font-semibold text-dark-blue mb-2">Subscriptions</h3>
-            {finance ? (
-              <div>
-                <div className="text-3xl font-bold text-dark-blue">
-                  €{finance.monthlyTotal.toFixed(2)}
-                  <span className="text-sm font-normal text-gray-600 ml-1">/mo</span>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  {formatCurrency(finance.yearlyTotal)}/year
-                </p>
-                <div className="mt-4">
-                  <Link to="/finance" className="text-custom-brown hover:text-brown text-sm font-medium flex items-center gap-1">
-                    Manage →
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-6 text-gray-400 text-sm">Loading...</div>
-            )}
+          {/* Invoices */}
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+            <InvoicesDashboardWidget workspaceId={workspaceId} />
+          </div>
+
+          {/* Draft Invoices */}
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+            <DraftInvoicesDashboardWidget workspaceId={workspaceId} />
           </div>
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <BottomNavigation />
+      {/* Bottom Navigation with Custom FAB Action */}
+      <BottomNavigation onFabClick={handleFabClick} />
+
+      {/* Modals */}
+      {showTaskModal && (
+        <TaskDetailModal
+          isOpen={showTaskModal}
+          onClose={() => setShowTaskModal(false)}
+          onSave={handleSaveTask}
+          task={null}
+          mode="create"
+        />
+      )}
+
+      {showIdeaModal && (
+        <IdeaFormModal
+          isOpen={showIdeaModal}
+          onClose={() => setShowIdeaModal(false)}
+          onSave={handleSaveIdea}
+          idea={null}
+          mode="create"
+        />
+      )}
     </div>
   )
 }

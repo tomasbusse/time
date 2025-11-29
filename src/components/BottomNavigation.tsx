@@ -1,13 +1,22 @@
 import { Home, ListTodo, Plus, Calendar, BarChart2 } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-export function BottomNavigation() {
+interface BottomNavigationProps {
+    onFabClick?: () => void
+}
+
+export function BottomNavigation({ onFabClick }: BottomNavigationProps) {
     const location = useLocation()
     const navigate = useNavigate()
 
     const isActive = (path: string) => location.pathname === path
 
     const handlePlusClick = () => {
+        if (onFabClick) {
+            onFabClick()
+            return
+        }
+
         const searchParams = new URLSearchParams(location.search)
 
         // On productivity page with view=tasks -> navigate to create task
