@@ -29,12 +29,17 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
     api.simpleFinance.getMonthlyBalances,
     workspaceId ? { workspaceId, month: activeMonth } : "skip"
   );
-  
+
   const assets = useQuery(
     api.simpleFinance.listSimpleAssets,
     workspaceId ? { workspaceId } : "skip"
   );
-  
+
+  // Filter for bank accounts only and sort by order
+  const bankAccounts = (assets || [])
+    .filter(a => a.type === 'bank_account')
+    .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
   const recordMonthlyBalance = useMutation(api.simpleFinance.recordMonthlyBalance);
 
   // State for the current active month only
@@ -44,22 +49,22 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
   // Load data when monthlyBalances changes or activeMonth changes
   useEffect(() => {
     if (!monthlyBalances) return;
-    
+
     const newBalances: Record<string, number> = {};
     const newNotes: Record<string, string> = {};
-    
+
     for (const mb of monthlyBalances) {
       newBalances[mb.assetId] = mb.balance;
       newNotes[mb.assetId] = mb.notes || "";
     }
-    
+
     setBalances(newBalances);
     setNotes(newNotes);
   }, [monthlyBalances, activeMonth]);
 
   const handleSave = async () => {
-    if (!assets || !workspaceId || !userId) return;
-    for (const asset of assets) {
+    if (!bankAccounts || !workspaceId || !userId) return;
+    for (const asset of bankAccounts) {
       if (balances[asset._id] !== undefined) {
         await recordMonthlyBalance({
           workspaceId,
@@ -125,7 +130,7 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
       </div>
 
       <div className="space-y-2">
-        {assets.map((asset) => (
+        {bankAccounts.map((asset) => (
           <div key={asset._id} className="grid grid-cols-3 gap-4 items-center">
             <label htmlFor={`balance-${asset._id}`} className="font-medium">
               {asset.name}
@@ -134,8 +139,8 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
               type="number"
               id={`balance-${asset._id}`}
               value={
-                (balances && balances[asset._id] !== undefined) 
-                  ? balances[asset._id] 
+                (balances && balances[asset._id] !== undefined)
+                  ? balances[asset._id]
                   : ""
               }
               onChange={(e) => {
@@ -151,8 +156,8 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
               type="text"
               placeholder="Notes"
               value={
-                (notes && notes[asset._id] !== undefined) 
-                  ? notes[asset._id] 
+                (notes && notes[asset._id] !== undefined)
+                  ? notes[asset._id]
                   : ""
               }
               onChange={(e) =>
