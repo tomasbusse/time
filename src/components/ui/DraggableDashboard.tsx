@@ -8,7 +8,7 @@ import { InvoicesDashboardWidget } from './InvoicesDashboardWidget'
 import { TasksDashboardWidget } from './TasksDashboardWidget'
 import { DraftInvoicesDashboardWidget } from './DraftInvoicesDashboardWidget'
 import { QuickLessonCreate } from './QuickLessonCreate'
-import { QuickMenuWidget } from './QuickMenuWidget'
+import { QuickMenuWidget, DashboardView } from './QuickMenuWidget'
 import { DailyTasksWidget } from './DailyTasksWidget'
 import { BottomNavigation } from '../BottomNavigation'
 import type { Id } from '../../../convex/_generated/dataModel'
@@ -20,6 +20,9 @@ interface DraggableDashboardProps {
 }
 
 export function DraggableDashboard({ workspaceId, userId, userName }: DraggableDashboardProps) {
+  // Dashboard view state
+  const [selectedView, setSelectedView] = useState<DashboardView>('default')
+
   // We can keep the tab state for desktop if we want, but for mobile we are focusing on the new design
   const [activeTab, setActiveTab] = useState<'overview' | 'invoices'>('overview')
 
@@ -47,11 +50,48 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
         {/* Quick Menu */}
         <div>
           <h3 className="text-lg font-bold text-dark-blue mb-4 px-4 lg:px-0">Quick Menu</h3>
-          <QuickMenuWidget />
+          <QuickMenuWidget
+            selectedView={selectedView}
+            onSelectView={setSelectedView}
+          />
         </div>
 
-        {/* Daily Tasks */}
-        <DailyTasksWidget workspaceId={workspaceId!} />
+        {/* Dynamic Content Area - Shows based on selection */}
+        {selectedView === 'default' && (
+          <DailyTasksWidget workspaceId={workspaceId!} />
+        )}
+
+        {selectedView === 'tasks' && (
+          <div className="px-4 lg:px-0">
+            <h3 className="text-lg font-bold text-dark-blue mb-4">Your Tasks</h3>
+            {/* Task list will go here */}
+            <p className="text-gray-500">Task list component coming soon...</p>
+          </div>
+        )}
+
+        {selectedView === 'ideas' && (
+          <div className="px-4 lg:px-0">
+            <h3 className="text-lg font-bold text-dark-blue mb-4">Your Ideas</h3>
+            {/* Ideas list will go here */}
+            <p className="text-gray-500">Ideas list component coming soon...</p>
+          </div>
+        )}
+
+        {selectedView === 'liquidity' && (
+          <div className="px-4 lg:px-0">
+            <h3 className="text-lg font-bold text-dark-blue mb-4">Liquidity Overview</h3>
+            {/* Liquidity data will go here */}
+            <p className="text-gray-500">Liquidity overview component coming soon...</p>
+          </div>
+        )}
+
+        {selectedView === 'assets' && (
+          <div className="px-4 lg:px-0">
+            <h3 className="text-lg font-bold text-dark-blue mb-4">Assets Overview</h3>
+            {/* Assets data will go here */}
+            <p className="text-gray-500">Assets overview component coming soon...</p>
+          </div>
+        )}
 
         {/* Desktop-only Widgets (Hidden on Mobile for now to match screenshot purity, or we can add them below) */}
         <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
