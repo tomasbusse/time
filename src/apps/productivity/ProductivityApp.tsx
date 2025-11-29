@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Plus, ChevronLeft, ChevronRight, CheckCircle2, FileText } from 'lucide-react';
 import { CircleAction } from '@/components/ui/CircleAction';
 import { ListItem } from '@/components/ui/ListItem';
@@ -27,7 +27,31 @@ type ModalType = 'create' | 'edit' | null;
 
 export default function ProductivityApp() {
     const { workspaceId, userId } = useWorkspace();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState<TabType>('tasks');
+
+    // Read view parameter from URL on mount
+    useEffect(() => {
+        const view = searchParams.get('view');
+        if (view === 'tasks' || view === 'ideas') {
+            setActiveTab(view);
+        }
+
+        // Check for create parameter and open modal
+        const create = searchParams.get('create');
+        if (create === 'task') {
+            setNewTaskStatus('todo');
+            setTaskModalType('create');
+            // Remove create param from URL
+            searchParams.delete('create');
+            setSearchParams(searchParams, { replace: true });
+        } else if (create === 'idea') {
+            setIdeaModalType('create');
+            // Remove create param from URL
+            searchParams.delete('create');
+            setSearchParams(searchParams, { replace: true });
+        }
+    }, [searchParams, setSearchParams]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showTaskSelector, setShowTaskSelector] = useState(false);
     const [activeTimer, setActiveTimer] = useState<Doc<'timeAllocations'> | null>(null);

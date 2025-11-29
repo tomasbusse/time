@@ -1,10 +1,32 @@
 import { Home, ListTodo, Plus, Calendar, BarChart2 } from 'lucide-react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 export function BottomNavigation() {
     const location = useLocation()
+    const navigate = useNavigate()
 
     const isActive = (path: string) => location.pathname === path
+
+    const handlePlusClick = () => {
+        const searchParams = new URLSearchParams(location.search)
+
+        // On productivity page with view=tasks -> navigate to create task
+        if (location.pathname === '/productivity' && searchParams.get('view') === 'tasks') {
+            navigate('/productivity?view=tasks&create=task')
+        }
+        // On productivity page with view=ideas -> navigate to create idea
+        else if (location.pathname === '/productivity' && searchParams.get('view') === 'ideas') {
+            navigate('/productivity?view=ideas&create=idea')
+        }
+        // On calendar page -> navigate with create event param
+        else if (location.pathname === '/calendar') {
+            navigate('/calendar?create=event')
+        }
+        // Default: navigate to productivity
+        else {
+            navigate('/productivity')
+        }
+    }
 
     return (
         <div className="fixed bottom-8 left-0 right-0 px-6 z-50 lg:hidden pointer-events-none">
@@ -26,7 +48,10 @@ export function BottomNavigation() {
                 </Link>
 
                 <div className="-mt-8">
-                    <button className="w-14 h-14 bg-custom-brown rounded-full flex items-center justify-center shadow-lg text-white hover:bg-brown transition-colors">
+                    <button
+                        onClick={handlePlusClick}
+                        className="w-14 h-14 bg-custom-brown rounded-full flex items-center justify-center shadow-lg text-white hover:bg-brown transition-colors"
+                    >
                         <Plus className="w-8 h-8" />
                     </button>
                 </div>

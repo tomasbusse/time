@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, ChevronDown } from 'lucide-react'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
@@ -37,7 +37,18 @@ interface Subscription {
 
 export default function FinanceApp() {
   const { workspaceId, userId } = useWorkspace()
+  const [searchParams] = useSearchParams()
   const [activeTab, setActiveTab] = useState<TabType>('overview')
+
+  // Read tab parameter from URL on mount
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    const validTabs: TabType[] = ['overview', 'assets-liabilities', 'equity', 'subscriptions', 'budget', 'invoices-overview', 'invoices-list', 'invoices-drafts', 'invoices-customers', 'invoices-lessons', 'users', 'teacher-dashboard']
+    if (tab && validTabs.includes(tab as TabType)) {
+      setActiveTab(tab as TabType)
+    }
+  }, [searchParams])
+
   const [classificationFilter, setClassificationFilter] = useState<'all' | 'business' | 'private'>('all');
   const currentUser = useQuery(api.users.getCurrentUser);
 

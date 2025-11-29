@@ -1,4 +1,4 @@
-import { Plus, Clock, Calendar, Folder } from 'lucide-react'
+import { CheckCircle2, Lightbulb, TrendingUp, Wallet } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 interface QuickMenuItemProps {
@@ -26,24 +26,24 @@ export function QuickMenuWidget() {
         <div className="w-full px-4 py-2">
             <div className="grid grid-cols-2 gap-x-8 gap-y-8 max-w-sm mx-auto">
                 <QuickMenuItem
-                    icon={Plus}
-                    label="New Task"
-                    to="/productivity"
+                    icon={CheckCircle2}
+                    label="Tasks"
+                    to="/productivity?view=tasks"
                 />
                 <QuickMenuItem
-                    icon={Clock}
-                    label="Focus Mode"
-                    to="/productivity"
+                    icon={Lightbulb}
+                    label="Ideas"
+                    to="/productivity?view=ideas"
                 />
                 <QuickMenuItem
-                    icon={Calendar}
-                    label="Calendar"
-                    to="/calendar"
+                    icon={TrendingUp}
+                    label="Liquidity"
+                    to="/finance?tab=budget"
                 />
                 <QuickMenuItem
-                    icon={Folder}
-                    label="Projects"
-                    to="/productivity"
+                    icon={Wallet}
+                    label="Assets"
+                    to="/finance?tab=assets"
                 />
             </div>
         </div>
