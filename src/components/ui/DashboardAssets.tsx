@@ -111,7 +111,7 @@ export function DashboardAssets({ workspaceId, year, month, onYearChange, onMont
                 <div className="flex flex-col items-center text-center space-y-4">
                     <div className="w-full">
                         <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Total Assets</div>
-                        <div className="text-4xl font-bold text-dark-blue">
+                        <div className="text-3xl font-bold text-dark-blue break-words">
                             {formatCurrency(totalAssets)}
                         </div>
                         <div className="text-sm text-gray-500 mt-2 font-medium">
@@ -121,14 +121,14 @@ export function DashboardAssets({ workspaceId, year, month, onYearChange, onMont
 
                     <div className="w-full h-px bg-gray-100 my-2"></div>
 
-                    <div className="grid grid-cols-2 gap-8 w-full">
-                        <div>
+                    <div className="w-full space-y-3">
+                        <div className="text-center">
                             <div className="text-xs text-gray-500 uppercase font-semibold mb-1">Liabilities</div>
-                            <div className="text-xl font-bold text-custom-brown">{formatCurrency(totalLiabilities)}</div>
+                            <div className="text-xl font-bold text-custom-brown break-words">{formatCurrency(totalLiabilities)}</div>
                         </div>
-                        <div>
+                        <div className="text-center">
                             <div className="text-xs text-gray-500 uppercase font-semibold mb-1">Net Worth</div>
-                            <div className={`text-xl font-bold ${netWorth >= 0 ? 'text-dark-blue' : 'text-custom-brown'}`}>
+                            <div className={`text-xl font-bold break-words ${netWorth >= 0 ? 'text-dark-blue' : 'text-custom-brown'}`}>
                                 {formatCurrency(netWorth)}
                             </div>
                         </div>
