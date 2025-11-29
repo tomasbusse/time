@@ -87,7 +87,7 @@ export function DashboardLiquidity({ workspaceId, year, month, onYearChange, onM
                 <div className="flex flex-col items-center text-center space-y-4">
                     <div>
                         <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Total Liquidity</div>
-                        <div className="text-4xl font-bold text-dark-blue">
+                        <div className="text-2xl font-bold text-dark-blue break-words">
                             {formatCurrency(currentLiquidity)}
                         </div>
                         <div className="text-sm text-gray-500 mt-2 font-medium">
