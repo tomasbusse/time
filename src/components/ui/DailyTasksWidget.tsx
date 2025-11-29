@@ -17,7 +17,7 @@ export function DailyTasksWidget({ workspaceId }: DailyTasksWidgetProps) {
     ]
 
     return (
-    return (
+
         <div className="w-full px-2 sm:px-4">
             <h2 className="text-lg font-bold text-dark-blue mb-3 px-2">Daily Tasks</h2>
             <div className="bg-white rounded-[2rem] p-5 shadow-sm space-y-1">
