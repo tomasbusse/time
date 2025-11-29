@@ -174,8 +174,10 @@ export default function ProductivityApp() {
 
     // Idea handlers
     const handleCreateIdea = () => {
+        console.log('handleCreateIdea clicked!', { currentModalType: ideaModalType });
         setSelectedIdeaId(null);
         setIdeaModalType('create');
+        console.log('Modal type set to create');
     };
 
     const handleEditIdea = (idea: Idea) => {
