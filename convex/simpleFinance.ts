@@ -73,37 +73,49 @@ export const reorderSimpleAssets = mutation({
   args: {
     workspaceId: v.id("workspaces"),
     assetId: v.id("simpleAssets"),
-    newSortOrder: v.number(),
+    fromIndex: v.number(),
+    toIndex: v.number(),
   },
   handler: async (ctx, args) => {
     try {
-      // Get all assets for this workspace
+      // Get all bank accounts for this workspace
       const assets = await ctx.db
         .query("simpleAssets")
         .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
         .filter((q) => q.eq(q.field("type"), "bank_account"))
         .collect();
 
-      // Sort by current sortOrder
+      // Sort by current sortOrder to match frontend state
       const sorted = assets.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
-      // Find the asset being moved
-      const assetIndex = sorted.findIndex(a => a._id === args.assetId);
-      if (assetIndex === -1) throw new Error("Asset not found");
+      // Verify the asset at fromIndex matches the ID (optimistic check)
+      // If not, find the real index
+      let realFromIndex = args.fromIndex;
+      if (!sorted[realFromIndex] || sorted[realFromIndex]._id !== args.assetId) {
+        realFromIndex = sorted.findIndex(a => a._id === args.assetId);
+      }
 
-      // Remove it from its current position
-      const [movedAsset] = sorted.splice(assetIndex, 1);
+      if (realFromIndex === -1) throw new Error("Asset not found in list");
 
-      // Insert at new position (newSortOrder is the target index)
-      const targetIndex = Math.floor(args.newSortOrder);
+      // Remove from old position
+      const [movedAsset] = sorted.splice(realFromIndex, 1);
+
+      // Insert at new position (clamped to bounds)
+      let targetIndex = args.toIndex;
+      if (targetIndex < 0) targetIndex = 0;
+      if (targetIndex > sorted.length) targetIndex = sorted.length;
+
       sorted.splice(targetIndex, 0, movedAsset);
 
-      // Update all sortOrders sequentially
+      // Update all sortOrders
       for (let i = 0; i < sorted.length; i++) {
-        await ctx.db.patch(sorted[i]._id, {
-          sortOrder: i,
-          updatedAt: Date.now(),
-        });
+        // Only update if changed
+        if (sorted[i].sortOrder !== i) {
+          await ctx.db.patch(sorted[i]._id, {
+            sortOrder: i,
+            updatedAt: Date.now(),
+          });
+        }
       }
 
       return args.assetId;

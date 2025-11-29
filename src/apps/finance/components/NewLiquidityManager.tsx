@@ -129,7 +129,8 @@ export default function NewLiquidityManager() {
     await reorderAssets({
       workspaceId,
       assetId: account._id as any,
-      newSortOrder: index - 1.5, // Place between previous items
+      fromIndex: index,
+      toIndex: index - 1,
     });
   };
 
@@ -139,7 +140,8 @@ export default function NewLiquidityManager() {
     await reorderAssets({
       workspaceId,
       assetId: account._id as any,
-      newSortOrder: index + 1.5, // Place between next items
+      fromIndex: index,
+      toIndex: index + 1,
     });
   };
 
