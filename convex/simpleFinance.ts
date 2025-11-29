@@ -73,56 +73,49 @@ export const reorderSimpleAssets = mutation({
   args: {
     workspaceId: v.id("workspaces"),
     assetId: v.id("simpleAssets"),
-    fromIndex: v.number(),
-    toIndex: v.number(),
+    direction: v.union(v.literal("up"), v.literal("down")),
   },
   handler: async (ctx, args) => {
-    try {
-      // Get all bank accounts for this workspace
-      const assets = await ctx.db
-        .query("simpleAssets")
-        .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
-        .filter((q) => q.eq(q.field("type"), "bank_account"))
-        .collect();
+    // 1. Get all bank accounts sorted by order
+    const assets = await ctx.db
+      .query("simpleAssets")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .filter((q) => q.eq(q.field("type"), "bank_account"))
+      .collect();
 
-      // Sort by current sortOrder to match frontend state
-      const sorted = assets.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    // Ensure they are sorted
+    const sorted = assets.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
-      // Verify the asset at fromIndex matches the ID (optimistic check)
-      // If not, find the real index
-      let realFromIndex = args.fromIndex;
-      if (!sorted[realFromIndex] || sorted[realFromIndex]._id !== args.assetId) {
-        realFromIndex = sorted.findIndex(a => a._id === args.assetId);
-      }
+    // 2. Find the current item's index
+    const currentIndex = sorted.findIndex(a => a._id === args.assetId);
+    if (currentIndex === -1) throw new Error("Asset not found");
 
-      if (realFromIndex === -1) throw new Error("Asset not found in list");
-
-      // Remove from old position
-      const [movedAsset] = sorted.splice(realFromIndex, 1);
-
-      // Insert at new position (clamped to bounds)
-      let targetIndex = args.toIndex;
-      if (targetIndex < 0) targetIndex = 0;
-      if (targetIndex > sorted.length) targetIndex = sorted.length;
-
-      sorted.splice(targetIndex, 0, movedAsset);
-
-      // Update all sortOrders
-      for (let i = 0; i < sorted.length; i++) {
-        // Only update if changed
-        if (sorted[i].sortOrder !== i) {
-          await ctx.db.patch(sorted[i]._id, {
-            sortOrder: i,
-            updatedAt: Date.now(),
-          });
-        }
-      }
-
-      return args.assetId;
-    } catch (error) {
-      console.error("Error reordering assets:", error);
-      throw error;
+    // 3. Determine the neighbor to swap with
+    let neighborIndex = -1;
+    if (args.direction === "up") {
+      neighborIndex = currentIndex - 1;
+    } else {
+      neighborIndex = currentIndex + 1;
     }
+
+    // 4. Check bounds
+    if (neighborIndex < 0 || neighborIndex >= sorted.length) {
+      return; // Can't move further
+    }
+
+    // 5. Swap sortOrders
+    const currentAsset = sorted[currentIndex];
+    const neighborAsset = sorted[neighborIndex];
+
+    // Use the neighbor's order for current, and current's order for neighbor
+    // If sortOrder is missing, fallback to index
+    const currentOrder = currentAsset.sortOrder ?? currentIndex;
+    const neighborOrder = neighborAsset.sortOrder ?? neighborIndex;
+
+    await ctx.db.patch(currentAsset._id, { sortOrder: neighborOrder });
+    await ctx.db.patch(neighborAsset._id, { sortOrder: currentOrder });
+
+    return args.assetId;
   },
 });
 
