@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, RefreshCw, Plus } from 'lucide-react'
+import { ChevronLeft, ChevronRight, RefreshCw, Plus, Calendar, List } from 'lucide-react'
+import { CircleAction } from '@/components/ui/CircleAction'
+import { ListItem } from '@/components/ui/ListItem'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday, addMonths, subMonths } from 'date-fns'
@@ -249,6 +251,8 @@ export default function CalendarApp() {
     return [...emptyDays, ...dayElements];
   };
 
+  const [mobileViewMode, setMobileViewMode] = useState<'agenda' | 'month'>('agenda');
+
   if (!accessToken) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -267,62 +271,176 @@ export default function CalendarApp() {
     );
   }
 
+  const sortedEvents = [...googleEvents].sort((a, b) => a.startTime - b.startTime);
+  const todayEvents = sortedEvents.filter(e => isToday(new Date(e.startTime)));
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Personal Calendar</h1>
-        <div className="flex gap-2">
-          <Button
-            onClick={fetchGoogleEvents}
-            disabled={isSyncing}
-            variant="outline"
-            size="sm"
-          >
-            <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
-          </Button>
-          <Button
+    <div className="min-h-screen bg-custom-off-white pb-24 lg:pb-8">
+      {/* Mobile Header & Quick Actions */}
+      <div className="lg:hidden px-6 pt-2 pb-6">
+        <h1 className="text-2xl font-bold text-dark-blue mb-6">Calendar</h1>
+
+        {/* Horizontal Scrollable Quick Actions */}
+        <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+          <CircleAction
+            label="New Event"
+            icon={Plus}
             onClick={() => {
               setSelectedEvent(null);
               setSelectedDate(new Date());
               setIsEventModalOpen(true);
             }}
+          />
+          <CircleAction
+            label="Today"
+            icon={Calendar}
+            onClick={() => {
+              setCurrentMonth(new Date());
+              setSelectedDate(new Date());
+            }}
+          />
+          <CircleAction
+            label="Agenda"
+            icon={List}
+            onClick={() => setMobileViewMode('agenda')}
+            isActive={mobileViewMode === 'agenda'}
+          />
+          <CircleAction
+            label="Month"
+            icon={Calendar}
+            onClick={() => setMobileViewMode('month')}
+            isActive={mobileViewMode === 'month'}
+          />
+        </div>
+      </div>
+
+      {/* Mobile Content */}
+      <div className="lg:hidden px-4">
+        {mobileViewMode === 'agenda' && (
+          <div className="bg-white rounded-[2rem] p-5 shadow-sm space-y-1">
+            <h2 className="text-lg font-bold text-dark-blue mb-3 px-2">Today's Agenda</h2>
+            {todayEvents.length === 0 ? (
+              <p className="text-gray-400 text-sm text-center py-4">No events for today.</p>
+            ) : (
+              todayEvents.map(event => (
+                <ListItem
+                  key={event.id}
+                  title={event.title}
+                  subtitle={`${format(event.startTime, 'HH:mm')} - ${format(event.endTime, 'HH:mm')}`}
+                  statusColor="border-blue-400 bg-blue-400"
+                  onClick={() => {
+                    setSelectedEvent(event);
+                    setIsEventModalOpen(true);
+                  }}
+                />
+              ))
+            )}
+            <div className="mt-6 pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-bold text-gray-400 mb-2 px-2">Upcoming</h3>
+              {sortedEvents.filter(e => e.startTime > new Date().setHours(23, 59, 59, 999)).slice(0, 5).map(event => (
+                <ListItem
+                  key={event.id}
+                  title={event.title}
+                  subtitle={`${format(event.startTime, 'MMM d, HH:mm')}`}
+                  statusColor="border-gray-300"
+                  onClick={() => {
+                    setSelectedEvent(event);
+                    setIsEventModalOpen(true);
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {mobileViewMode === 'month' && (
+          <div className="bg-white rounded-[2rem] p-4 shadow-sm">
+            <div className="mb-4 flex justify-between items-center">
+              <Button
+                onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+                variant="ghost"
+                size="sm"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <h2 className="text-lg font-bold text-dark-blue">
+                {format(currentMonth, 'MMMM yyyy')}
+              </h2>
+              <Button
+                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                variant="ghost"
+                size="sm"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+            <div className="grid grid-cols-7 text-center text-xs font-medium text-gray-400 mb-2">
+              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <div key={d}>{d}</div>)}
+            </div>
+            <div className="grid grid-cols-7 gap-y-2">
+              {renderCalendar()}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Content (Hidden on Mobile) */}
+      <div className="hidden lg:block p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Personal Calendar</h1>
+          <div className="flex gap-2">
+            <Button
+              onClick={fetchGoogleEvents}
+              disabled={isSyncing}
+              variant="outline"
+              size="sm"
+            >
+              <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+            </Button>
+            <Button
+              onClick={() => {
+                setSelectedEvent(null);
+                setSelectedDate(new Date());
+                setIsEventModalOpen(true);
+              }}
+              size="sm"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              New Event
+            </Button>
+          </div>
+        </div>
+
+        <div className="mb-4 flex justify-between items-center">
+          <Button
+            onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+            variant="outline"
             size="sm"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            New Event
+            <ChevronLeft className="w-4 h-4" />
+          </Button>
+          <h2 className="text-xl font-semibold">
+            {format(currentMonth, 'MMMM yyyy')}
+          </h2>
+          <Button
+            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+            variant="outline"
+            size="sm"
+          >
+            <ChevronRight className="w-4 h-4" />
           </Button>
         </div>
-      </div>
 
-      <div className="mb-4 flex justify-between items-center">
-        <Button
-          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-          variant="outline"
-          size="sm"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </Button>
-        <h2 className="text-xl font-semibold">
-          {format(currentMonth, 'MMMM yyyy')}
-        </h2>
-        <Button
-          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-          variant="outline"
-          size="sm"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </Button>
-      </div>
-
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="grid grid-cols-7 border-b">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div key={day} className="px-4 py-2 text-center font-semibold bg-gray-50">
-              {day}
-            </div>
-          ))}
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="grid grid-cols-7 border-b">
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+              <div key={day} className="px-4 py-2 text-center font-semibold bg-gray-50">
+                {day}
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-7">{renderCalendar()}</div>
         </div>
-        <div className="grid grid-cols-7">{renderCalendar()}</div>
       </div>
 
       {isEventModalOpen && (

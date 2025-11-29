@@ -17,24 +17,25 @@ export function DailyTasksWidget({ workspaceId }: DailyTasksWidgetProps) {
     ]
 
     return (
-        <div className="w-full px-4">
-            <h2 className="text-xl font-bold text-dark-blue mb-4">Daily Tasks</h2>
-            <div className="bg-white rounded-[2rem] p-6 shadow-sm space-y-4">
+    return (
+        <div className="w-full px-2 sm:px-4">
+            <h2 className="text-lg font-bold text-dark-blue mb-3 px-2">Daily Tasks</h2>
+            <div className="bg-white rounded-[2rem] p-5 shadow-sm space-y-1">
                 {tasks.map((task) => {
                     const Icon = task.icon
                     return (
-                        <div key={task.id} className="flex items-center justify-between group">
-                            <div className="flex items-center gap-4">
-                                <button className="w-6 h-6 rounded-full border-2 border-gray-200 hover:border-custom-brown transition-colors flex items-center justify-center">
+                        <div key={task.id} className="flex items-center justify-between py-3 group">
+                            <div className="flex items-center gap-3">
+                                <button className="w-5 h-5 rounded-full border border-gray-300 hover:border-custom-brown transition-colors flex items-center justify-center flex-shrink-0">
                                     {/* Empty circle for todo state */}
                                 </button>
                                 <div>
-                                    <h3 className="font-bold text-dark-blue text-lg leading-tight">{task.title}</h3>
-                                    <p className="text-gray-400 text-sm mt-0.5">{task.time}</p>
+                                    <h3 className="font-bold text-dark-blue text-sm leading-tight">{task.title}</h3>
+                                    <p className="text-gray-400 text-xs mt-0.5 font-medium">{task.time}</p>
                                 </div>
                             </div>
-                            <div className="text-gray-300">
-                                <Icon className="w-6 h-6" />
+                            <div className="text-gray-400">
+                                <Icon className="w-5 h-5" />
                             </div>
                         </div>
                     )

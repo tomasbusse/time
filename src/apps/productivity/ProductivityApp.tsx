@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Plus, ChevronLeft, ChevronRight, CheckCircle2, FileText } from 'lucide-react';
+import { CircleAction } from '@/components/ui/CircleAction';
+import { ListItem } from '@/components/ui/ListItem';
 import { format, addDays, subDays } from 'date-fns';
 import { Button } from '@/components/ui/Button';
 import { useQuery, useMutation } from 'convex/react';
@@ -270,181 +272,259 @@ export default function ProductivityApp() {
     const selectedTask = selectedTaskId ? tasks.find((t) => t._id === selectedTaskId) : null;
 
     return (
-        <div className="min-h-screen bg-[#DDDEE3]">
-            {/* Header */}
-            <div className="bg-[#F1F5EE] border-b border-gray-200">
-                <div className="max-w-[1800px] mx-auto px-8 py-6">
-                    <Link to="/" className="inline-flex items-center gap-2 text-[#384C5A] hover:text-[#2c3b46] mb-4">
-                        <ArrowLeft className="w-4 h-4" />
-                        Back to Dashboard
-                    </Link>
+        <div className="min-h-screen bg-custom-off-white pb-24 lg:pb-8">
+            {/* Mobile Header is handled by global TopBar, but we need to ensure it's visible */}
 
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-3xl font-bold text-[#384C5A] mb-2">Productivity</h1>
-                            <p className="text-gray-600">Manage your tasks, track time, and capture ideas</p>
-                        </div>
+            {/* Page Title & Quick Actions (Mobile) */}
+            <div className="lg:hidden px-6 pt-2 pb-6">
+                <h1 className="text-2xl font-bold text-dark-blue mb-6">Productivity</h1>
 
-                        <div className="flex items-center gap-4">
-                            {activeTab === 'tasks' && (
-                                <>
-                                    <div className="text-sm text-gray-600">
-                                        {taskStats.completed} / {taskStats.total} completed
-                                    </div>
-                                    <Button onClick={() => handleCreateTask('todo')} className="bg-[#384C5A] hover:bg-[#2c3b46]">
-                                        <Plus className="w-4 h-4 mr-2" />
-                                        New Task
-                                    </Button>
-                                </>
-                            )}
-                            {activeTab === 'ideas' && (
-                                <Button onClick={handleCreateIdea} className="bg-[#384C5A] hover:bg-[#2c3b46]">
-                                    <Plus className="w-4 h-4 mr-2" />
-                                    New Idea
-                                </Button>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Tab Navigation */}
-                    <div className="mt-6">
-                        <nav className="flex space-x-8">
-                            <button
-                                onClick={() => setActiveTab('tasks')}
-                                className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'tasks'
-                                    ? 'border-[#A78573] text-[#A78573]'
-                                    : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
-                                    }`}
-                            >
-                                Tasks
-                                <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-[#384C5A]">
-                                    {taskStats.total}
-                                </span>
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('ideas')}
-                                className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'ideas'
-                                    ? 'border-[#A78573] text-[#A78573]'
-                                    : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
-                                    }`}
-                            >
-                                Ideas
-                                <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-[#384C5A]">
-                                    {ideas.filter((i) => i.status !== 'archived').length}
-                                </span>
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('history')}
-                                className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'history'
-                                    ? 'border-[#A78573] text-[#A78573]'
-                                    : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
-                                    }`}
-                            >
-                                Time History
-                            </button>
-                        </nav>
-                    </div>
+                {/* Horizontal Scrollable Quick Actions */}
+                <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+                    <CircleAction
+                        label="New Task"
+                        icon={Plus}
+                        onClick={() => handleCreateTask('todo')}
+                    />
+                    <CircleAction
+                        label="New Idea"
+                        icon={Plus}
+                        onClick={handleCreateIdea}
+                    />
+                    <CircleAction
+                        label="Tasks"
+                        icon={CheckCircle2}
+                        onClick={() => setActiveTab('tasks')}
+                        isActive={activeTab === 'tasks'}
+                    />
+                    <CircleAction
+                        label="Ideas"
+                        icon={FileText}
+                        onClick={() => setActiveTab('ideas')}
+                        isActive={activeTab === 'ideas'}
+                    />
                 </div>
             </div>
 
-            {/* Main Content */}
-            <div className="max-w-[1800px] mx-auto px-8 py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Main Area (Tasks/Ideas/History) */}
-                    <div className="lg:col-span-2">
+            {/* Main Content Area */}
+            <div className="px-2 sm:px-4 lg:px-8 max-w-[1800px] mx-auto">
+                {/* Mobile View */}
+                <div className="lg:hidden">
+                    <div className="bg-white rounded-[2rem] p-5 shadow-sm space-y-1">
                         {activeTab === 'tasks' && (
-                            <TaskBoard
-                                onEditTask={(taskId) => handleEditTask(taskId as string)}
-                                onDeleteTask={(taskId) => handleDeleteTask(taskId as string)}
-                                onCreateTask={handleCreateTask}
-                            />
+                            <>
+                                <h2 className="text-lg font-bold text-dark-blue mb-3 px-2">Your Tasks</h2>
+                                {tasks.length === 0 ? (
+                                    <p className="text-gray-400 text-sm text-center py-4">No tasks yet. Create one!</p>
+                                ) : (
+                                    tasks.map(task => (
+                                        <ListItem
+                                            key={task._id}
+                                            title={task.title}
+                                            subtitle={task.priority}
+                                            statusColor={task.status === 'completed' ? 'bg-green-500 border-green-500' : 'border-gray-300'}
+                                            onClick={() => handleEditTask(task._id)}
+                                            rightIcon={ChevronRight}
+                                        />
+                                    ))
+                                )}
+                            </>
                         )}
 
                         {activeTab === 'ideas' && (
-                            <IdeaList
-                                ideas={ideas}
-                                onAddIdea={handleCreateIdea}
-                                onEditIdea={handleEditIdea}
-                                onViewIdeaDetail={handleViewIdeaDetail}
-                                onDeleteIdea={handleDeleteIdea}
-                                onConvertToTask={handleConvertToTask}
-                            />
+                            <>
+                                <h2 className="text-lg font-bold text-dark-blue mb-3 px-2">Ideas</h2>
+                                {ideas.length === 0 ? (
+                                    <p className="text-gray-400 text-sm text-center py-4">No ideas yet. Capture one!</p>
+                                ) : (
+                                    ideas.map(idea => (
+                                        <ListItem
+                                            key={idea.id}
+                                            title={idea.title}
+                                            subtitle={idea.category}
+                                            statusColor="border-blue-300"
+                                            onClick={() => handleViewIdeaDetail(idea.id)}
+                                            rightIcon={ChevronRight}
+                                        />
+                                    ))
+                                )}
+                            </>
                         )}
-
-                        {activeTab === 'history' && <TimeLogHistory loggedEntries={[]} />}
                     </div>
+                </div>
 
-                    {/* Sidebar (Time Allocations & Timer) */}
-                    <div className="space-y-6">
-                        {/* Date Selector */}
-                        <div className="bg-[#F1F5EE] rounded-lg shadow-sm p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <button
-                                    onClick={() => setSelectedDate(subDays(selectedDate, 1))}
-                                    className="p-2 hover:bg-gray-200 rounded"
-                                >
-                                    <ChevronLeft className="w-5 h-5" />
-                                </button>
-                                <h2 className="text-lg font-semibold text-[#384C5A]">{format(selectedDate, 'MMM d, yyyy')}</h2>
-                                <button
-                                    onClick={() => setSelectedDate(addDays(selectedDate, 1))}
-                                    className="p-2 hover:bg-gray-200 rounded"
-                                >
-                                    <ChevronRight className="w-5 h-5" />
-                                </button>
+                {/* Desktop View (Preserved but wrapped) */}
+                <div className="hidden lg:block">
+                    <div className="bg-[#F1F5EE] border-b border-gray-200 -mx-8 px-8 py-6 mb-8">
+                        <Link to="/" className="inline-flex items-center gap-2 text-[#384C5A] hover:text-[#2c3b46] mb-4">
+                            <ArrowLeft className="w-4 h-4" />
+                            Back to Dashboard
+                        </Link>
+
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h1 className="text-3xl font-bold text-[#384C5A] mb-2">Productivity</h1>
+                                <p className="text-gray-600">Manage your tasks, track time, and capture ideas</p>
                             </div>
 
-                            {/* Timer Widget */}
-                            {activeTimer && (
-                                <TimerWidget
-                                    allocatedDuration={activeTimer.allocatedDuration}
-                                    taskName={activeTimer.taskName}
-                                    autoStart={true}
-                                    initialElapsedSeconds={(activeTimer.timeSpent || 0) * 60}
-                                    onStop={handleStopTimer}
-                                />
-                            )}
+                            <div className="flex items-center gap-4">
+                                {activeTab === 'tasks' && (
+                                    <>
+                                        <div className="text-sm text-gray-600">
+                                            {taskStats.completed} / {taskStats.total} completed
+                                        </div>
+                                        <Button onClick={() => handleCreateTask('todo')} className="bg-[#384C5A] hover:bg-[#2c3b46]">
+                                            <Plus className="w-4 h-4 mr-2" />
+                                            New Task
+                                        </Button>
+                                    </>
+                                )}
+                                {activeTab === 'ideas' && (
+                                    <Button onClick={handleCreateIdea} className="bg-[#384C5A] hover:bg-[#2c3b46]">
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        New Idea
+                                    </Button>
+                                )}
+                            </div>
                         </div>
 
-                        {/* Today's Allocations */}
-                        <div className="bg-[#F1F5EE] rounded-lg shadow-sm p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-lg font-semibold text-[#384C5A]">Today's Allocations</h3>
-                                <Button
-                                    onClick={() => setShowTaskSelector(true)}
-                                    className="bg-[#384C5A] hover:bg-[#2c3b46] text-sm py-1 px-3"
+                        {/* Tab Navigation */}
+                        <div className="mt-6">
+                            <nav className="flex space-x-8">
+                                <button
+                                    onClick={() => setActiveTab('tasks')}
+                                    className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'tasks'
+                                        ? 'border-[#A78573] text-[#A78573]'
+                                        : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+                                        }`}
                                 >
-                                    <Plus className="w-4 h-4" />
-                                </Button>
+                                    Tasks
+                                    <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-[#384C5A]">
+                                        {taskStats.total}
+                                    </span>
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('ideas')}
+                                    className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'ideas'
+                                        ? 'border-[#A78573] text-[#A78573]'
+                                        : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+                                        }`}
+                                >
+                                    Ideas
+                                    <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-[#384C5A]">
+                                        {ideas.filter((i) => i.status !== 'archived').length}
+                                    </span>
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('history')}
+                                    className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'history'
+                                        ? 'border-[#A78573] text-[#A78573]'
+                                        : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+                                        }`}
+                                >
+                                    Time History
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Main Area (Tasks/Ideas/History) */}
+                        <div className="lg:col-span-2">
+                            {activeTab === 'tasks' && (
+                                <TaskBoard
+                                    onEditTask={(taskId) => handleEditTask(taskId as string)}
+                                    onDeleteTask={(taskId) => handleDeleteTask(taskId as string)}
+                                    onCreateTask={handleCreateTask}
+                                />
+                            )}
+
+                            {activeTab === 'ideas' && (
+                                <IdeaList
+                                    ideas={ideas}
+                                    onAddIdea={handleCreateIdea}
+                                    onEditIdea={handleEditIdea}
+                                    onViewIdeaDetail={handleViewIdeaDetail}
+                                    onDeleteIdea={handleDeleteIdea}
+                                    onConvertToTask={handleConvertToTask}
+                                />
+                            )}
+
+                            {activeTab === 'history' && <TimeLogHistory loggedEntries={[]} />}
+                        </div>
+
+                        {/* Sidebar (Time Allocations & Timer) */}
+                        <div className="space-y-6">
+                            {/* Date Selector */}
+                            <div className="bg-[#F1F5EE] rounded-lg shadow-sm p-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <button
+                                        onClick={() => setSelectedDate(subDays(selectedDate, 1))}
+                                        className="p-2 hover:bg-gray-200 rounded"
+                                    >
+                                        <ChevronLeft className="w-5 h-5" />
+                                    </button>
+                                    <h2 className="text-lg font-semibold text-[#384C5A]">{format(selectedDate, 'MMM d, yyyy')}</h2>
+                                    <button
+                                        onClick={() => setSelectedDate(addDays(selectedDate, 1))}
+                                        className="p-2 hover:bg-gray-200 rounded"
+                                    >
+                                        <ChevronRight className="w-5 h-5" />
+                                    </button>
+                                </div>
+
+                                {/* Timer Widget */}
+                                {activeTimer && (
+                                    <TimerWidget
+                                        allocatedDuration={activeTimer.allocatedDuration}
+                                        taskName={activeTimer.taskName}
+                                        autoStart={true}
+                                        initialElapsedSeconds={(activeTimer.timeSpent || 0) * 60}
+                                        onStop={handleStopTimer}
+                                    />
+                                )}
                             </div>
 
-                            <div className="space-y-4">
-                                {allocations?.map((allocation) => (
-                                    <TimeAllocationCard
-                                        key={allocation._id}
-                                        taskName={allocation.taskName}
-                                        allocatedDuration={allocation.allocatedDuration}
-                                        timeSpent={allocation.timeSpent ?? 0}
-                                        category={undefined}
-                                        isRecurring={allocation.isRecurring}
-                                        onStartTimer={() => handleStartTimer(allocation)}
-                                        onEdit={() => { }}
-                                        onDelete={() => handleDeleteAllocation(allocation._id)}
-                                    />
-                                ))}
+                            {/* Today's Allocations */}
+                            <div className="bg-[#F1F5EE] rounded-lg shadow-sm p-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-lg font-semibold text-[#384C5A]">Today's Allocations</h3>
+                                    <Button
+                                        onClick={() => setShowTaskSelector(true)}
+                                        className="bg-[#384C5A] hover:bg-[#2c3b46] text-sm py-1 px-3"
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                    </Button>
+                                </div>
 
-                                {!allocations || allocations.length === 0 ? (
-                                    <div className="text-center py-8 text-gray-600 text-sm">
-                                        <p>No time allocations for today</p>
-                                        <Button
-                                            onClick={() => setShowTaskSelector(true)}
-                                            className="mt-4 bg-[#384C5A] hover:bg-[#2c3b46] text-sm"
-                                        >
-                                            <Plus className="w-4 h-4 mr-2" />
-                                            Add First Allocation
-                                        </Button>
-                                    </div>
-                                ) : null}
+                                <div className="space-y-4">
+                                    {allocations?.map((allocation) => (
+                                        <TimeAllocationCard
+                                            key={allocation._id}
+                                            taskName={allocation.taskName}
+                                            allocatedDuration={allocation.allocatedDuration}
+                                            timeSpent={allocation.timeSpent ?? 0}
+                                            category={undefined}
+                                            isRecurring={allocation.isRecurring}
+                                            onStartTimer={() => handleStartTimer(allocation)}
+                                            onEdit={() => { }}
+                                            onDelete={() => handleDeleteAllocation(allocation._id)}
+                                        />
+                                    ))}
+
+                                    {!allocations || allocations.length === 0 ? (
+                                        <div className="text-center py-8 text-gray-600 text-sm">
+                                            <p>No time allocations for today</p>
+                                            <Button
+                                                onClick={() => setShowTaskSelector(true)}
+                                                className="mt-4 bg-[#384C5A] hover:bg-[#2c3b46] text-sm"
+                                            >
+                                                <Plus className="w-4 h-4 mr-2" />
+                                                Add First Allocation
+                                            </Button>
+                                        </div>
+                                    ) : null}
+                                </div>
                             </div>
                         </div>
                     </div>

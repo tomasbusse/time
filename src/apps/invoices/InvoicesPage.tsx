@@ -5,6 +5,8 @@ import { Id } from "../../../convex/_generated/dataModel";
 import { useWorkspace } from "../../lib/WorkspaceContext";
 import CreateInvoicePage from "./CreateInvoicePage";
 import CustomerListPage from "./CustomerListPage";
+import { CircleAction } from "@/components/ui/CircleAction";
+import { ListItem } from "@/components/ui/ListItem";
 import {
     Download,
     Zap,
@@ -122,178 +124,260 @@ export default function InvoicesPage() {
     const formatCurrency = (amount: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount / 100);
 
     return (
-        <div className="p-8 max-w-[1600px] mx-auto min-h-screen bg-[#DDDEE3]">
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold text-[#384C5A] tracking-tight">Invoices</h1>
-                    <div className="flex gap-6 mt-3 text-sm font-medium text-gray-500">
-                        <button
-                            onClick={() => window.location.hash = "#/invoices/lessons"}
-                            className="hover:text-[#384C5A] flex items-center gap-2 transition-colors"
-                        >
-                            <Calendar size={18} /> Lessons
-                        </button>
-                        <button
-                            onClick={() => window.location.hash = "#/invoices/customers"}
-                            className="hover:text-[#384C5A] flex items-center gap-2 transition-colors"
-                        >
-                            <Users size={18} /> Customers
-                        </button>
-                        <button
-                            onClick={() => window.location.hash = "#/invoices/settings"}
-                            className="hover:text-[#384C5A] flex items-center gap-2 transition-colors"
-                        >
-                            <Settings size={18} /> Settings
-                        </button>
-                    </div>
-                </div>
-                <div className="flex gap-3">
-                    <button
-                        onClick={handleExport}
-                        className="px-4 py-2 bg-[#F1F5EE] border border-transparent text-[#384C5A] rounded-lg hover:bg-white transition-all shadow-sm font-medium flex items-center gap-2"
-                    >
-                        <Download size={16} /> Export
-                    </button>
-                    <button
-                        onClick={handleGenerate}
-                        className="px-4 py-2 bg-[#F1F5EE] border border-transparent text-[#384C5A] rounded-lg hover:bg-white transition-all shadow-sm font-medium flex items-center gap-2"
-                    >
-                        <Zap size={16} /> Generate Drafts
-                    </button>
-                    <button
+        <div className="min-h-screen bg-custom-off-white pb-24 lg:pb-8">
+            {/* Mobile Header & Quick Actions */}
+            <div className="lg:hidden px-6 pt-2 pb-6">
+                <h1 className="text-2xl font-bold text-dark-blue mb-6">Invoices</h1>
+
+                {/* Horizontal Scrollable Quick Actions */}
+                <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+                    <CircleAction
+                        label="Create"
+                        icon={Plus}
                         onClick={() => setShowCreatePage(true)}
-                        className="px-4 py-2 bg-[#A78573] text-white rounded-lg hover:bg-[#8e6f5e] transition-all shadow-md font-medium flex items-center gap-2"
-                    >
-                        <Plus size={18} /> Create Invoice
-                    </button>
+                    />
+                    <CircleAction
+                        label="Customers"
+                        icon={Users}
+                        onClick={() => window.location.hash = "#/invoices/customers"}
+                    />
+                    <CircleAction
+                        label="Drafts"
+                        icon={FileText}
+                        onClick={() => setFilterStatus('draft')}
+                        isActive={filterStatus === 'draft'}
+                    />
+                    <CircleAction
+                        label="Sent"
+                        icon={Send}
+                        onClick={() => setFilterStatus('sent')}
+                        isActive={filterStatus === 'sent'}
+                    />
                 </div>
             </div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-[#F1F5EE] p-6 rounded-xl shadow-sm border border-transparent">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Total Revenue (Paid)</div>
-                    <div className="text-3xl font-bold text-[#384C5A]">{formatCurrency(stats.totalRevenue)}</div>
+            {/* Mobile Content */}
+            <div className="lg:hidden px-4 space-y-6">
+                {/* Mobile Stats (Horizontal Scroll) */}
+                <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+                    <div className="min-w-[160px] bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="text-xs font-medium text-gray-400 mb-1">Revenue</div>
+                        <div className="text-xl font-bold text-dark-blue">{formatCurrency(stats.totalRevenue)}</div>
+                    </div>
+                    <div className="min-w-[160px] bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="text-xs font-medium text-gray-400 mb-1">Overdue</div>
+                        <div className="text-xl font-bold text-orange-600">{formatCurrency(stats.openAmount)}</div>
+                    </div>
+                    <div className="min-w-[160px] bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="text-xs font-medium text-gray-400 mb-1">Drafts</div>
+                        <div className="text-xl font-bold text-gray-600">{formatCurrency(stats.draftTotal)}</div>
+                    </div>
                 </div>
-                <div className="bg-[#F1F5EE] p-6 rounded-xl shadow-sm border border-transparent">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Sent (Unpaid)</div>
-                    <div className="text-3xl font-bold text-[#A78573]">{formatCurrency(stats.sentTotal)}</div>
-                </div>
-                <div className="bg-[#F1F5EE] p-6 rounded-xl shadow-sm border border-transparent">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Draft Total</div>
-                    <div className="text-3xl font-bold text-[#384C5A]">{formatCurrency(stats.draftTotal)}</div>
-                </div>
-                <div className="bg-[#F1F5EE] p-6 rounded-xl shadow-sm border border-transparent">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Overdue (Open)</div>
-                    <div className="text-3xl font-bold text-orange-600">{formatCurrency(stats.openAmount)}</div>
+
+                {/* Mobile Invoice List */}
+                <div className="bg-white rounded-[2rem] p-5 shadow-sm">
+                    <div className="flex items-center justify-between mb-4 px-2">
+                        <h2 className="text-lg font-bold text-dark-blue">Recent Invoices</h2>
+                        <button onClick={() => setFilterStatus('all')} className="text-xs text-custom-brown font-medium">View All</button>
+                    </div>
+
+                    <div className="space-y-1">
+                        {filteredInvoices?.length === 0 ? (
+                            <p className="text-gray-400 text-sm text-center py-4">No invoices found.</p>
+                        ) : (
+                            filteredInvoices?.map(invoice => (
+                                <ListItem
+                                    key={invoice._id}
+                                    title={invoice.invoiceNumber}
+                                    subtitle={invoice.customerName}
+                                    statusColor={
+                                        invoice.status === 'paid' ? 'bg-green-500 border-green-500' :
+                                            invoice.status === 'sent' ? 'bg-orange-400 border-orange-400' :
+                                                'border-gray-300'
+                                    }
+                                    onClick={() => window.location.hash = `#/invoices/preview/${invoice._id}`}
+                                    rightIcon={CheckCircle2} // Placeholder, maybe use chevron or status icon
+                                />
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {/* Filters & Search */}
-            <div className="bg-[#F1F5EE] rounded-xl shadow-sm border border-transparent overflow-hidden mb-8">
-                <div className="p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div className="flex bg-[#EAEAEA] p-1 rounded-lg overflow-x-auto w-full sm:w-auto">
-                        {["all", "draft", "sent", "open", "paid", "cancelled"].map(status => (
+            {/* Desktop Content (Hidden on Mobile) */}
+            <div className="hidden lg:block p-8 max-w-[1600px] mx-auto">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold text-[#384C5A] tracking-tight">Invoices</h1>
+                        <div className="flex gap-6 mt-3 text-sm font-medium text-gray-500">
                             <button
-                                key={status}
-                                onClick={() => setFilterStatus(status)}
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all whitespace-nowrap ${filterStatus === status
-                                    ? "bg-[#384C5A] text-white shadow-sm"
-                                    : "text-gray-600 hover:text-gray-900"
-                                    }`}
+                                onClick={() => window.location.hash = "#/invoices/lessons"}
+                                className="hover:text-[#384C5A] flex items-center gap-2 transition-colors"
                             >
-                                {status === "open" ? "Open (Overdue)" : status.charAt(0).toUpperCase() + status.slice(1)}
+                                <Calendar size={18} /> Lessons
                             </button>
-                        ))}
+                            <button
+                                onClick={() => window.location.hash = "#/invoices/customers"}
+                                className="hover:text-[#384C5A] flex items-center gap-2 transition-colors"
+                            >
+                                <Users size={18} /> Customers
+                            </button>
+                            <button
+                                onClick={() => window.location.hash = "#/invoices/settings"}
+                                className="hover:text-[#384C5A] flex items-center gap-2 transition-colors"
+                            >
+                                <Settings size={18} /> Settings
+                            </button>
+                        </div>
                     </div>
-                    <div className="relative w-full sm:w-64">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                        <input
-                            type="text"
-                            placeholder="Search invoices..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-white border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A78573]"
-                        />
+                    <div className="flex gap-3">
+                        <button
+                            onClick={handleExport}
+                            className="px-4 py-2 bg-[#F1F5EE] border border-transparent text-[#384C5A] rounded-lg hover:bg-white transition-all shadow-sm font-medium flex items-center gap-2"
+                        >
+                            <Download size={16} /> Export
+                        </button>
+                        <button
+                            onClick={handleGenerate}
+                            className="px-4 py-2 bg-[#F1F5EE] border border-transparent text-[#384C5A] rounded-lg hover:bg-white transition-all shadow-sm font-medium flex items-center gap-2"
+                        >
+                            <Zap size={16} /> Generate Drafts
+                        </button>
+                        <button
+                            onClick={() => setShowCreatePage(true)}
+                            className="px-4 py-2 bg-[#A78573] text-white rounded-lg hover:bg-[#8e6f5e] transition-all shadow-md font-medium flex items-center gap-2"
+                        >
+                            <Plus size={18} /> Create Invoice
+                        </button>
                     </div>
                 </div>
 
-                {/* Table */}
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-[#EAEAEA] border-b border-gray-200">
-                            <tr>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Invoice #</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Customer</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Due Date</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Amount</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200 bg-[#F1F5EE]">
-                            {filteredInvoices?.length === 0 ? (
+                {/* Summary Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div className="bg-[#F1F5EE] p-6 rounded-xl shadow-sm border border-transparent">
+                        <div className="text-sm font-medium text-gray-500 mb-2">Total Revenue (Paid)</div>
+                        <div className="text-3xl font-bold text-[#384C5A]">{formatCurrency(stats.totalRevenue)}</div>
+                    </div>
+                    <div className="bg-[#F1F5EE] p-6 rounded-xl shadow-sm border border-transparent">
+                        <div className="text-sm font-medium text-gray-500 mb-2">Sent (Unpaid)</div>
+                        <div className="text-3xl font-bold text-[#A78573]">{formatCurrency(stats.sentTotal)}</div>
+                    </div>
+                    <div className="bg-[#F1F5EE] p-6 rounded-xl shadow-sm border border-transparent">
+                        <div className="text-sm font-medium text-gray-500 mb-2">Draft Total</div>
+                        <div className="text-3xl font-bold text-[#384C5A]">{formatCurrency(stats.draftTotal)}</div>
+                    </div>
+                    <div className="bg-[#F1F5EE] p-6 rounded-xl shadow-sm border border-transparent">
+                        <div className="text-sm font-medium text-gray-500 mb-2">Overdue (Open)</div>
+                        <div className="text-3xl font-bold text-orange-600">{formatCurrency(stats.openAmount)}</div>
+                    </div>
+                </div>
+
+                {/* Filters & Search */}
+                <div className="bg-[#F1F5EE] rounded-xl shadow-sm border border-transparent overflow-hidden mb-8">
+                    <div className="p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div className="flex bg-[#EAEAEA] p-1 rounded-lg overflow-x-auto w-full sm:w-auto">
+                            {["all", "draft", "sent", "open", "paid", "cancelled"].map(status => (
+                                <button
+                                    key={status}
+                                    onClick={() => setFilterStatus(status)}
+                                    className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all whitespace-nowrap ${filterStatus === status
+                                        ? "bg-[#384C5A] text-white shadow-sm"
+                                        : "text-gray-600 hover:text-gray-900"
+                                        }`}
+                                >
+                                    {status === "open" ? "Open (Overdue)" : status.charAt(0).toUpperCase() + status.slice(1)}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="relative w-full sm:w-64">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                            <input
+                                type="text"
+                                placeholder="Search invoices..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full pl-10 pr-4 py-2 bg-white border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A78573]"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Table */}
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-[#EAEAEA] border-b border-gray-200">
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
-                                        No invoices found matching your criteria.
-                                    </td>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Invoice #</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Customer</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Due Date</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
-                            ) : (
-                                filteredInvoices?.map((invoice) => (
-                                    <tr key={invoice._id} className="hover:bg-white transition-colors group border-b border-gray-100 last:border-0">
-                                        <td className="px-6 py-4 whitespace-nowrap font-medium text-[#384C5A]">
-                                            {invoice.invoiceNumber}
+                            </thead>
+                            <tbody className="divide-y divide-gray-200 bg-[#F1F5EE]">
+                                {filteredInvoices?.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                                            No invoices found matching your criteria.
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                                            {invoice.customerName}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">
-                                            {new Date(invoice.date).toLocaleDateString("de-DE")}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">
-                                            {new Date(invoice.dueDate).toLocaleDateString("de-DE")}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap font-bold text-[#384C5A]">
-                                            {formatCurrency(invoice.total)}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${invoice.status === "paid" ? "bg-green-100 text-green-800" :
+                                    </tr>
+                                ) : (
+                                    filteredInvoices?.map((invoice) => (
+                                        <tr key={invoice._id} className="hover:bg-white transition-colors group border-b border-gray-100 last:border-0">
+                                            <td className="px-6 py-4 whitespace-nowrap font-medium text-[#384C5A]">
+                                                {invoice.invoiceNumber}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                                                {invoice.customerName}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">
+                                                {new Date(invoice.date).toLocaleDateString("de-DE")}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">
+                                                {new Date(invoice.dueDate).toLocaleDateString("de-DE")}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap font-bold text-[#384C5A]">
+                                                {formatCurrency(invoice.total)}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${invoice.status === "paid" ? "bg-green-100 text-green-800" :
                                                     invoice.status === "sent" ? "bg-orange-100 text-[#A78573]" :
                                                         invoice.status === "draft" ? "bg-gray-200 text-gray-700" :
                                                             "bg-gray-100 text-gray-600"
-                                                }`}>
-                                                {invoice.status === "sent" && invoice.dueDate < Date.now() ? (
-                                                    <span className="flex items-center gap-1 text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
-                                                        <AlertCircle size={12} /> Overdue
-                                                    </span>
-                                                ) : (
-                                                    invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)
-                                                )}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right">
-                                            <button
-                                                onClick={() => window.location.hash = `#/invoices/preview/${invoice._id}`}
-                                                className="text-[#A78573] hover:text-[#8e6f5e] font-medium transition-colors mr-4"
-                                            >
-                                                View
-                                            </button>
-                                            {invoice.status === "sent" && (
+                                                    }`}>
+                                                    {invoice.status === "sent" && invoice.dueDate < Date.now() ? (
+                                                        <span className="flex items-center gap-1 text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
+                                                            <AlertCircle size={12} /> Overdue
+                                                        </span>
+                                                    ) : (
+                                                        invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)
+                                                    )}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <button
-                                                    onClick={() => handleMarkAsPaid(invoice._id)}
-                                                    className="text-[#384C5A] hover:text-black font-medium transition-colors"
+                                                    onClick={() => window.location.hash = `#/invoices/preview/${invoice._id}`}
+                                                    className="text-[#A78573] hover:text-[#8e6f5e] font-medium transition-colors mr-4"
                                                 >
-                                                    Mark Paid
+                                                    View
                                                 </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                                                {invoice.status === "sent" && (
+                                                    <button
+                                                        onClick={() => handleMarkAsPaid(invoice._id)}
+                                                        className="text-[#384C5A] hover:text-black font-medium transition-colors"
+                                                    >
+                                                        Mark Paid
+                                                    </button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
