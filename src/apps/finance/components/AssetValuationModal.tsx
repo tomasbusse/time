@@ -151,16 +151,6 @@ export default function AssetValuationModal({ isOpen, onClose, workspaceId, year
                                                     placeholder={asset.currentValue?.toString() || "0.00"}
                                                 />
                                             </div>
-                                            <input
-                                                type="text"
-                                                value={assetNotes[asset._id] || ''}
-                                                onChange={(e) => {
-                                                    setAssetNotes(prev => ({ ...prev, [asset._id]: e.target.value }))
-                                                    setHasChanges(true)
-                                                }}
-                                                className="w-1/3 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-blue text-sm"
-                                                placeholder="Notes"
-                                            />
                                         </div>
                                     </div>
                                 ))}
@@ -196,16 +186,6 @@ export default function AssetValuationModal({ isOpen, onClose, workspaceId, year
                                                     placeholder={liability.currentBalance?.toString() || "0.00"}
                                                 />
                                             </div>
-                                            <input
-                                                type="text"
-                                                value={liabilityNotes[liability._id] || ''}
-                                                onChange={(e) => {
-                                                    setLiabilityNotes(prev => ({ ...prev, [liability._id]: e.target.value }))
-                                                    setHasChanges(true)
-                                                }}
-                                                className="w-1/3 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-blue text-sm"
-                                                placeholder="Notes"
-                                            />
                                         </div>
                                     </div>
                                 ))}

@@ -131,7 +131,7 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
 
       <div className="space-y-2">
         {bankAccounts.map((asset) => (
-          <div key={asset._id} className="grid grid-cols-3 gap-4 items-center">
+          <div key={asset._id} className="grid grid-cols-2 gap-4 items-center">
             <label htmlFor={`balance-${asset._id}`} className="font-medium">
               {asset.name}
             </label>
@@ -150,23 +150,8 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
                   [asset._id]: isNaN(value) ? 0 : value
                 }));
               }}
-              className="p-2 border rounded"
-            />
-            <input
-              type="text"
-              placeholder="Notes"
-              value={
-                (notes && notes[asset._id] !== undefined)
-                  ? notes[asset._id]
-                  : ""
-              }
-              onChange={(e) =>
-                setNotes(prev => ({
-                  ...prev,
-                  [asset._id]: e.target.value
-                }))
-              }
-              className="p-2 border rounded"
+              className="p-2 border rounded w-full"
+              placeholder="0.00"
             />
           </div>
         ))}
