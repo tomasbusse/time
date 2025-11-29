@@ -18,6 +18,8 @@ import TaskDetailModal from '../../apps/flow/components/TaskDetailModal'
 import IdeaFormModal from '../../apps/flow/components/IdeaFormModal'
 import { DashboardLiquidity } from './DashboardLiquidity'
 import LiquidityEntryModal from './LiquidityEntryModal'
+import { DashboardAssets } from './DashboardAssets'
+import AssetValuationModal from '../../apps/finance/components/AssetValuationModal'
 
 interface DraggableDashboardProps {
   workspaceId: Id<"workspaces"> | null
@@ -34,10 +36,15 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
   const [liquidityYear, setLiquidityYear] = useState(now.getFullYear())
   const [liquidityMonth, setLiquidityMonth] = useState(now.getMonth() + 1)
 
+  // Assets Date State
+  const [assetsYear, setAssetsYear] = useState(now.getFullYear())
+  const [assetsMonth, setAssetsMonth] = useState(now.getMonth() + 1)
+
   // Modal states
   const [showTaskModal, setShowTaskModal] = useState(false)
   const [showIdeaModal, setShowIdeaModal] = useState(false)
   const [showLiquidityModal, setShowLiquidityModal] = useState(false)
+  const [showAssetsModal, setShowAssetsModal] = useState(false)
 
   // Mutations
   const createTask = useMutation(api.flow.createTask)
@@ -59,6 +66,8 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
       setShowIdeaModal(true)
     } else if (selectedView === 'liquidity') {
       setShowLiquidityModal(true)
+    } else if (selectedView === 'assets') {
+      setShowAssetsModal(true)
     } else {
       // Default behavior: open task modal if on default view
       if (selectedView === 'default') {
@@ -150,31 +159,37 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
           </div>
         )}
 
-        {selectedView === 'assets' && (
+        {selectedView === 'assets' && workspaceId && (
           <div className="px-4 lg:px-0">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Assets Overview</h3>
-            {/* Assets data will go here */}
-            <p className="text-gray-500">Assets overview component coming soon...</p>
+            <DashboardAssets
+              workspaceId={workspaceId}
+              year={assetsYear}
+              month={assetsMonth}
+              onYearChange={setAssetsYear}
+              onMonthChange={setAssetsMonth}
+            />
           </div>
         )}
+        <p className="text-gray-500">Assets overview component coming soon...</p>
+      </div>
 
-        {/* Desktop-only Widgets (Hidden on Mobile for now to match screenshot purity, or we can add them below) */}
-        <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          {/* Financial Overview */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            <h3 className="text-base font-semibold text-dark-blue mb-4">Financial Overview</h3>
-            <FinancialOverviewWidget />
-          </div>
+      {/* Desktop-only Widgets (Hidden on Mobile for now to match screenshot purity, or we can add them below) */}
+      <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+        {/* Financial Overview */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+          <h3 className="text-base font-semibold text-dark-blue mb-4">Financial Overview</h3>
+          <FinancialOverviewWidget />
+        </div>
 
-          {/* Invoices */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            {workspaceId && <InvoicesDashboardWidget workspaceId={workspaceId} />}
-          </div>
+        {/* Invoices */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+          {workspaceId && <InvoicesDashboardWidget workspaceId={workspaceId} />}
+        </div>
 
-          {/* Draft Invoices */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            {workspaceId && <DraftInvoicesDashboardWidget workspaceId={workspaceId} />}
-          </div>
+        {/* Draft Invoices */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+          {workspaceId && <DraftInvoicesDashboardWidget workspaceId={workspaceId} />}
         </div>
       </div>
 
@@ -182,35 +197,53 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
       <BottomNavigation onFabClick={handleFabClick} />
 
       {/* Modals */}
-      {showTaskModal && (
-        <TaskDetailModal
-          isOpen={showTaskModal}
-          onClose={() => setShowTaskModal(false)}
-          onSave={handleSaveTask}
-          task={null}
-          mode="create"
-        />
-      )}
+      {
+        showTaskModal && (
+          <TaskDetailModal
+            isOpen={showTaskModal}
+            onClose={() => setShowTaskModal(false)}
+            onSave={handleSaveTask}
+            task={null}
+            mode="create"
+          />
+        )
+      }
 
-      {showIdeaModal && (
-        <IdeaFormModal
-          isOpen={showIdeaModal}
-          onClose={() => setShowIdeaModal(false)}
-          onSave={handleSaveIdea}
-          idea={null}
-          mode="create"
-        />
-      )}
+      {
+        showIdeaModal && (
+          <IdeaFormModal
+            isOpen={showIdeaModal}
+            onClose={() => setShowIdeaModal(false)}
+            onSave={handleSaveIdea}
+            idea={null}
+            mode="create"
+          />
+        )
+      }
 
-      {showLiquidityModal && workspaceId && (
-        <LiquidityEntryModal
-          isOpen={showLiquidityModal}
-          onClose={() => setShowLiquidityModal(false)}
-          workspaceId={workspaceId}
-          year={liquidityYear}
-          month={liquidityMonth}
-        />
-      )}
-    </div>
+      {
+        showLiquidityModal && workspaceId && (
+          <LiquidityEntryModal
+            isOpen={showLiquidityModal}
+            onClose={() => setShowLiquidityModal(false)}
+            workspaceId={workspaceId}
+            year={liquidityYear}
+            month={liquidityMonth}
+          />
+        )
+      }
+
+      {
+        showAssetsModal && workspaceId && (
+          <AssetValuationModal
+            isOpen={showAssetsModal}
+            onClose={() => setShowAssetsModal(false)}
+            workspaceId={workspaceId}
+            year={assetsYear}
+            month={assetsMonth}
+          />
+        )
+      }
+    </div >
   )
 }
