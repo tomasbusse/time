@@ -7,6 +7,7 @@ import { useWorkspace } from '@/lib/WorkspaceContext'
 import { formatCurrency } from '@/lib/utils'
 import { SimpleAssetForm } from './SimpleAssetForm'
 import { SimpleLiabilityForm } from './SimpleLiabilityForm'
+import AssetValuationModal from './AssetValuationModal'
 import { Plus, Edit2, Trash2, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface SimpleAsset {
@@ -42,6 +43,7 @@ export function SimpleAssetsLiabilities() {
 
   const [showAssetForm, setShowAssetForm] = useState(false)
   const [showLiabilityForm, setShowLiabilityForm] = useState(false)
+  const [showValuationModal, setShowValuationModal] = useState(false)
   const [editingAsset, setEditingAsset] = useState<SimpleAsset | undefined>()
   const [editingLiability, setEditingLiability] = useState<SimpleLiability | undefined>()
 
@@ -198,9 +200,19 @@ export function SimpleAssetsLiabilities() {
           <ChevronLeft className="w-5 h-5" />
           <span className="text-sm">Previous</span>
         </button>
-        <h3 className="text-lg font-bold text-dark-blue text-center">
-          {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][selectedMonth - 1]} {selectedYear}
-        </h3>
+        <div className="flex flex-col items-center">
+          <h3 className="text-lg font-bold text-dark-blue text-center">
+            {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][selectedMonth - 1]} {selectedYear}
+          </h3>
+          <Button
+            onClick={() => setShowValuationModal(true)}
+            size="sm"
+            variant="outline"
+            className="mt-2"
+          >
+            Update Valuations
+          </Button>
+        </div>
         <button
           onClick={handleNextMonth}
           className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-dark-blue flex items-center gap-1"
@@ -413,6 +425,17 @@ export function SimpleAssetsLiabilities() {
           </div>
         )}
       </div>
+
+      {/* Asset Valuation Modal */}
+      {showValuationModal && (
+        <AssetValuationModal
+          isOpen={showValuationModal}
+          onClose={() => setShowValuationModal(false)}
+          workspaceId={workspaceId!}
+          year={selectedYear}
+          month={selectedMonth}
+        />
+      )}
     </div>
   )
 }
