@@ -111,7 +111,7 @@ export function DashboardAssets({ workspaceId, year, month, onYearChange, onMont
                 <div className="flex flex-col items-center text-center space-y-4">
                     <div className="w-full">
                         <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Total Assets</div>
-                        <div className="text-3xl font-bold text-dark-blue break-words">
+                        <div className="text-2xl font-bold text-dark-blue break-words">
                             {formatCurrency(totalAssets)}
                         </div>
                         <div className="text-sm text-gray-500 mt-2 font-medium">
