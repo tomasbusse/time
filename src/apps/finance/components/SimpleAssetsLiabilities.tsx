@@ -7,7 +7,7 @@ import { useWorkspace } from '@/lib/WorkspaceContext'
 import { formatCurrency } from '@/lib/utils'
 import { SimpleAssetForm } from './SimpleAssetForm'
 import { SimpleLiabilityForm } from './SimpleLiabilityForm'
-import { Plus, Edit2, Trash2, TrendingUp, TrendingDown } from 'lucide-react'
+import { Plus, Edit2, Trash2, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface SimpleAsset {
   _id: string
@@ -34,20 +34,35 @@ interface SimpleLiability {
 
 export function SimpleAssetsLiabilities() {
   const { workspaceId } = useWorkspace()
+
+  // Month selection
+  const now = new Date()
+  const [selectedYear, setSelectedYear] = useState(now.getFullYear())
+  const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1)
+
   const [showAssetForm, setShowAssetForm] = useState(false)
   const [showLiabilityForm, setShowLiabilityForm] = useState(false)
   const [editingAsset, setEditingAsset] = useState<SimpleAsset | undefined>()
   const [editingLiability, setEditingLiability] = useState<SimpleLiability | undefined>()
 
   // Query data
-  const assets = useQuery(
+  const allAssets = useQuery(
     api.simpleFinance.listSimpleAssets,
     workspaceId ? { workspaceId } : 'skip'
   ) || []
-  
+
+  // Filter out bank accounts - those belong to Liquidity page only
+  const assets = allAssets.filter((asset: SimpleAsset) => asset.type !== 'bank_account')
+
   const liabilities = useQuery(
     api.simpleFinance.listSimpleLiabilities,
     workspaceId ? { workspaceId } : 'skip'
+  ) || []
+
+  // Query monthly valuations for selected month
+  const monthlyValuations = useQuery(
+    api.simpleFinance.listMonthlyValuations,
+    workspaceId ? { workspaceId, year: selectedYear, month: selectedMonth } : 'skip'
   ) || []
 
   const netWorth = useQuery(
@@ -86,6 +101,31 @@ export function SimpleAssetsLiabilities() {
     }
   }
 
+  const handlePrevMonth = () => {
+    if (selectedMonth === 1) {
+      setSelectedMonth(12)
+      setSelectedYear(selectedYear - 1)
+    } else {
+      setSelectedMonth(selectedMonth - 1)
+    }
+  }
+
+  const handleNextMonth = () => {
+    if (selectedMonth === 12) {
+      setSelectedMonth(1)
+      setSelectedYear(selectedYear + 1)
+    } else {
+      setSelectedMonth(selectedMonth + 1)
+    }
+  }
+
+  // Get value for an item (asset or liability) from monthly valuations or fallback to current value
+  const getItemValue = (itemId: string, itemType: 'asset' | 'liability', fallbackValue: number): number => {
+    const valuation = monthlyValuations.find(
+      (v: any) => v.itemId === itemId && v.itemType === itemType
+    )
+    return valuation ? valuation.value : fallbackValue
+  }
 
   const getAssetTypeLabel = (type: string) => {
     const types: Record<string, string> = {
@@ -149,6 +189,27 @@ export function SimpleAssetsLiabilities() {
 
   return (
     <div className="space-y-6">
+      {/* Month Selector */}
+      <div className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <button
+          onClick={handlePrevMonth}
+          className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-dark-blue flex items-center gap-1"
+        >
+          <ChevronLeft className="w-5 h-5" />
+          <span className="text-sm">Previous</span>
+        </button>
+        <h3 className="text-lg font-bold text-dark-blue text-center">
+          {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][selectedMonth - 1]} {selectedYear}
+        </h3>
+        <button
+          onClick={handleNextMonth}
+          className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-dark-blue flex items-center gap-1"
+        >
+          <span className="text-sm">Next</span>
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4" style={{ backgroundColor: '#F1F5EE' }}>
@@ -231,9 +292,9 @@ export function SimpleAssetsLiabilities() {
         {assets.length === 0 ? (
           <Card className="p-8 text-center">
             <p className="text-gray">No assets added yet</p>
-            <Button 
-              onClick={() => setShowAssetForm(true)} 
-              variant="outline" 
+            <Button
+              onClick={() => setShowAssetForm(true)}
+              variant="outline"
               className="mt-4"
             >
               Add Your First Asset
@@ -241,41 +302,44 @@ export function SimpleAssetsLiabilities() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {assets.map((asset: SimpleAsset) => (
-              <Card key={asset._id} className="p-4" style={{ backgroundColor: '#F1F5EE' }}>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h3 className="font-semibold" style={{ color: '#384C5A' }}>{asset.name}</h3>
-                    <p className="text-sm" style={{ color: '#B6B2B5' }}>{getAssetTypeLabel(asset.type)}</p>
-                    <p className="text-lg font-bold mt-2" style={{ color: '#384C5A' }}>
-                      {formatCurrency(asset.currentValue)}
-                    </p>
-                    {asset.purchaseValue && (
-                      <p className="text-sm" style={{ color: '#B6B2B5' }}>
-                        Purchase: {formatCurrency(asset.purchaseValue)}
+            {assets.map((asset: SimpleAsset) => {
+              const displayValue = getItemValue(asset._id, 'asset', asset.currentValue)
+              return (
+                <Card key={asset._id} className="p-4" style={{ backgroundColor: '#F1F5EE' }}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-semibold" style={{ color: '#384C5A' }}>{asset.name}</h3>
+                      <p className="text-sm" style={{ color: '#B6B2B5' }}>{getAssetTypeLabel(asset.type)}</p>
+                      <p className="text-lg font-bold mt-2" style={{ color: '#384C5A' }}>
+                        {formatCurrency(displayValue)}
                       </p>
-                    )}
+                      {asset.purchaseValue && (
+                        <p className="text-sm" style={{ color: '#B6B2B5' }}>
+                          Purchase: {formatCurrency(asset.purchaseValue)}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setEditingAsset(asset)}
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDeleteAsset(asset._id)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setEditingAsset(asset)}
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleDeleteAsset(asset._id)}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              )
+            })}
           </div>
         )}
       </div>
@@ -293,9 +357,9 @@ export function SimpleAssetsLiabilities() {
         {liabilities.length === 0 ? (
           <Card className="p-8 text-center">
             <p className="text-gray">No liabilities added yet</p>
-            <Button 
-              onClick={() => setShowLiabilityForm(true)} 
-              variant="outline" 
+            <Button
+              onClick={() => setShowLiabilityForm(true)}
+              variant="outline"
               className="mt-4"
             >
               Add Your First Liability
@@ -303,46 +367,49 @@ export function SimpleAssetsLiabilities() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {liabilities.map((liability: SimpleLiability) => (
-              <Card key={liability._id} className="p-4" style={{ backgroundColor: '#F1F5EE' }}>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h3 className="font-semibold" style={{ color: '#384C5A' }}>{liability.name}</h3>
-                    <p className="text-sm" style={{ color: '#B6B2B5' }}>{getLiabilityTypeLabel(liability.type)}</p>
-                    <p className="text-lg font-bold mt-2" style={{ color: '#A78573' }}>
-                      {formatCurrency(liability.currentBalance)}
-                    </p>
-                    {liability.monthlyPayment && (
-                      <p className="text-sm" style={{ color: '#B6B2B5' }}>
-                        Monthly Payment: {formatCurrency(liability.monthlyPayment)}
+            {liabilities.map((liability: SimpleLiability) => {
+              const displayValue = getItemValue(liability._id, 'liability', liability.currentBalance)
+              return (
+                <Card key={liability._id} className="p-4" style={{ backgroundColor: '#F1F5EE' }}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-semibold" style={{ color: '#384C5A' }}>{liability.name}</h3>
+                      <p className="text-sm" style={{ color: '#B6B2B5' }}>{getLiabilityTypeLabel(liability.type)}</p>
+                      <p className="text-lg font-bold mt-2" style={{ color: '#A78573' }}>
+                        {formatCurrency(displayValue)}
                       </p>
-                    )}
-                    {liability.interestRate && (
-                      <p className="text-sm" style={{ color: '#B6B2B5' }}>
-                        Interest Rate: {liability.interestRate}%
-                      </p>
-                    )}
+                      {liability.monthlyPayment && (
+                        <p className="text-sm" style={{ color: '#B6B2B5' }}>
+                          Monthly Payment: {formatCurrency(liability.monthlyPayment)}
+                        </p>
+                      )}
+                      {liability.interestRate && (
+                        <p className="text-sm" style={{ color: '#B6B2B5' }}>
+                          Interest Rate: {liability.interestRate}%
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setEditingLiability(liability)}
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDeleteLiability(liability._id)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setEditingLiability(liability)}
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleDeleteLiability(liability._id)}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              )
+            })}
           </div>
         )}
       </div>
