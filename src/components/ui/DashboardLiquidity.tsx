@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { formatCurrency } from '@/lib/utils'
-import { ChevronLeft, ChevronRight, TrendingUp, TrendingDown } from 'lucide-react'
+import { ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Target } from 'lucide-react'
 import type { Id } from '../../../convex/_generated/dataModel'
 
 interface DashboardLiquidityProps {
@@ -14,35 +14,32 @@ interface DashboardLiquidityProps {
 }
 
 export function DashboardLiquidity({ workspaceId, year, month, onYearChange, onMonthChange }: DashboardLiquidityProps) {
-    // Get budget data
-    const budgetIncome = useQuery(
-        api.budget.getBudgetIncome,
-        workspaceId ? { workspaceId, year, month } : 'skip'
-    )
-    const outgoings = useQuery(api.budget.listBudgetOutgoings, workspaceId ? { workspaceId } : 'skip')
+    // Format month as YYYY-MM for the API
+    const monthStr = `${year}-${month.toString().padStart(2, '0')}`
 
-    const monthlyOverrides = useQuery(
-        (api as any).budget.getMonthlyOverrides,
-        workspaceId ? { workspaceId, year, month } : 'skip'
+    // Get liquidity data
+    const monthlyBalances = useQuery(
+        api.simpleFinance.getMonthlyBalances,
+        workspaceId ? { workspaceId, month: monthStr } : 'skip'
+    )
+
+    const goalData = useQuery(
+        api.simpleFinance.getEquityGoalProgress,
+        workspaceId ? { workspaceId } : 'skip'
     )
 
     // Calculate totals
-    const [totalOutgoings, setTotalOutgoings] = useState(0)
+    const { currentLiquidity, targetEquity, progress } = useMemo(() => {
+        const liquidity = (monthlyBalances || []).reduce((sum: number, balance: any) => sum + balance.balance, 0)
+        const target = goalData?.targetEquity || 0
+        const prog = target > 0 ? (liquidity / target) * 100 : 0
 
-    useEffect(() => {
-        if (outgoings) {
-            const overridesMap = new Map(monthlyOverrides?.map((m: any) => [m.outgoingId, m.amount]) || [])
-            let total = 0
-            outgoings.forEach((o: any) => {
-                total += overridesMap.has(o._id) ? overridesMap.get(o._id)! : o.amount
-            })
-            setTotalOutgoings(total)
+        return {
+            currentLiquidity: liquidity,
+            targetEquity: target,
+            progress: prog
         }
-    }, [outgoings, monthlyOverrides])
-
-    const income = budgetIncome?.amount || 0
-    const surplus = income - totalOutgoings
-    const isHealthy = surplus >= 0
+    }, [monthlyBalances, goalData])
 
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
@@ -89,28 +86,33 @@ export function DashboardLiquidity({ workspaceId, year, month, onYearChange, onM
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div className="flex flex-col items-center text-center space-y-4">
                     <div>
-                        <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Projected Liquidity</div>
-                        <div className={`text-4xl font-bold flex items-center justify-center gap-2 ${isHealthy ? 'text-dark-blue' : 'text-custom-brown'}`}>
-                            {isHealthy ? <TrendingUp className="w-8 h-8 text-green-500" /> : <TrendingDown className="w-8 h-8" />}
-                            {formatCurrency(surplus)}
+                        <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Total Liquidity</div>
+                        <div className="text-4xl font-bold text-dark-blue">
+                            {formatCurrency(currentLiquidity)}
                         </div>
                         <div className="text-sm text-gray-500 mt-2 font-medium">
-                            {isHealthy ? 'Surplus (Green)' : 'Deficit (Red)'}
+                            {monthlyBalances?.length || 0} Accounts Tracked
                         </div>
                     </div>
 
-                    <div className="w-full h-px bg-gray-100 my-2"></div>
-
-                    <div className="grid grid-cols-2 gap-8 w-full">
-                        <div>
-                            <div className="text-xs text-gray-500 uppercase font-semibold mb-1">Income</div>
-                            <div className="text-xl font-bold text-dark-blue">{formatCurrency(income)}</div>
+                    {targetEquity > 0 && (
+                        <div className="w-full space-y-2">
+                            <div className="w-full h-px bg-gray-100 my-2"></div>
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-gray-500">Goal Progress</span>
+                                <span className="font-bold text-dark-blue">{progress.toFixed(1)}%</span>
+                            </div>
+                            <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                                <div
+                                    className="h-full bg-dark-blue rounded-full transition-all duration-500"
+                                    style={{ width: `${Math.min(progress, 100)}%` }}
+                                ></div>
+                            </div>
+                            <div className="text-xs text-gray-400 text-right">
+                                Target: {formatCurrency(targetEquity)}
+                            </div>
                         </div>
-                        <div>
-                            <div className="text-xs text-gray-500 uppercase font-semibold mb-1">Outgoings</div>
-                            <div className="text-xl font-bold text-dark-blue">{formatCurrency(totalOutgoings)}</div>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>
