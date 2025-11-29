@@ -58,9 +58,10 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
   }
 
   const handleSaveTask = async (taskData: any) => {
-    if (!workspaceId) return
+    if (!workspaceId || !userId) return
     await createTask({
       workspaceId,
+      userId,
       title: taskData.title,
       description: taskData.description,
       status: 'todo',
@@ -72,15 +73,13 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
   }
 
   const handleSaveIdea = async (ideaData: any) => {
-    if (!workspaceId) return
+    if (!workspaceId || !userId) return
     await createIdea({
       workspaceId,
+      userId,
       title: ideaData.title,
       description: ideaData.description,
-      richDescription: ideaData.richDescription,
-      category: ideaData.category || 'other',
-      tags: ideaData.tags,
-      priority: ideaData.priority || 'medium',
+      status: 'new',
     })
     setShowIdeaModal(false)
   }
@@ -149,17 +148,17 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
           {/* Financial Overview */}
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
             <h3 className="text-base font-semibold text-dark-blue mb-4">Financial Overview</h3>
-            <FinancialOverviewWidget workspaceId={workspaceId} />
+            <FinancialOverviewWidget />
           </div>
 
           {/* Invoices */}
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            <InvoicesDashboardWidget workspaceId={workspaceId} />
+            {workspaceId && <InvoicesDashboardWidget workspaceId={workspaceId} />}
           </div>
 
           {/* Draft Invoices */}
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            <DraftInvoicesDashboardWidget workspaceId={workspaceId} />
+            {workspaceId && <DraftInvoicesDashboardWidget workspaceId={workspaceId} />}
           </div>
         </div>
       </div>
