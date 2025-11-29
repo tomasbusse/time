@@ -187,34 +187,31 @@ export default function ProductivityApp() {
 
     const handleSaveIdea = async (ideaData: any) => {
         console.log('handleSaveIdea called', { ideaModalType, workspaceId, userId, ideaData });
-        try {
-            if (ideaModalType === 'create' && workspaceId && userId) {
-                console.log('Creating new idea...');
-                // createIdea mutation only accepts: workspaceId, userId, title, description, status
-                await createIdea({
-                    workspaceId: workspaceId as any,
-                    userId: userId as any,
-                    title: ideaData.title,
-                    description: ideaData.description || '',
-                    status: 'new',
-                });
-                console.log('Idea created successfully');
-                setIdeaModalType(null);
-            } else if (ideaModalType === 'edit' && selectedIdeaId) {
-                console.log('Updating existing idea...');
-                // updateIdea accepts all the rich fields
-                await updateIdea({
-                    ideaId: selectedIdeaId as any,
-                    ...ideaData,
-                });
-                console.log('Idea updated successfully');
-                setIdeaModalType(null);
-                setSelectedIdeaId(null);
-            } else {
-                console.log('Condition not met for save:', { ideaModalType, workspaceId, userId, selectedIdeaId });
-            }
-        } catch (error) {
-            console.error('Error saving idea:', error);
+        if (ideaModalType === 'create' && workspaceId && userId) {
+            console.log('Creating new idea...');
+            // createIdea mutation only accepts: workspaceId, userId, title, description, status
+            await createIdea({
+                workspaceId: workspaceId as any,
+                userId: userId as any,
+                title: ideaData.title,
+                description: ideaData.description || '',
+                status: 'new',
+            });
+            console.log('Idea created successfully');
+            setIdeaModalType(null);
+        } else if (ideaModalType === 'edit' && selectedIdeaId) {
+            console.log('Updating existing idea...');
+            // updateIdea accepts all the rich fields
+            await updateIdea({
+                ideaId: selectedIdeaId as any,
+                ...ideaData,
+            });
+            console.log('Idea updated successfully');
+            setIdeaModalType(null);
+            setSelectedIdeaId(null);
+        } else {
+            console.log('Condition not met for save:', { ideaModalType, workspaceId, userId, selectedIdeaId });
+            throw new Error('Cannot save: missing required data');
         }
     };
 
