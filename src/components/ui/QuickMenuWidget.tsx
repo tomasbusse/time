@@ -1,4 +1,4 @@
-import { Plus, Clock, Calendar, Folder, FileText, Users } from 'lucide-react'
+import { Plus, Clock, Calendar, Folder } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 interface QuickMenuItemProps {
@@ -10,19 +10,21 @@ interface QuickMenuItemProps {
 
 function QuickMenuItem({ icon: Icon, label, to, color = "text-custom-brown" }: QuickMenuItemProps) {
     return (
-        <Link to={to} className="flex flex-col items-center gap-2 group">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm transition-all group-hover:shadow-md group-hover:border-custom-brown/30 group-active:scale-95">
-                <Icon className={`w-8 h-8 sm:w-10 sm:h-10 ${color}`} />
+        <Link to={to} className="flex flex-col items-center gap-3 group">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-custom-off-white border-2 border-custom-brown flex items-center justify-center shadow-sm transition-all group-hover:shadow-md group-hover:scale-105 group-active:scale-95 relative">
+                {/* Inner circle for styling effect */}
+                <div className="absolute inset-2 rounded-full border border-custom-brown/10"></div>
+                <Icon className={`w-10 h-10 sm:w-12 sm:h-12 ${color}`} />
             </div>
-            <span className="text-sm font-medium text-dark-blue group-hover:text-custom-brown transition-colors">{label}</span>
+            <span className="text-base font-bold text-dark-blue group-hover:text-custom-brown transition-colors">{label}</span>
         </Link>
     )
 }
 
 export function QuickMenuWidget() {
     return (
-        <div className="w-full overflow-x-auto pb-4 pt-2 px-2 -mx-2 scrollbar-hide">
-            <div className="flex justify-between sm:justify-start sm:gap-12 min-w-max px-2">
+        <div className="w-full px-4 py-2">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-8 max-w-sm mx-auto">
                 <QuickMenuItem
                     icon={Plus}
                     label="New Task"
@@ -42,16 +44,6 @@ export function QuickMenuWidget() {
                     icon={Folder}
                     label="Projects"
                     to="/productivity"
-                />
-                <QuickMenuItem
-                    icon={FileText}
-                    label="Invoices"
-                    to="/invoices"
-                />
-                <QuickMenuItem
-                    icon={Users}
-                    label="Customers"
-                    to="/invoices/customers"
                 />
             </div>
         </div>
