@@ -174,10 +174,8 @@ export default function ProductivityApp() {
 
     // Idea handlers
     const handleCreateIdea = () => {
-        console.log('handleCreateIdea clicked!', { currentModalType: ideaModalType });
         setSelectedIdeaId(null);
         setIdeaModalType('create');
-        console.log('Modal type set to create');
     };
 
     const handleEditIdea = (idea: Idea) => {
@@ -186,9 +184,7 @@ export default function ProductivityApp() {
     };
 
     const handleSaveIdea = async (ideaData: any) => {
-        console.log('handleSaveIdea called', { ideaModalType, workspaceId, userId, ideaData });
         if (ideaModalType === 'create' && workspaceId && userId) {
-            console.log('Creating new idea...');
             // createIdea mutation only accepts: workspaceId, userId, title, description, status
             await createIdea({
                 workspaceId: workspaceId as any,
@@ -197,20 +193,16 @@ export default function ProductivityApp() {
                 description: ideaData.description || '',
                 status: 'new',
             });
-            console.log('Idea created successfully');
             setIdeaModalType(null);
         } else if (ideaModalType === 'edit' && selectedIdeaId) {
-            console.log('Updating existing idea...');
             // updateIdea accepts all the rich fields
             await updateIdea({
                 ideaId: selectedIdeaId as any,
                 ...ideaData,
             });
-            console.log('Idea updated successfully');
             setIdeaModalType(null);
             setSelectedIdeaId(null);
         } else {
-            console.log('Condition not met for save:', { ideaModalType, workspaceId, userId, selectedIdeaId });
             throw new Error('Cannot save: missing required data');
         }
     };
