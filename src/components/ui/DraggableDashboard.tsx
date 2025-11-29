@@ -16,6 +16,8 @@ import { BottomNavigation } from '../BottomNavigation'
 import type { Id } from '../../../convex/_generated/dataModel'
 import TaskDetailModal from '../../apps/flow/components/TaskDetailModal'
 import IdeaFormModal from '../../apps/flow/components/IdeaFormModal'
+import { DashboardLiquidity } from './DashboardLiquidity'
+import LiquidityEntryModal from './LiquidityEntryModal'
 
 interface DraggableDashboardProps {
   workspaceId: Id<"workspaces"> | null
@@ -25,11 +27,17 @@ interface DraggableDashboardProps {
 
 export function DraggableDashboard({ workspaceId, userId, userName }: DraggableDashboardProps) {
   // Dashboard view state
-  const [selectedView, setSelectedView] = useState<DashboardView>('default')
+  const [selectedView, setSelectedView] = useState<DashboardView>('tasks')
+
+  // Liquidity Date State
+  const now = new Date()
+  const [liquidityYear, setLiquidityYear] = useState(now.getFullYear())
+  const [liquidityMonth, setLiquidityMonth] = useState(now.getMonth() + 1)
 
   // Modal states
   const [showTaskModal, setShowTaskModal] = useState(false)
   const [showIdeaModal, setShowIdeaModal] = useState(false)
+  const [showLiquidityModal, setShowLiquidityModal] = useState(false)
 
   // Mutations
   const createTask = useMutation(api.flow.createTask)
@@ -49,6 +57,8 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
       setShowTaskModal(true)
     } else if (selectedView === 'ideas') {
       setShowIdeaModal(true)
+    } else if (selectedView === 'liquidity') {
+      setShowLiquidityModal(true)
     } else {
       // Default behavior: open task modal if on default view
       if (selectedView === 'default') {
@@ -127,11 +137,16 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
           </div>
         )}
 
-        {selectedView === 'liquidity' && (
+        {selectedView === 'liquidity' && workspaceId && (
           <div className="px-4 lg:px-0">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Liquidity Overview</h3>
-            {/* Liquidity data will go here */}
-            <p className="text-gray-500">Liquidity overview component coming soon...</p>
+            <DashboardLiquidity
+              workspaceId={workspaceId}
+              year={liquidityYear}
+              month={liquidityMonth}
+              onYearChange={setLiquidityYear}
+              onMonthChange={setLiquidityMonth}
+            />
           </div>
         )}
 
@@ -184,6 +199,16 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
           onSave={handleSaveIdea}
           idea={null}
           mode="create"
+        />
+      )}
+
+      {showLiquidityModal && workspaceId && (
+        <LiquidityEntryModal
+          isOpen={showLiquidityModal}
+          onClose={() => setShowLiquidityModal(false)}
+          workspaceId={workspaceId}
+          year={liquidityYear}
+          month={liquidityMonth}
         />
       )}
     </div>
