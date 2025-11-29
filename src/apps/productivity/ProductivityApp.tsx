@@ -188,16 +188,19 @@ export default function ProductivityApp() {
         try {
             if (ideaModalType === 'create' && workspaceId && userId) {
                 console.log('Creating new idea...');
+                // createIdea mutation only accepts: workspaceId, userId, title, description, status
                 await createIdea({
                     workspaceId: workspaceId as any,
                     userId: userId as any,
-                    ...ideaData,
+                    title: ideaData.title,
+                    description: ideaData.description || '',
                     status: 'new',
                 });
                 console.log('Idea created successfully');
                 setIdeaModalType(null);
             } else if (ideaModalType === 'edit' && selectedIdeaId) {
                 console.log('Updating existing idea...');
+                // updateIdea accepts all the rich fields
                 await updateIdea({
                     ideaId: selectedIdeaId as any,
                     ...ideaData,
