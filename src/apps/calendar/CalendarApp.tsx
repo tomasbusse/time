@@ -280,8 +280,8 @@ export default function CalendarApp() {
       <div className="lg:hidden px-6 pt-2 pb-6">
         <h1 className="text-2xl font-bold text-dark-blue mb-6">Calendar</h1>
 
-        {/* Horizontal Scrollable Quick Actions */}
-        <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+        {/* 2-Column Grid Quick Actions */}
+        <div className="grid grid-cols-2 gap-4">
           <CircleAction
             label="New Event"
             icon={Plus}

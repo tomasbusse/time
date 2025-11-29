@@ -184,21 +184,32 @@ export default function ProductivityApp() {
     };
 
     const handleSaveIdea = async (ideaData: any) => {
-        if (ideaModalType === 'create' && workspaceId && userId) {
-            await createIdea({
-                workspaceId: workspaceId as any,
-                userId: userId as any,
-                ...ideaData,
-                status: 'new',
-            });
-            setIdeaModalType(null);
-        } else if (ideaModalType === 'edit' && selectedIdeaId) {
-            await updateIdea({
-                ideaId: selectedIdeaId as any,
-                ...ideaData,
-            });
-            setIdeaModalType(null);
-            setSelectedIdeaId(null);
+        console.log('handleSaveIdea called', { ideaModalType, workspaceId, userId, ideaData });
+        try {
+            if (ideaModalType === 'create' && workspaceId && userId) {
+                console.log('Creating new idea...');
+                await createIdea({
+                    workspaceId: workspaceId as any,
+                    userId: userId as any,
+                    ...ideaData,
+                    status: 'new',
+                });
+                console.log('Idea created successfully');
+                setIdeaModalType(null);
+            } else if (ideaModalType === 'edit' && selectedIdeaId) {
+                console.log('Updating existing idea...');
+                await updateIdea({
+                    ideaId: selectedIdeaId as any,
+                    ...ideaData,
+                });
+                console.log('Idea updated successfully');
+                setIdeaModalType(null);
+                setSelectedIdeaId(null);
+            } else {
+                console.log('Condition not met for save:', { ideaModalType, workspaceId, userId, selectedIdeaId });
+            }
+        } catch (error) {
+            console.error('Error saving idea:', error);
         }
     };
 
@@ -279,8 +290,8 @@ export default function ProductivityApp() {
             <div className="lg:hidden px-6 pt-2 pb-6">
                 <h1 className="text-2xl font-bold text-dark-blue mb-6">Productivity</h1>
 
-                {/* Horizontal Scrollable Quick Actions */}
-                <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+                {/* 2-Column Grid Quick Actions */}
+                <div className="grid grid-cols-2 gap-4">
                     <CircleAction
                         label="New Task"
                         icon={Plus}
