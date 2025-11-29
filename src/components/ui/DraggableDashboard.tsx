@@ -11,7 +11,6 @@ import { QuickLessonCreate } from './QuickLessonCreate'
 import { QuickMenuWidget } from './QuickMenuWidget'
 import { DailyTasksWidget } from './DailyTasksWidget'
 import { BottomNavigation } from '../BottomNavigation'
-import { Menu, User } from 'lucide-react'
 import type { Id } from '../../../convex/_generated/dataModel'
 
 interface DraggableDashboardProps {
@@ -32,18 +31,7 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
 
   return (
     <div className="min-h-screen bg-custom-off-white pb-24 lg:pb-8">
-      {/* Mobile Header */}
-      <div className="lg:hidden flex items-center justify-between p-6">
-        <button className="p-2 -ml-2 text-dark-blue">
-          <Menu className="w-6 h-6" />
-        </button>
-        <div className="text-2xl font-bold text-dark-blue tracking-wider">
-          {currentTime}
-        </div>
-        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 border border-green-200">
-          <User className="w-5 h-5" />
-        </div>
-      </div>
+      {/* Mobile Header - Removed as it is now in TopBar */}
 
       {/* Desktop Header (Hidden on Mobile) */}
       <div className="hidden lg:flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2 p-6 lg:p-8">

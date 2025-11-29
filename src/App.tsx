@@ -17,6 +17,7 @@ const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY!
 function AppContent() {
   const { userId, isLoading, workspaceId } = useWorkspace();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useUser();
   const authorizedEmails = useQuery(api.auth.listAuthorizedEmails) || [];
 
@@ -40,10 +41,12 @@ function AppContent() {
         <Sidebar
           isCollapsed={isSidebarCollapsed}
           onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+          isMobileOpen={isMobileMenuOpen}
+          onMobileClose={() => setIsMobileMenuOpen(false)}
         />
         {/* Responsive main content area */}
         <div className="flex-1 transition-all duration-300 min-w-0">
-          <TopBar />
+          <TopBar onMenuClick={() => setIsMobileMenuOpen(true)} />
           <main className="p-4 sm:p-6 lg:p-8">
             <AppRoutes />
           </main>

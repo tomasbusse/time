@@ -31,11 +31,12 @@ const navItems: NavItem[] = [
 export interface SidebarProps {
   isCollapsed: boolean
   onToggle: () => void
+  isMobileOpen?: boolean
+  onMobileClose?: () => void
 }
 
-export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
+export function Sidebar({ isCollapsed, onToggle, isMobileOpen = false, onMobileClose = () => { } }: SidebarProps) {
   const location = useLocation()
-  const [isMobileOpen, setIsMobileOpen] = useState(false)
 
   const isActive = (path: string) => {
     if (path === '/') {
@@ -46,13 +47,13 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
   // Close mobile menu on route change
   useEffect(() => {
-    setIsMobileOpen(false)
+    onMobileClose()
   }, [location.pathname])
 
   // Close mobile menu on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsMobileOpen(false)
+      if (e.key === 'Escape') onMobileClose()
     }
     document.addEventListener('keydown', handleEscape)
     return () => document.removeEventListener('keydown', handleEscape)
@@ -60,8 +61,8 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
   return (
     <>
-      {/* Mobile Menu Button */}
-      <button
+      {/* Mobile Menu Button - Removed in favor of Dashboard header button */}
+      {/* <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
         className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg hover:bg-white transition-colors"
         aria-label="Toggle menu"
@@ -71,7 +72,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         ) : (
           <Menu className="w-6 h-6 text-dark-blue" />
         )}
-      </button>
+      </button> */}
 
       {/* Mobile Overlay - Full Screen Solid Color */}
       <div
@@ -82,7 +83,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
           {/* Close Button (Absolute Top Left) */}
           <button
-            onClick={() => setIsMobileOpen(false)}
+            onClick={onMobileClose}
             className="absolute top-6 left-6 p-2 text-dark-blue hover:bg-black/5 rounded-full transition-colors"
           >
             <X className="w-8 h-8" />
@@ -108,7 +109,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                 <Link
                   key={item.path}
                   to={item.path}
-                  onClick={() => setIsMobileOpen(false)}
+                  onClick={onMobileClose}
                   className={`flex items-center gap-4 px-4 py-4 rounded-xl text-xl font-medium transition-all duration-200 border-b border-dark-blue/10 ${active
                     ? 'text-dark-blue bg-black/5'
                     : 'text-dark-blue hover:bg-black/5'
@@ -125,7 +126,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           <div className="mt-auto pt-6">
             <Link
               to="/settings"
-              onClick={() => setIsMobileOpen(false)}
+              onClick={onMobileClose}
               className="flex items-center gap-4 px-4 py-4 rounded-xl text-xl font-medium text-dark-blue hover:bg-black/5 transition-all duration-200"
             >
               <Settings className="w-6 h-6 text-dark-blue/70" />
