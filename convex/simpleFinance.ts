@@ -905,6 +905,41 @@ export const cleanupOrphanedBalances = mutation({
   },
 });
 
+// Diagnostic query to see what's happening
+export const debugBalances = query({
+  args: {
+    workspaceId: v.id("workspaces"),
+    month: v.string()
+  },
+  handler: async (ctx, args) => {
+    try {
+      const balances = await ctx.db
+        .query("simpleAssetMonthlyBalances")
+        .withIndex("by_workspace_month", (q) =>
+          q.eq("workspaceId", args.workspaceId).eq("month", args.month)
+        )
+        .collect();
+
+      return {
+        count: balances.length,
+        records: balances.map(b => ({
+          id: b._id,
+          assetId: b.assetId,
+          month: b.month,
+          hasBalance: b.balance !== undefined,
+          hasCreatedAt: b.createdAt !== undefined,
+        }))
+      };
+    } catch (error: any) {
+      return {
+        error: error.message || String(error),
+        count: 0,
+        records: []
+      };
+    }
+  },
+});
+
 export const cleanupBalancesByMonth = mutation({
   args: {
     workspaceId: v.id("workspaces"),
