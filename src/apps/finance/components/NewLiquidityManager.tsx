@@ -158,7 +158,7 @@ export default function NewLiquidityManager() {
   const cleanupBalancesByMonth = useMutation(api.simpleFinance.cleanupBalancesByMonth);
   const debugBalances = useQuery(
     api.simpleFinance.debugBalances,
-    workspaceId && activeMonth ? { workspaceId, month: activeMonth } : "skip"
+    workspaceId && selectedMonth ? { workspaceId, month: selectedMonth } : "skip"
   );
 
   const handleDebug = () => {
