@@ -23,23 +23,47 @@ export function DashboardLiquidity({ workspaceId, year, month, onYearChange, onM
         workspaceId ? { workspaceId, month: monthStr } : 'skip'
     )
 
+    // Get all assets to determine type (asset vs liability)
+    const allAssets = useQuery(
+        api.simpleFinance.listSimpleAssets,
+        workspaceId ? { workspaceId } : 'skip'
+    )
+
     const goalData = useQuery(
         api.simpleFinance.getEquityGoalProgress,
         workspaceId ? { workspaceId } : 'skip'
     )
 
     // Calculate totals
-    const { currentLiquidity, targetEquity, progress } = useMemo(() => {
-        const liquidity = (monthlyBalances || []).reduce((sum: number, balance: any) => sum + balance.balance, 0)
+    const { currentLiquidity, totalAssets, totalLiabilities, targetEquity, progress } = useMemo(() => {
+        let assetTotal = 0
+        let liabilityTotal = 0
+
+        if (monthlyBalances && allAssets) {
+            monthlyBalances.forEach((balance: any) => {
+                const asset = allAssets.find((a: any) => a._id === balance.assetId)
+                if (asset) {
+                    if (asset.type === 'bank_account_liability') {
+                        liabilityTotal += Math.abs(balance.balance)
+                    } else {
+                        assetTotal += balance.balance
+                    }
+                }
+            })
+        }
+
+        const netWorth = assetTotal - liabilityTotal
         const target = goalData?.targetEquity || 0
-        const prog = target > 0 ? (liquidity / target) * 100 : 0
+        const prog = target > 0 ? (netWorth / target) * 100 : 0
 
         return {
-            currentLiquidity: liquidity,
+            currentLiquidity: netWorth,
+            totalAssets: assetTotal,
+            totalLiabilities: liabilityTotal,
             targetEquity: target,
             progress: prog
         }
-    }, [monthlyBalances, goalData])
+    }, [monthlyBalances, allAssets, goalData])
 
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
@@ -85,18 +109,37 @@ export function DashboardLiquidity({ workspaceId, year, month, onYearChange, onM
             {/* Liquidity Summary Card */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div className="flex flex-col items-center text-center space-y-4">
-                    <div>
-                        <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Total Liquidity</div>
-                        <div className="text-2xl font-bold text-dark-blue break-words">
+                    {/* Net Worth - Prominent & Top */}
+                    <div className="w-full">
+                        <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Net Worth</div>
+                        <div className={`text-2xl font-bold break-words ${currentLiquidity >= 0 ? 'text-dark-blue' : 'text-custom-brown'}`}>
                             {formatCurrency(currentLiquidity)}
                         </div>
-                        <div className="text-sm text-gray-500 mt-2 font-medium">
-                            {monthlyBalances?.length || 0} Accounts Tracked
+                    </div>
+
+                    <div className="w-full h-px bg-gray-100"></div>
+
+                    {/* Assets & Liabilities - Stacked */}
+                    <div className="w-full flex flex-col gap-3">
+                        <div className="text-center">
+                            <div className="text-xs text-gray-500 uppercase font-semibold mb-1">Assets</div>
+                            <div className="text-base font-bold text-dark-blue break-words">
+                                {formatCurrency(totalAssets)}
+                            </div>
+                        </div>
+
+                        <div className="w-full h-px bg-gray-50"></div>
+
+                        <div className="text-center">
+                            <div className="text-xs text-gray-500 uppercase font-semibold mb-1">Liabilities</div>
+                            <div className="text-base font-bold text-custom-brown break-words">
+                                {formatCurrency(totalLiabilities)}
+                            </div>
                         </div>
                     </div>
 
                     {targetEquity > 0 && (
-                        <div className="w-full space-y-2">
+                        <div className="w-full space-y-2 pt-2">
                             <div className="w-full h-px bg-gray-100 my-2"></div>
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-gray-500">Goal Progress</span>
