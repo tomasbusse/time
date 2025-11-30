@@ -64,6 +64,17 @@ export const updateSimpleAsset = mutation({
 export const deleteSimpleAsset = mutation({
   args: { id: v.id("simpleAssets") },
   handler: async (ctx, args) => {
+    // First, delete all monthly balance records associated with this asset
+    const balances = await ctx.db
+      .query("simpleAssetMonthlyBalances")
+      .withIndex("by_asset", (q: any) => q.eq("assetId", args.id))
+      .collect();
+
+    for (const balance of balances) {
+      await ctx.db.delete(balance._id);
+    }
+
+    // Then delete the asset itself
     await ctx.db.delete(args.id);
     return args.id;
   },
