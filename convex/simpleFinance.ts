@@ -860,6 +860,14 @@ export const getLiquidityHistory = query({
   },
 });
 
+export const deleteMonthlyBalance = mutation({
+  args: { id: v.id("simpleAssetMonthlyBalances") },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.id);
+    return args.id;
+  },
+});
+
 export const resetLiquidityHistory = mutation({
   args: {},
   handler: async (ctx) => {

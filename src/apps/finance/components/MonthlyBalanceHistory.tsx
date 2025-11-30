@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useWorkspace } from "../../../lib/WorkspaceContext";
 import { Id } from "../../../../convex/_generated/dataModel";
+import { Trash2 } from "lucide-react";
 
 interface MonthlyBalanceHistoryProps {
   month: string; // YYYY-MM
@@ -19,6 +20,7 @@ export function MonthlyBalanceHistory({ month, onSelectMonth }: MonthlyBalanceHi
     workspaceId ? { workspaceId } : "skip"
   );
   const resetLiquidityHistoryMutation = useMutation(api.simpleFinance.resetLiquidityHistory);
+  const deleteMonthlyBalance = useMutation(api.simpleFinance.deleteMonthlyBalance);
 
   const assetMap = new Map(assets?.map((asset) => [asset._id, asset.name]));
 
@@ -26,6 +28,12 @@ export function MonthlyBalanceHistory({ month, onSelectMonth }: MonthlyBalanceHi
     const newDate = new Date(month + "-01");
     newDate.setMonth(newDate.getMonth() + offset);
     onSelectMonth(newDate.toISOString().slice(0, 7));
+  };
+
+  const handleDeleteBalance = async (balanceId: Id<"simpleAssetMonthlyBalances">) => {
+    if (confirm("Are you sure you want to delete this balance record?")) {
+      await deleteMonthlyBalance({ id: balanceId });
+    }
   };
 
   return (
@@ -57,7 +65,15 @@ export function MonthlyBalanceHistory({ month, onSelectMonth }: MonthlyBalanceHi
                 }).format(balance.balance)}
               </td>
               <td>{balance.notes}</td>
-              <td></td>
+              <td className="text-right">
+                <button
+                  onClick={() => handleDeleteBalance(balance._id)}
+                  className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"
+                  title="Delete this balance record"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
