@@ -7,9 +7,10 @@ interface ListItemProps {
     rightIcon?: LucideIcon
     onClick?: () => void
     statusColor?: string // e.g., 'bg-green-500', 'border-gray-300'
+    actions?: React.ReactNode
 }
 
-export function ListItem({ title, subtitle, icon: Icon, rightIcon: RightIcon, onClick, statusColor = 'border-gray-300' }: ListItemProps) {
+export function ListItem({ title, subtitle, icon: Icon, rightIcon: RightIcon, onClick, statusColor = 'border-gray-300', actions }: ListItemProps) {
     return (
         <div
             onClick={onClick}
@@ -31,6 +32,7 @@ export function ListItem({ title, subtitle, icon: Icon, rightIcon: RightIcon, on
 
             {/* Right Side Icons */}
             <div className="flex items-center gap-2 text-gray-400">
+                {actions}
                 {Icon && <Icon className="w-5 h-5" />}
                 {RightIcon && <RightIcon className="w-5 h-5" />}
             </div>

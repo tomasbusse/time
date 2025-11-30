@@ -1,14 +1,16 @@
 import { useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { ListItem } from './ListItem'
-import { CheckCircle2, Circle } from 'lucide-react'
+import { CheckCircle2, Circle, Edit2, Trash2 } from 'lucide-react'
 import type { Id } from '../../../convex/_generated/dataModel'
 
 interface DashboardTasksListProps {
     workspaceId: Id<"workspaces">
+    onEdit?: (task: any) => void
+    onDelete?: (taskId: string) => void
 }
 
-export function DashboardTasksList({ workspaceId }: DashboardTasksListProps) {
+export function DashboardTasksList({ workspaceId, onEdit, onDelete }: DashboardTasksListProps) {
     const tasks = useQuery(api.flow.listTasks, { workspaceId })
 
     if (!tasks) {
@@ -34,6 +36,29 @@ export function DashboardTasksList({ workspaceId }: DashboardTasksListProps) {
                     icon={task.status === 'completed' ? CheckCircle2 : Circle}
                     title={task.title}
                     subtitle={task.description || undefined}
+                    onClick={() => onEdit?.(task)}
+                    actions={
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onEdit?.(task)
+                                }}
+                                className="p-1.5 text-gray-400 hover:text-dark-blue hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                                <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onDelete?.(task._id)
+                                }}
+                                className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                        </div>
+                    }
                 />
             ))}
             {tasks.length > 10 && (

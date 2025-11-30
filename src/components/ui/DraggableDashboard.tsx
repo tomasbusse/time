@@ -48,7 +48,17 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
 
   // Mutations
   const createTask = useMutation(api.flow.createTask)
+  const updateTask = useMutation(api.flow.updateTask)
+  const deleteTask = useMutation(api.flow.deleteTask)
   const createIdea = useMutation(api.flow.createIdea)
+  const updateIdea = useMutation(api.flow.updateIdea)
+  const deleteIdea = useMutation(api.flow.deleteIdea)
+
+  // Modal Data State
+  const [selectedTask, setSelectedTask] = useState<any>(null)
+  const [selectedIdea, setSelectedIdea] = useState<any>(null)
+  const [taskModalMode, setTaskModalMode] = useState<'create' | 'edit'>('create')
+  const [ideaModalMode, setIdeaModalMode] = useState<'create' | 'edit'>('create')
 
   // We can keep the tab state for desktop if we want, but for mobile we are focusing on the new design
   const [activeTab, setActiveTab] = useState<'overview' | 'invoices'>('overview')
@@ -61,8 +71,12 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
 
   const handleFabClick = () => {
     if (selectedView === 'tasks') {
+      setSelectedTask(null)
+      setTaskModalMode('create')
       setShowTaskModal(true)
     } else if (selectedView === 'ideas') {
+      setSelectedIdea(null)
+      setIdeaModalMode('create')
       setShowIdeaModal(true)
     } else if (selectedView === 'liquidity') {
       setShowLiquidityModal(true)
@@ -71,36 +85,80 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
     } else {
       // Default behavior: open task modal if on default view
       if (selectedView === 'default') {
+        setSelectedTask(null)
+        setTaskModalMode('create')
         setShowTaskModal(true)
       }
     }
   }
 
+  const handleEditTask = (task: any) => {
+    setSelectedTask(task)
+    setTaskModalMode('edit')
+    setShowTaskModal(true)
+  }
+
+  const handleDeleteTask = async (taskId: string) => {
+    if (confirm('Are you sure you want to delete this task?')) {
+      await deleteTask({ taskId: taskId as Id<"tasks"> })
+    }
+  }
+
+  const handleEditIdea = (idea: any) => {
+    setSelectedIdea(idea)
+    setIdeaModalMode('edit')
+    setShowIdeaModal(true)
+  }
+
+  const handleDeleteIdea = async (ideaId: string) => {
+    if (confirm('Are you sure you want to delete this idea?')) {
+      await deleteIdea({ ideaId: ideaId as Id<"ideas"> })
+    }
+  }
+
   const handleSaveTask = async (taskData: any) => {
     if (!workspaceId || !userId) return
-    await createTask({
-      workspaceId,
-      userId,
-      title: taskData.title,
-      description: taskData.description,
-      status: 'todo',
-      priority: taskData.priority || 'medium',
-      dueDate: taskData.dueDate,
-      tags: taskData.tags,
-    })
+
+    if (taskModalMode === 'edit' && selectedTask) {
+      await updateTask({
+        taskId: selectedTask._id,
+        ...taskData
+      })
+    } else {
+      await createTask({
+        workspaceId,
+        userId,
+        title: taskData.title,
+        description: taskData.description,
+        status: 'todo',
+        priority: taskData.priority || 'medium',
+        dueDate: taskData.dueDate,
+        tags: taskData.tags,
+      })
+    }
     setShowTaskModal(false)
+    setSelectedTask(null)
   }
 
   const handleSaveIdea = async (ideaData: any) => {
     if (!workspaceId || !userId) return
-    await createIdea({
-      workspaceId,
-      userId,
-      title: ideaData.title,
-      description: ideaData.description,
-      status: 'new',
-    })
+
+    if (ideaModalMode === 'edit' && selectedIdea) {
+      await updateIdea({
+        ideaId: selectedIdea._id,
+        ...ideaData
+      })
+    } else {
+      await createIdea({
+        workspaceId,
+        userId,
+        title: ideaData.title,
+        description: ideaData.description,
+        status: 'new',
+      })
+    }
     setShowIdeaModal(false)
+    setSelectedIdea(null)
   }
 
   return (
@@ -134,14 +192,22 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
         {selectedView === 'tasks' && workspaceId && (
           <div className="px-4">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Your Tasks</h3>
-            <DashboardTasksList workspaceId={workspaceId} />
+            <DashboardTasksList
+              workspaceId={workspaceId}
+              onEdit={handleEditTask}
+              onDelete={handleDeleteTask}
+            />
           </div>
         )}
 
         {selectedView === 'ideas' && workspaceId && (
           <div className="px-4">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Your Ideas</h3>
-            <DashboardIdeasList workspaceId={workspaceId} />
+            <DashboardIdeasList
+              workspaceId={workspaceId}
+              onEdit={handleEditIdea}
+              onDelete={handleDeleteIdea}
+            />
           </div>
         )}
 
@@ -183,12 +249,20 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
 
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Your Tasks</h3>
-            <DashboardTasksList workspaceId={workspaceId!} />
+            <DashboardTasksList
+              workspaceId={workspaceId!}
+              onEdit={handleEditTask}
+              onDelete={handleDeleteTask}
+            />
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Your Ideas</h3>
-            <DashboardIdeasList workspaceId={workspaceId!} />
+            <DashboardIdeasList
+              workspaceId={workspaceId!}
+              onEdit={handleEditIdea}
+              onDelete={handleDeleteIdea}
+            />
           </div>
         </div>
 
@@ -246,10 +320,13 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
         showTaskModal && (
           <TaskDetailModal
             isOpen={showTaskModal}
-            onClose={() => setShowTaskModal(false)}
+            onClose={() => {
+              setShowTaskModal(false)
+              setSelectedTask(null)
+            }}
             onSave={handleSaveTask}
-            task={null}
-            mode="create"
+            task={selectedTask}
+            mode={taskModalMode}
           />
         )
       }
@@ -258,10 +335,13 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
         showIdeaModal && (
           <IdeaFormModal
             isOpen={showIdeaModal}
-            onClose={() => setShowIdeaModal(false)}
+            onClose={() => {
+              setShowIdeaModal(false)
+              setSelectedIdea(null)
+            }}
             onSave={handleSaveIdea}
-            idea={null}
-            mode="create"
+            idea={selectedIdea}
+            mode={ideaModalMode}
           />
         )
       }

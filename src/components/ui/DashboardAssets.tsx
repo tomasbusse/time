@@ -112,15 +112,15 @@ export function DashboardAssets({ workspaceId, year, month, onYearChange, onMont
                     {/* Net Worth - Prominent & Top */}
                     <div className="w-full">
                         <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Net Worth</div>
-                        <div className={`text-3xl sm:text-4xl font-bold break-words ${netWorth >= 0 ? 'text-dark-blue' : 'text-custom-brown'}`}>
+                        <div className={`text-2xl sm:text-3xl font-bold break-words ${netWorth >= 0 ? 'text-dark-blue' : 'text-custom-brown'}`}>
                             {formatCurrency(netWorth)}
                         </div>
                     </div>
 
                     <div className="w-full h-px bg-gray-100"></div>
 
-                    {/* Assets & Liabilities */}
-                    <div className="w-full grid grid-cols-2 gap-4">
+                    {/* Assets & Liabilities - Stacked */}
+                    <div className="w-full flex flex-col gap-4">
                         <div className="text-center">
                             <div className="text-xs text-gray-500 uppercase font-semibold mb-1">Assets</div>
                             <div className="text-lg sm:text-xl font-bold text-dark-blue break-words">
@@ -130,7 +130,10 @@ export function DashboardAssets({ workspaceId, year, month, onYearChange, onMont
                                 {assets?.length || 0} Items
                             </div>
                         </div>
-                        <div className="text-center border-l border-gray-100">
+
+                        <div className="w-full h-px bg-gray-50"></div>
+
+                        <div className="text-center">
                             <div className="text-xs text-gray-500 uppercase font-semibold mb-1">Liabilities</div>
                             <div className="text-lg sm:text-xl font-bold text-custom-brown break-words">
                                 {formatCurrency(totalLiabilities)}

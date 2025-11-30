@@ -1,14 +1,16 @@
 import { useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { ListItem } from './ListItem'
-import { Lightbulb } from 'lucide-react'
+import { Lightbulb, Edit2, Trash2 } from 'lucide-react'
 import type { Id } from '../../../convex/_generated/dataModel'
 
 interface DashboardIdeasListProps {
     workspaceId: Id<"workspaces">
+    onEdit?: (idea: any) => void
+    onDelete?: (ideaId: string) => void
 }
 
-export function DashboardIdeasList({ workspaceId }: DashboardIdeasListProps) {
+export function DashboardIdeasList({ workspaceId, onEdit, onDelete }: DashboardIdeasListProps) {
     const ideas = useQuery(api.flow.listIdeas, { workspaceId })
 
     if (!ideas) {
@@ -32,6 +34,29 @@ export function DashboardIdeasList({ workspaceId }: DashboardIdeasListProps) {
                     icon={Lightbulb}
                     title={idea.title}
                     subtitle={idea.description || undefined}
+                    onClick={() => onEdit?.(idea)}
+                    actions={
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onEdit?.(idea)
+                                }}
+                                className="p-1.5 text-gray-400 hover:text-dark-blue hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                                <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onDelete?.(idea._id)
+                                }}
+                                className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                        </div>
+                    }
                 />
             ))}
             {ideas.length > 10 && (
