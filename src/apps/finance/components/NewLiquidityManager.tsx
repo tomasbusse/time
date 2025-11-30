@@ -156,20 +156,6 @@ export default function NewLiquidityManager() {
   const reorderAssets = useMutation(api.simpleFinance.reorderSimpleAssets);
   const cleanupBalances = useMutation(api.simpleFinance.cleanupOrphanedBalances);
   const emergencyCleanup = useMutation(api.simpleFinance.emergencyCleanup);
-  const debugBalances = useQuery(
-    api.simpleFinance.debugBalances,
-    workspaceId && selectedMonth ? { workspaceId, month: selectedMonth } : "skip"
-  );
-
-  const handleDebug = () => {
-    if (!debugBalances) {
-      alert("Debug info not loaded yet");
-      return;
-    }
-    const info = JSON.stringify(debugBalances, null, 2);
-    console.log("DEBUG BALANCES:", debugBalances);
-    alert(`Debug Info:\n\n${info}`);
-  };
 
   const handleCleanup = async () => {
     if (confirm(`EMERGENCY CLEANUP: This will scan ALL records and delete any for 2025-11. This ignores all safety checks. Continue?`)) {
@@ -285,10 +271,6 @@ export default function NewLiquidityManager() {
           <p className="mt-1" style={{ color: '#B6B2B5' }}>A unified dashboard to track liquid assets, monitor monthly progress, and manage goals.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={handleDebug} className="text-blue-500 border-blue-300 hover:bg-blue-50">
-            <Trash2 className="w-4 h-4 mr-2" />
-            Debug
-          </Button>
           <Button variant="outline" onClick={handleCleanup} className="text-gray-500 border-gray-300 hover:bg-gray-50">
             <Trash2 className="w-4 h-4 mr-2" />
             Cleanup Data

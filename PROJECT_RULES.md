@@ -1,5 +1,4 @@
 # Project Rules
 
-## Deployment
-- **ALWAYS PUSH TO GITHUB**: After every set of changes, code must be pushed to GitHub (`git push`) to trigger the deployment pipeline for `time.simmonds.online`.
-- **Commit Messages**: Use descriptive commit messages explaining the changes.
+1. **GitHub Push**: Always push changes to GitHub immediately after completing a significant step or fix. This triggers the Vercel deployment.
+2. **Convex Deployment**: When modifying the database schema (`convex/schema.ts`), you MUST manually run `npx convex deploy` to apply changes to the backend. The dev server does not always pick up schema changes reliably.
