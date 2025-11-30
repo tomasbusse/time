@@ -61,6 +61,7 @@ export function MonthlyBalanceHistory({ month, onSelectMonth }: MonthlyBalanceHi
               <td className="text-right">
                 {new Intl.NumberFormat("de-DE", {
                   style: "currency",
+                  currency: "EUR",
                 }).format(balance.balance || 0)}
               </td>
               <td>{typeof balance.notes === 'string' ? balance.notes : (balance.notes ? String(balance.notes) : '')}</td>
