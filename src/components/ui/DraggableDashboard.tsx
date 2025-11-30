@@ -115,12 +115,11 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-4 lg:p-8 space-y-8 max-w-md mx-auto lg:max-w-none">
-
+      {/* Mobile Content (Quick Menu & Dynamic View) */}
+      <div className="lg:hidden p-4 space-y-8 max-w-md mx-auto">
         {/* Quick Menu */}
         <div>
-          <h3 className="text-lg font-bold text-dark-blue mb-4 px-4 lg:px-0">Quick Menu</h3>
+          <h3 className="text-lg font-bold text-dark-blue mb-4 px-4">Quick Menu</h3>
           <QuickMenuWidget
             selectedView={selectedView}
             onSelectView={setSelectedView}
@@ -133,21 +132,21 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
         )}
 
         {selectedView === 'tasks' && workspaceId && (
-          <div className="px-4 lg:px-0">
+          <div className="px-4">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Your Tasks</h3>
             <DashboardTasksList workspaceId={workspaceId} />
           </div>
         )}
 
         {selectedView === 'ideas' && workspaceId && (
-          <div className="px-4 lg:px-0">
+          <div className="px-4">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Your Ideas</h3>
             <DashboardIdeasList workspaceId={workspaceId} />
           </div>
         )}
 
         {selectedView === 'liquidity' && workspaceId && (
-          <div className="px-4 lg:px-0">
+          <div className="px-4">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Liquidity Overview</h3>
             <DashboardLiquidity
               workspaceId={workspaceId}
@@ -160,7 +159,7 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
         )}
 
         {selectedView === 'assets' && workspaceId && (
-          <div className="px-4 lg:px-0">
+          <div className="px-4">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Assets Overview</h3>
             <DashboardAssets
               workspaceId={workspaceId}
@@ -171,25 +170,71 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
             />
           </div>
         )}
-        <p className="text-gray-500">Assets overview component coming soon...</p>
       </div>
 
-      {/* Desktop-only Widgets (Hidden on Mobile for now to match screenshot purity, or we can add them below) */}
-      <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-        {/* Financial Overview */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-          <h3 className="text-base font-semibold text-dark-blue mb-4">Financial Overview</h3>
-          <FinancialOverviewWidget />
+      {/* Desktop Content (Full Grid Layout) */}
+      <div className="hidden lg:grid grid-cols-3 gap-6 p-8">
+        {/* Column 1: Productivity */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-bold text-dark-blue mb-4">Daily Focus</h3>
+            <DailyTasksWidget workspaceId={workspaceId!} />
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-bold text-dark-blue mb-4">Your Tasks</h3>
+            <DashboardTasksList workspaceId={workspaceId!} />
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-bold text-dark-blue mb-4">Your Ideas</h3>
+            <DashboardIdeasList workspaceId={workspaceId!} />
+          </div>
         </div>
 
-        {/* Invoices */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-          {workspaceId && <InvoicesDashboardWidget workspaceId={workspaceId} />}
+        {/* Column 2: Finance & Assets */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+            <h3 className="text-base font-semibold text-dark-blue mb-4">Financial Overview</h3>
+            <FinancialOverviewWidget />
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-bold text-dark-blue mb-4">Liquidity Overview</h3>
+            {workspaceId && (
+              <DashboardLiquidity
+                workspaceId={workspaceId}
+                year={liquidityYear}
+                month={liquidityMonth}
+                onYearChange={setLiquidityYear}
+                onMonthChange={setLiquidityMonth}
+              />
+            )}
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-bold text-dark-blue mb-4">Assets Overview</h3>
+            {workspaceId && (
+              <DashboardAssets
+                workspaceId={workspaceId}
+                year={assetsYear}
+                month={assetsMonth}
+                onYearChange={setAssetsYear}
+                onMonthChange={setAssetsMonth}
+              />
+            )}
+          </div>
         </div>
 
-        {/* Draft Invoices */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-          {workspaceId && <DraftInvoicesDashboardWidget workspaceId={workspaceId} />}
+        {/* Column 3: Invoices & Admin */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+            {workspaceId && <InvoicesDashboardWidget workspaceId={workspaceId} />}
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+            {workspaceId && <DraftInvoicesDashboardWidget workspaceId={workspaceId} />}
+          </div>
         </div>
       </div>
 
