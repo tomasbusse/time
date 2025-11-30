@@ -35,9 +35,13 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
     workspaceId ? { workspaceId } : "skip"
   );
 
-  // Filter for bank accounts only and sort by order
+  // Filter for bank accounts and liabilities, sort by order
   const bankAccounts = (assets || [])
     .filter(a => a.type === 'bank_account')
+    .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
+  const liabilities = (assets || [])
+    .filter(a => a.type === 'bank_account_liability')
     .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
   const recordMonthlyBalance = useMutation(api.simpleFinance.recordMonthlyBalance);
@@ -63,8 +67,9 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
   }, [monthlyBalances, activeMonth]);
 
   const handleSave = async () => {
-    if (!bankAccounts || !workspaceId || !userId) return;
-    for (const asset of bankAccounts) {
+    if (!assets || !workspaceId || !userId) return;
+    const allAccounts = [...bankAccounts, ...liabilities];
+    for (const asset of allAccounts) {
       if (balances[asset._id] !== undefined) {
         await recordMonthlyBalance({
           workspaceId,
@@ -129,32 +134,72 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
         </button>
       </div>
 
-      <div className="space-y-2">
-        {bankAccounts.map((asset) => (
-          <div key={asset._id} className="grid grid-cols-2 gap-4 items-center">
-            <label htmlFor={`balance-${asset._id}`} className="font-medium">
-              {asset.name}
-            </label>
-            <input
-              type="number"
-              id={`balance-${asset._id}`}
-              value={
-                (balances && balances[asset._id] !== undefined)
-                  ? balances[asset._id]
-                  : ""
-              }
-              onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                setBalances(prev => ({
-                  ...prev,
-                  [asset._id]: isNaN(value) ? 0 : value
-                }));
-              }}
-              className="p-2 border rounded w-full"
-              placeholder="0.00"
-            />
+      <div className="space-y-4">
+        {bankAccounts.length > 0 && (
+          <div>
+            <h4 className="text-sm font-semibold text-dark-blue mb-2">Assets (Positive Balance)</h4>
+            <div className="space-y-2">
+              {bankAccounts.map((asset) => (
+                <div key={asset._id} className="grid grid-cols-2 gap-4 items-center p-2 rounded" style={{ backgroundColor: '#F1F5EE' }}>
+                  <label htmlFor={`balance-${asset._id}`} className="font-medium">
+                    {asset.name}
+                  </label>
+                  <input
+                    type="number"
+                    id={`balance-${asset._id}`}
+                    value={
+                      (balances && balances[asset._id] !== undefined)
+                        ? balances[asset._id]
+                        : ""
+                    }
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      setBalances(prev => ({
+                        ...prev,
+                        [asset._id]: isNaN(value) ? 0 : value
+                      }));
+                    }}
+                    className="p-2 border rounded w-full"
+                    placeholder="0.00"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+        )}
+
+        {liabilities.length > 0 && (
+          <div>
+            <h4 className="text-sm font-semibold text-custom-brown mb-2">Liabilities (Negative Balance)</h4>
+            <div className="space-y-2">
+              {liabilities.map((asset) => (
+                <div key={asset._id} className="grid grid-cols-2 gap-4 items-center p-2 rounded" style={{ backgroundColor: '#FFF5F0' }}>
+                  <label htmlFor={`balance-${asset._id}`} className="font-medium">
+                    {asset.name}
+                  </label>
+                  <input
+                    type="number"
+                    id={`balance-${asset._id}`}
+                    value={
+                      (balances && balances[asset._id] !== undefined)
+                        ? balances[asset._id]
+                        : ""
+                    }
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      setBalances(prev => ({
+                        ...prev,
+                        [asset._id]: isNaN(value) ? 0 : Math.abs(value) // Always store as positive, will be negated in calculations
+                      }));
+                    }}
+                    className="p-2 border rounded w-full"
+                    placeholder="0.00"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <button
         onClick={handleSave}

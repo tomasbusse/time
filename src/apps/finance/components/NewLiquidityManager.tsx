@@ -27,6 +27,7 @@ function AssetForm({
 }) {
   const { workspaceId } = useWorkspace();
   const [name, setName] = useState(asset?.name || '');
+  const [accountType, setAccountType] = useState<'asset' | 'liability'>('asset');
   const [error, setError] = useState('');
 
   const createAsset = useMutation(api.simpleFinance.createSimpleAsset);
@@ -49,7 +50,7 @@ function AssetForm({
         await createAsset({
           workspaceId: workspaceId as any,
           name,
-          type: 'bank_account',
+          type: accountType === 'liability' ? 'bank_account_liability' : 'bank_account',
           currentValue: 0, // Initial value is always 0
         });
       }
@@ -64,7 +65,7 @@ function AssetForm({
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
         <div className="p-6 border-b">
           <h2 className="text-xl font-semibold">
-            {asset ? 'Edit Bank Account' : 'Add Bank Account'}
+            {asset ? 'Edit Account' : 'Add Account'}
           </h2>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -73,11 +74,42 @@ function AssetForm({
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Main Checking"
+              placeholder="e.g., Main Checking, Car Loan"
             />
           </div>
+
+          {!asset && (
+            <div>
+              <label className="block text-sm font-medium mb-3">Account Type</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setAccountType('asset')}
+                  className={`p-4 rounded-lg border-2 transition-all ${accountType === 'asset'
+                    ? 'border-dark-blue bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                >
+                  <div className="font-semibold text-dark-blue">Asset</div>
+                  <div className="text-xs text-gray-500 mt-1">Positive balance (e.g., Bank Account)</div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAccountType('liability')}
+                  className={`p-4 rounded-lg border-2 transition-all ${accountType === 'liability'
+                    ? 'border-custom-brown bg-orange-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                >
+                  <div className="font-semibold text-custom-brown">Liability</div>
+                  <div className="text-xs text-gray-500 mt-1">Negative balance (e.g., Loan, Debt)</div>
+                </button>
+              </div>
+            </div>
+          )}
+
           {error && <p className="text-sm text-red-500">{error}</p>}
-          <div className="p-6 border-t flex gap-3">
+          <div className="pt-4 border-t flex gap-3">
             <Button type="button" variant="secondary" onClick={onClose}>
               Cancel
             </Button>
@@ -144,15 +176,27 @@ export default function NewLiquidityManager() {
   };
 
   // Memoize calculations to prevent re-renders
-  const { bankAccounts, allAccounts, currentLiquidity, targetEquity, missingAmount, progress } = React.useMemo(() => {
+  const { bankAccounts, liabilityAccounts, allAccounts, currentLiquidity, targetEquity, missingAmount, progress } = React.useMemo(() => {
     const allAccounts = simpleAssets || [];
-    // Filter to ONLY show bank accounts (exclude property, vehicles, etc.) and sort by order
+    // Filter and separate assets and liabilities, sort by order
     const filteredBankAccounts = allAccounts
       .filter(asset => asset.type === 'bank_account')
       .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
-    // Calculate current liquidity based on the selected month's balances only
-    const monthlyLiquidity = (monthlyBalances || []).reduce((sum, balance) => sum + balance.balance, 0);
+    const filteredLiabilities = allAccounts
+      .filter(asset => asset.type === 'bank_account_liability')
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
+    // Calculate current liquidity based on the selected month's balances
+    // For liabilities, the balance should be negative
+    const monthlyLiquidity = (monthlyBalances || []).reduce((sum, balance) => {
+      const asset = allAccounts.find(a => a._id === balance.assetId);
+      // If it's a liability, treat the balance as negative
+      if (asset?.type === 'bank_account_liability') {
+        return sum - Math.abs(balance.balance);
+      }
+      return sum + balance.balance;
+    }, 0);
 
     // Use the month-specific liquidity for all calculations
     const equityTarget = goalData?.targetEquity || 0;
@@ -161,11 +205,12 @@ export default function NewLiquidityManager() {
 
     return {
       bankAccounts: filteredBankAccounts,
+      liabilityAccounts: filteredLiabilities,
       allAccounts: allAccounts,
-      currentLiquidity: monthlyLiquidity, // Sum of balances for the selected month only
+      currentLiquidity: monthlyLiquidity,
       targetEquity: equityTarget,
-      missingAmount: missing, // How much missing for the selected month
-      progress: progressPercent, // Progress based on selected month vs goal
+      missingAmount: missing,
+      progress: progressPercent,
     };
   }, [simpleAssets, goalData, monthlyBalances]);
 
@@ -213,7 +258,7 @@ export default function NewLiquidityManager() {
         </div>
         <Button onClick={() => { setEditingAsset(undefined); setShowAssetForm(true); }}>
           <Plus className="w-4 h-4 mr-2" />
-          Add Bank Account
+          Add Account
         </Button>
       </div>
 
@@ -225,7 +270,7 @@ export default function NewLiquidityManager() {
               <div className="text-center md:text-left">
                 <div className="text-sm" style={{ color: '#A78573' }}>Current Liquidity</div>
                 <div className="text-4xl font-bold" style={{ color: '#384C5A' }}>{formatCurrency(currentLiquidity)}</div>
-                <div className="text-xs mt-1" style={{ color: '#B6B2B5' }}>{bankAccounts.length} bank accounts</div>
+                <div className="text-xs mt-1" style={{ color: '#B6B2B5' }}>{bankAccounts.length + liabilityAccounts.length} accounts</div>
               </div>
               <div className="text-center">
                 <div className="text-sm" style={{ color: '#A78573' }}>Target Goal</div>
@@ -289,51 +334,102 @@ export default function NewLiquidityManager() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Bank Accounts</CardTitle>
+            <CardTitle>Accounts</CardTitle>
           </CardHeader>
           <CardContent>
-            {bankAccounts.length > 0 ? (
-              <div className="space-y-3">
-                {bankAccounts.map((account, index) => (
-                  <div key={account._id} className="flex justify-between items-center p-3 rounded-lg" style={{ backgroundColor: '#F1F5EE' }}>
-                    <div className="flex items-center gap-3">
-                      <div className="flex flex-col gap-1">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleMoveUp(index)}
-                          disabled={index === 0}
-                          className="p-1 h-6"
-                        >
-                          <ChevronUp className="w-3 h-3" />
+            {bankAccounts.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-dark-blue mb-3">Assets (Positive Balance)</h3>
+                <div className="space-y-3">
+                  {bankAccounts.map((account, index) => (
+                    <div key={account._id} className="flex justify-between items-center p-3 rounded-lg" style={{ backgroundColor: '#F1F5EE' }}>
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleMoveUp(index)}
+                            disabled={index === 0}
+                            className="p-1 h-6"
+                          >
+                            <ChevronUp className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleMoveDown(index)}
+                            disabled={index === bankAccounts.length - 1}
+                            className="p-1 h-6"
+                          >
+                            <ChevronDown className="w-3 h-3" />
+                          </Button>
+                        </div>
+                        <div>
+                          <div className="font-medium" style={{ color: '#384C5A' }}>{account.name}</div>
+                          <div className="text-sm" style={{ color: '#B6B2B5' }}>Asset</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button size="sm" variant="outline" onClick={() => { setEditingAsset(account); setShowAssetForm(true); }}>
+                          <Edit2 className="w-4 h-4" />
                         </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleMoveDown(index)}
-                          disabled={index === bankAccounts.length - 1}
-                          className="p-1 h-6"
-                        >
-                          <ChevronDown className="w-3 h-3" />
+                        <Button size="sm" variant="outline" className="text-red-500 hover:bg-off-white hover:text-red-600" onClick={async () => { if (window.confirm(`Are you sure you want to delete "${account.name}"?`)) { await deleteAsset({ id: account._id as any }); } }}>
+                          <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
-                      <div>
-                        <div className="font-medium" style={{ color: '#384C5A' }}>{account.name}</div>
-                        <div className="text-sm" style={{ color: '#B6B2B5' }}>{account.type.replace('_', ' ')}</div>
-                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Button size="sm" variant="outline" onClick={() => { setEditingAsset(account); setShowAssetForm(true); }}>
-                        <Edit2 className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="outline" className="text-red-500 hover:bg-off-white hover:text-red-600" onClick={async () => { if (window.confirm(`Are you sure you want to delete "${account.name}"?`)) { await deleteAsset({ id: account._id as any }); } }}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            ) : (
+            )}
+
+            {liabilityAccounts.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold text-custom-brown mb-3">Liabilities (Negative Balance)</h3>
+                <div className="space-y-3">
+                  {liabilityAccounts.map((account, index) => (
+                    <div key={account._id} className="flex justify-between items-center p-3 rounded-lg" style={{ backgroundColor: '#FFF5F0' }}>
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleMoveUp(index)}
+                            disabled={index === 0}
+                            className="p-1 h-6"
+                          >
+                            <ChevronUp className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleMoveDown(index)}
+                            disabled={index === liabilityAccounts.length - 1}
+                            className="p-1 h-6"
+                          >
+                            <ChevronDown className="w-3 h-3" />
+                          </Button>
+                        </div>
+                        <div>
+                          <div className="font-medium" style={{ color: '#A78573' }}>{account.name}</div>
+                          <div className="text-sm" style={{ color: '#B6B2B5' }}>Liability</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button size="sm" variant="outline" onClick={() => { setEditingAsset(account); setShowAssetForm(true); }}>
+                          <Edit2 className="w-4 h-4" />
+                        </Button>
+                        <Button size="sm" variant="outline" className="text-red-500 hover:bg-off-white hover:text-red-600" onClick={async () => { if (window.confirm(`Are you sure you want to delete "${account.name}"?`)) { await deleteAsset({ id: account._id as any }); } }}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {bankAccounts.length === 0 && liabilityAccounts.length === 0 && (
               <div className="text-center py-8 text-gray">
                 <p>No accounts yet.</p>
               </div>
