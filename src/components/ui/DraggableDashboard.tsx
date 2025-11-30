@@ -240,13 +240,8 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
 
       {/* Desktop Content (Full Grid Layout) */}
       <div className="hidden lg:grid grid-cols-3 gap-6 p-8">
-        {/* Column 1: Productivity */}
+        {/* Column 1: Productivity (Tasks & Ideas) */}
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-bold text-dark-blue mb-4">Daily Focus</h3>
-            <DailyTasksWidget workspaceId={workspaceId!} />
-          </div>
-
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Your Tasks</h3>
             <DashboardTasksList
@@ -266,13 +261,8 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
           </div>
         </div>
 
-        {/* Column 2: Finance & Assets */}
+        {/* Column 2: Finance Status (Liquidity & Assets) */}
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            <h3 className="text-base font-semibold text-dark-blue mb-4">Financial Overview</h3>
-            <FinancialOverviewWidget />
-          </div>
-
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <h3 className="text-lg font-bold text-dark-blue mb-4">Liquidity Overview</h3>
             {workspaceId && (
