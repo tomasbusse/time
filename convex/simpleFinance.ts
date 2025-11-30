@@ -911,39 +911,37 @@ export const cleanupBalancesByMonth = mutation({
     month: v.string()
   },
   handler: async (ctx, args) => {
-    // Get all balances for this workspace and month
-    const balances = await ctx.db
-      .query("simpleAssetMonthlyBalances")
-      .withIndex("by_workspace_month", (q) =>
-        q.eq("workspaceId", args.workspaceId).eq("month", args.month)
-      )
-      .collect();
+    try {
+      // Get all balances for this workspace and month
+      const balances = await ctx.db
+        .query("simpleAssetMonthlyBalances")
+        .withIndex("by_workspace_month", (q) =>
+          q.eq("workspaceId", args.workspaceId).eq("month", args.month)
+        )
+        .collect();
 
-    let deletedCount = 0;
-    let errors = 0;
+      let deletedCount = 0;
 
-    for (const balance of balances) {
-      // Check if the asset exists
-      const asset = await ctx.db.get(balance.assetId);
-
-      // If asset is null, it's orphaned
-      if (!asset) {
-        try {
-          await ctx.db.delete(balance._id);
-          deletedCount++;
-        } catch (e) {
-          console.error(`Failed to delete balance ${balance._id}:`, e);
-          errors++;
-        }
+      // Simply delete each balance record
+      for (const balance of balances) {
+        await ctx.db.delete(balance._id);
+        deletedCount++;
       }
-    }
 
-    return {
-      success: true,
-      deletedCount,
-      errors,
-      message: `Cleaned up ${deletedCount} orphaned records for ${args.month}.${errors > 0 ? ` (${errors} errors)` : ''}`
-    };
+      return {
+        success: true,
+        deletedCount,
+        errors: 0,
+        message: `Deleted ${deletedCount} balance records for ${args.month}.`
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        deletedCount: 0,
+        errors: 1,
+        message: `Error: ${error.message || String(error)}`
+      };
+    }
   },
 });
 
