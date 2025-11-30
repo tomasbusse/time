@@ -848,7 +848,7 @@ export const getLiquidityHistory = query({
 
     const history: Record<string, number> = {};
     for (const balance of balances) {
-      history[balance.month] = (history[balance.month] || 0) + balance.balance;
+      history[balance.month] = (history[balance.month] || 0) + (balance.balance || 0);
     }
 
     return Object.entries(history)
