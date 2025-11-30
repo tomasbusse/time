@@ -595,9 +595,9 @@ export default defineSchema({
     workspaceId: v.id("workspaces"),
     assetId: v.id("simpleAssets"),
     month: v.string(),
-    balance: v.number(),
+    balance: v.optional(v.number()),
     notes: v.optional(v.any()),
-    createdAt: v.number(),
+    createdAt: v.optional(v.number()),
     createdBy: v.optional(v.id("users")),
   })
     .index("by_workspace_asset", ["workspaceId", "assetId"])
