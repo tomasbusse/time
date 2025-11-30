@@ -154,6 +154,15 @@ export default function NewLiquidityManager() {
   const upsertGoal = useMutation(api.simpleFinance.upsertEquityGoal)
   const deleteAsset = useMutation(api.simpleFinance.deleteSimpleAsset);
   const reorderAssets = useMutation(api.simpleFinance.reorderSimpleAssets);
+  const cleanupBalances = useMutation(api.simpleFinance.cleanupOrphanedBalances);
+
+  const handleCleanup = async () => {
+    if (!workspaceId) return;
+    if (confirm("This will remove all balance records for accounts that no longer exist. Continue?")) {
+      const result = await cleanupBalances({ workspaceId });
+      alert(result.message);
+    }
+  };
 
   const handleMoveUp = async (index: number) => {
     if (index === 0 || !workspaceId) return;
@@ -256,10 +265,16 @@ export default function NewLiquidityManager() {
           <h2 className="text-3xl font-bold" style={{ color: '#384C5A' }}>Liquidity Manager</h2>
           <p className="mt-1" style={{ color: '#B6B2B5' }}>A unified dashboard to track liquid assets, monitor monthly progress, and manage goals.</p>
         </div>
-        <Button onClick={() => { setEditingAsset(undefined); setShowAssetForm(true); }}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Account
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleCleanup} className="text-gray-500 border-gray-300 hover:bg-gray-50">
+            <Trash2 className="w-4 h-4 mr-2" />
+            Cleanup Data
+          </Button>
+          <Button onClick={() => { setEditingAsset(undefined); setShowAssetForm(true); }}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Account
+          </Button>
+        </div>
       </div>
 
       {/* Goal Summary */}
