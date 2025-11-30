@@ -63,7 +63,7 @@ export function MonthlyBalanceHistory({ month, onSelectMonth }: MonthlyBalanceHi
                   style: "currency",
                 }).format(balance.balance || 0)}
               </td>
-              <td>{balance.notes}</td>
+              <td>{typeof balance.notes === 'string' ? balance.notes : (balance.notes ? String(balance.notes) : '')}</td>
               <td className="text-right">
                 <button
                   onClick={() => handleDeleteBalance(balance._id)}
