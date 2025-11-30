@@ -594,7 +594,7 @@ export default defineSchema({
   simpleAssetMonthlyBalances: defineTable({
     workspaceId: v.any(),
     assetId: v.any(),
-    month: v.string(),
+    month: v.any(),
     balance: v.optional(v.number()),
     notes: v.optional(v.any()),
     createdAt: v.optional(v.number()),
