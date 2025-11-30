@@ -208,11 +208,12 @@ export default function NewLiquidityManager() {
     // For liabilities, the balance should be negative
     const monthlyLiquidity = (monthlyBalances || []).reduce((sum, balance) => {
       const asset = allAccounts.find(a => a._id === balance.assetId);
+      const balanceValue = balance.balance || 0;
       // If it's a liability, treat the balance as negative
       if (asset?.type === 'bank_account_liability') {
-        return sum - Math.abs(balance.balance);
+        return sum - Math.abs(balanceValue);
       }
-      return sum + balance.balance;
+      return sum + balanceValue;
     }, 0);
 
     // Use the month-specific liquidity for all calculations

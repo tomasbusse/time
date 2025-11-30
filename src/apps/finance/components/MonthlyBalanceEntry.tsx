@@ -58,7 +58,7 @@ export function MonthlyBalanceEntry({ month, onMonthChange }: MonthlyBalanceEntr
     const newNotes: Record<string, string> = {};
 
     for (const mb of monthlyBalances) {
-      newBalances[mb.assetId] = mb.balance;
+      newBalances[mb.assetId] = mb.balance || 0;
       newNotes[mb.assetId] = mb.notes || "";
     }
 
