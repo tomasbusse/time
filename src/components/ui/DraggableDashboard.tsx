@@ -196,6 +196,11 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
               workspaceId={workspaceId}
               onEdit={handleEditTask}
               onDelete={handleDeleteTask}
+              onCreate={() => {
+                setSelectedTask(null)
+                setTaskModalMode('create')
+                setShowTaskModal(true)
+              }}
             />
           </div>
         )}
@@ -207,6 +212,11 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
               workspaceId={workspaceId}
               onEdit={handleEditIdea}
               onDelete={handleDeleteIdea}
+              onCreate={() => {
+                setSelectedIdea(null)
+                setIdeaModalMode('create')
+                setShowIdeaModal(true)
+              }}
             />
           </div>
         )}
@@ -248,6 +258,11 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
               workspaceId={workspaceId!}
               onEdit={handleEditTask}
               onDelete={handleDeleteTask}
+              onCreate={() => {
+                setSelectedTask(null)
+                setTaskModalMode('create')
+                setShowTaskModal(true)
+              }}
             />
           </div>
 
@@ -257,6 +272,11 @@ export function DraggableDashboard({ workspaceId, userId, userName }: DraggableD
               workspaceId={workspaceId!}
               onEdit={handleEditIdea}
               onDelete={handleDeleteIdea}
+              onCreate={() => {
+                setSelectedIdea(null)
+                setIdeaModalMode('create')
+                setShowIdeaModal(true)
+              }}
             />
           </div>
         </div>

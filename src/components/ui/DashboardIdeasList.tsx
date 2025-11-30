@@ -1,16 +1,17 @@
 import { useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { ListItem } from './ListItem'
-import { Lightbulb, Edit2, Trash2 } from 'lucide-react'
+import { Lightbulb, Edit2, Trash2, Plus } from 'lucide-react'
 import type { Id } from '../../../convex/_generated/dataModel'
 
 interface DashboardIdeasListProps {
     workspaceId: Id<"workspaces">
     onEdit?: (idea: any) => void
     onDelete?: (ideaId: string) => void
+    onCreate?: () => void
 }
 
-export function DashboardIdeasList({ workspaceId, onEdit, onDelete }: DashboardIdeasListProps) {
+export function DashboardIdeasList({ workspaceId, onEdit, onDelete, onCreate }: DashboardIdeasListProps) {
     const ideas = useQuery(api.flow.listIdeas, { workspaceId })
 
     if (!ideas) {
@@ -63,6 +64,16 @@ export function DashboardIdeasList({ workspaceId, onEdit, onDelete }: DashboardI
                 <p className="text-sm text-gray-400 text-center pt-4">
                     Showing 10 of {ideas.length} ideas
                 </p>
+            )}
+
+            {onCreate && (
+                <button
+                    onClick={onCreate}
+                    className="w-full mt-3 py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-dark-blue hover:text-dark-blue transition-colors flex items-center justify-center gap-2 font-medium"
+                >
+                    <Plus className="w-4 h-4" />
+                    Add Idea
+                </button>
             )}
         </div>
     )

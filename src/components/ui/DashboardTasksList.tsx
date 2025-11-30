@@ -1,16 +1,17 @@
 import { useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { ListItem } from './ListItem'
-import { CheckCircle2, Circle, Edit2, Trash2 } from 'lucide-react'
+import { CheckCircle2, Circle, Edit2, Trash2, Plus } from 'lucide-react'
 import type { Id } from '../../../convex/_generated/dataModel'
 
 interface DashboardTasksListProps {
     workspaceId: Id<"workspaces">
     onEdit?: (task: any) => void
     onDelete?: (taskId: string) => void
+    onCreate?: () => void
 }
 
-export function DashboardTasksList({ workspaceId, onEdit, onDelete }: DashboardTasksListProps) {
+export function DashboardTasksList({ workspaceId, onEdit, onDelete, onCreate }: DashboardTasksListProps) {
     const tasks = useQuery(api.flow.listTasks, { workspaceId })
 
     if (!tasks) {
@@ -65,6 +66,16 @@ export function DashboardTasksList({ workspaceId, onEdit, onDelete }: DashboardT
                 <p className="text-sm text-gray-400 text-center pt-4">
                     Showing 10 of {tasks.length} tasks
                 </p>
+            )}
+
+            {onCreate && (
+                <button
+                    onClick={onCreate}
+                    className="w-full mt-3 py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-dark-blue hover:text-dark-blue transition-colors flex items-center justify-center gap-2 font-medium"
+                >
+                    <Plus className="w-4 h-4" />
+                    Add Task
+                </button>
             )}
         </div>
     )
