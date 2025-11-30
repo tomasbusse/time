@@ -598,7 +598,7 @@ export default defineSchema({
     balance: v.number(),
     notes: v.optional(v.string()),
     createdAt: v.number(),
-    createdBy: v.id("users"),
+    createdBy: v.optional(v.id("users")),
   })
     .index("by_workspace_asset", ["workspaceId", "assetId"])
     .index("by_workspace_month", ["workspaceId", "month"]),
