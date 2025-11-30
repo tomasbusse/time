@@ -155,7 +155,7 @@ export default function NewLiquidityManager() {
   const deleteAsset = useMutation(api.simpleFinance.deleteSimpleAsset);
   const reorderAssets = useMutation(api.simpleFinance.reorderSimpleAssets);
   const cleanupBalances = useMutation(api.simpleFinance.cleanupOrphanedBalances);
-  const cleanupBalancesByMonth = useMutation(api.simpleFinance.cleanupBalancesByMonth);
+  const emergencyCleanup = useMutation(api.simpleFinance.emergencyCleanup);
   const debugBalances = useQuery(
     api.simpleFinance.debugBalances,
     workspaceId && selectedMonth ? { workspaceId, month: selectedMonth } : "skip"
@@ -172,13 +172,9 @@ export default function NewLiquidityManager() {
   };
 
   const handleCleanup = async () => {
-    if (!workspaceId) return;
-    const month = prompt("Enter the month to cleanup (YYYY-MM):", "2025-11");
-    if (!month) return;
-
-    if (confirm(`This will remove orphaned balance records for ${month}. Continue?`)) {
+    if (confirm(`EMERGENCY CLEANUP: This will scan ALL records and delete any for 2025-11. This ignores all safety checks. Continue?`)) {
       try {
-        const result = await cleanupBalancesByMonth({ workspaceId, month });
+        const result = await emergencyCleanup();
         alert(result.message);
       } catch (e: any) {
         alert(`Error: ${e.message}`);

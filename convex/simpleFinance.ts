@@ -940,41 +940,44 @@ export const debugBalances = query({
   },
 });
 
-export const cleanupBalancesByMonth = mutation({
-  args: {
-    workspaceId: v.id("workspaces"),
-    month: v.string()
-  },
-  handler: async (ctx, args) => {
+// Emergency cleanup that scans everything
+export const emergencyCleanup = mutation({
+  args: {},
+  handler: async (ctx) => {
     try {
-      // Get all balances for this workspace and month
-      const balances = await ctx.db
-        .query("simpleAssetMonthlyBalances")
-        .withIndex("by_workspace_month", (q) =>
-          q.eq("workspaceId", args.workspaceId).eq("month", args.month)
-        )
-        .collect();
+      // Full scan of the table - no indexes, no filters
+      const balances = await ctx.db.query("simpleAssetMonthlyBalances").collect();
 
       let deletedCount = 0;
+      let errors = 0;
 
-      // Simply delete each balance record
       for (const balance of balances) {
-        await ctx.db.delete(balance._id);
-        deletedCount++;
+        // Manually check if this is the record we want to delete
+        // We check for the specific month that's causing issues
+        if (balance.month === "2025-11") {
+          try {
+            await ctx.db.delete(balance._id);
+            deletedCount++;
+          } catch (e) {
+            console.error(`Failed to delete ${balance._id}:`, e);
+            errors++;
+          }
+        }
       }
 
       return {
         success: true,
         deletedCount,
-        errors: 0,
-        message: `Deleted ${deletedCount} balance records for ${args.month}.`
+        errors,
+        totalScanned: balances.length,
+        message: `Scanned ${balances.length} records. Deleted ${deletedCount} records for 2025-11.`
       };
     } catch (error: any) {
       return {
         success: false,
         deletedCount: 0,
         errors: 1,
-        message: `Error: ${error.message || String(error)}`
+        message: `Critical Error: ${error.message || String(error)}`
       };
     }
   },
