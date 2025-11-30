@@ -108,11 +108,11 @@ export function DashboardAssets({ workspaceId, year, month, onYearChange, onMont
 
             {/* Assets Summary Card */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <div className="flex flex-col items-center text-center space-y-6">
+                <div className="flex flex-col items-center text-center space-y-4">
                     {/* Net Worth - Prominent & Top */}
                     <div className="w-full">
                         <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Net Worth</div>
-                        <div className={`text-2xl sm:text-3xl font-bold break-words ${netWorth >= 0 ? 'text-dark-blue' : 'text-custom-brown'}`}>
+                        <div className={`text-2xl font-bold break-words ${netWorth >= 0 ? 'text-dark-blue' : 'text-custom-brown'}`}>
                             {formatCurrency(netWorth)}
                         </div>
                     </div>
@@ -120,13 +120,13 @@ export function DashboardAssets({ workspaceId, year, month, onYearChange, onMont
                     <div className="w-full h-px bg-gray-100"></div>
 
                     {/* Assets & Liabilities - Stacked */}
-                    <div className="w-full flex flex-col gap-4">
+                    <div className="w-full flex flex-col gap-3">
                         <div className="text-center">
                             <div className="text-xs text-gray-500 uppercase font-semibold mb-1">Assets</div>
-                            <div className="text-lg sm:text-xl font-bold text-dark-blue break-words">
+                            <div className="text-base font-bold text-dark-blue break-words">
                                 {formatCurrency(totalAssets)}
                             </div>
-                            <div className="text-[10px] text-gray-400 mt-1">
+                            <div className="text-xs text-gray-400 mt-1">
                                 {assets?.length || 0} Items
                             </div>
                         </div>
@@ -135,10 +135,10 @@ export function DashboardAssets({ workspaceId, year, month, onYearChange, onMont
 
                         <div className="text-center">
                             <div className="text-xs text-gray-500 uppercase font-semibold mb-1">Liabilities</div>
-                            <div className="text-lg sm:text-xl font-bold text-custom-brown break-words">
+                            <div className="text-base font-bold text-custom-brown break-words">
                                 {formatCurrency(totalLiabilities)}
                             </div>
-                            <div className="text-[10px] text-gray-400 mt-1">
+                            <div className="text-xs text-gray-400 mt-1">
                                 {liabilities?.length || 0} Items
                             </div>
                         </div>
