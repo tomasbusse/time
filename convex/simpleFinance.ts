@@ -905,6 +905,48 @@ export const cleanupOrphanedBalances = mutation({
   },
 });
 
+export const cleanupBalancesByMonth = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+    month: v.string()
+  },
+  handler: async (ctx, args) => {
+    // Get all balances for this workspace and month
+    const balances = await ctx.db
+      .query("simpleAssetMonthlyBalances")
+      .withIndex("by_workspace_month", (q) =>
+        q.eq("workspaceId", args.workspaceId).eq("month", args.month)
+      )
+      .collect();
+
+    let deletedCount = 0;
+    let errors = 0;
+
+    for (const balance of balances) {
+      // Check if the asset exists
+      const asset = await ctx.db.get(balance.assetId);
+
+      // If asset is null, it's orphaned
+      if (!asset) {
+        try {
+          await ctx.db.delete(balance._id);
+          deletedCount++;
+        } catch (e) {
+          console.error(`Failed to delete balance ${balance._id}:`, e);
+          errors++;
+        }
+      }
+    }
+
+    return {
+      success: true,
+      deletedCount,
+      errors,
+      message: `Cleaned up ${deletedCount} orphaned records for ${args.month}.${errors > 0 ? ` (${errors} errors)` : ''}`
+    };
+  },
+});
+
 export const resetLiquidityHistory = mutation({
   args: {},
   handler: async (ctx) => {

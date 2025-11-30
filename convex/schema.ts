@@ -596,7 +596,7 @@ export default defineSchema({
     assetId: v.id("simpleAssets"),
     month: v.string(),
     balance: v.number(),
-    notes: v.optional(v.string()),
+    notes: v.optional(v.any()),
     createdAt: v.number(),
     createdBy: v.optional(v.id("users")),
   })
