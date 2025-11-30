@@ -64,10 +64,16 @@ export const updateSimpleAsset = mutation({
 export const deleteSimpleAsset = mutation({
   args: { id: v.id("simpleAssets") },
   handler: async (ctx, args) => {
-    // First, delete all monthly balance records associated with this asset
+    // First, get the asset to retrieve its workspaceId
+    const assetToDelete = await ctx.db.get(args.id);
+    if (!assetToDelete) throw new Error("Asset not found");
+
+    // Then, delete all monthly balance records associated with this asset
     const balances = await ctx.db
       .query("simpleAssetMonthlyBalances")
-      .withIndex("by_asset", (q: any) => q.eq("assetId", args.id))
+      .withIndex("by_workspace_asset", (q) =>
+        q.eq("workspaceId", assetToDelete.workspaceId).eq("assetId", args.id)
+      )
       .collect();
 
     for (const balance of balances) {
