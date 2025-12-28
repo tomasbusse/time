@@ -76,7 +76,7 @@ export const inviteUser = mutation({
         await ctx.scheduler.runAfter(0, internal.sharing.sendInvitationEmailInternal, {
             invitationId,
             workspaceName: "Your Workspace", // TODO: Get workspace name
-            invitedByName: inviter.name,
+            invitedByName: inviter.name || "A user",
         });
 
         return invitationId;

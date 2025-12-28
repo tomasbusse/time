@@ -3,14 +3,21 @@ import { v } from "convex/values";
 
 export default defineSchema({
   users: defineTable({
-    email: v.string(),
-    name: v.string(),
-    isAdmin: v.boolean(),
+    email: v.optional(v.string()),
+    name: v.optional(v.string()),
+    isAdmin: v.optional(v.boolean()),
     role: v.optional(v.string()),
     emailVerified: v.optional(v.number()),
     image: v.optional(v.string()),
-    createdAt: v.number(),
-  }).index("by_email", ["email"]),
+    createdAt: v.optional(v.number()),
+    // Convex Auth standard fields
+    phone: v.optional(v.string()),
+    phoneVerificationTime: v.optional(v.number()),
+    emailVerificationTime: v.optional(v.number()),
+    isAnonymous: v.optional(v.boolean()),
+  })
+    .index("by_email", ["email"])
+    .index("phone", ["phone"]),
 
   // Convex Auth tables
   authSessions: defineTable({

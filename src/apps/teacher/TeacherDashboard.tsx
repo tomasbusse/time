@@ -49,7 +49,7 @@ export default function TeacherDashboard() {
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                                {getGreeting()}, {currentUser.name.split(' ')[0]}!
+                                {getGreeting()}, {currentUser.name?.split(' ')[0] || 'there'}!
                             </h1>
                             <p className="text-gray-500 text-lg">
                                 You have <span className="font-bold text-blue-600">{todaysLessons.length} lessons</span> scheduled for today.
@@ -143,7 +143,7 @@ export default function TeacherDashboard() {
                                                                     email: customer?.email,
                                                                 },
                                                                 {
-                                                                    name: currentUser.name,
+                                                                    name: currentUser.name || 'Teacher',
                                                                     email: currentUser.email,
                                                                 }
                                                             );
