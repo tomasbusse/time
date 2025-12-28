@@ -22,9 +22,44 @@ export default defineSchema({
     userId: v.id("users"),
     provider: v.string(),
     providerAccountId: v.string(),
+    secret: v.optional(v.string()), // For password hash
+    emailVerified: v.optional(v.string()),
+    phoneVerified: v.optional(v.string()),
   })
     .index("userIdAndProvider", ["userId", "provider"])
     .index("providerAndAccountId", ["provider", "providerAccountId"]),
+
+  authRefreshTokens: defineTable({
+    sessionId: v.id("authSessions"),
+    expirationTime: v.number(),
+    firstUsedTime: v.optional(v.number()),
+    parentRefreshTokenId: v.optional(v.id("authRefreshTokens")),
+  })
+    .index("sessionId", ["sessionId"])
+    .index("sessionIdAndParentRefreshTokenId", ["sessionId", "parentRefreshTokenId"]),
+
+  authVerificationCodes: defineTable({
+    accountId: v.id("authAccounts"),
+    provider: v.string(),
+    code: v.string(),
+    expirationTime: v.number(),
+    verifier: v.optional(v.string()),
+    emailVerified: v.optional(v.string()),
+    phoneVerified: v.optional(v.string()),
+  })
+    .index("accountId", ["accountId"])
+    .index("code", ["code"]),
+
+  authVerifiers: defineTable({
+    sessionId: v.optional(v.id("authSessions")),
+    signature: v.optional(v.string()),
+  }).index("signature", ["signature"]),
+
+  authRateLimits: defineTable({
+    identifier: v.string(),
+    lastAttemptTime: v.number(),
+    attemptsLeft: v.number(),
+  }).index("identifier", ["identifier"]),
 
   // Whitelist for authorized emails
   authorizedEmails: defineTable({
