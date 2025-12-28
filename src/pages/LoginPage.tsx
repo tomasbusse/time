@@ -9,6 +9,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const { signIn } = useAuthActions();
 
@@ -21,12 +22,12 @@ export default function LoginPage() {
       const formData = new FormData();
       formData.append("email", email);
       formData.append("password", password);
-      formData.append("flow", "signIn");
+      formData.append("flow", isSignUp ? "signUp" : "signIn");
 
       await signIn("password", formData);
     } catch (err: any) {
       console.error("Error with email/password auth:", err);
-      setError(err.message || "Failed to sign in. Please check your credentials.");
+      setError(err.message || (isSignUp ? "Failed to create account." : "Failed to sign in. Please check your credentials."));
       setIsLoggingIn(false);
     }
   };
@@ -49,10 +50,10 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-dark-blue mb-2">
-            Welcome Back
+            {isSignUp ? "Create Account" : "Welcome Back"}
           </CardTitle>
           <p className="text-gray">
-            Sign in to access your workspace
+            {isSignUp ? "Sign up to get started" : "Sign in to access your workspace"}
           </p>
         </CardHeader>
         <CardContent>
@@ -98,9 +99,20 @@ export default function LoginPage() {
                 disabled={isLoggingIn}
                 className="w-full"
               >
-                {isLoggingIn ? "Signing in..." : "Sign In"}
+                {isLoggingIn ? (isSignUp ? "Creating account..." : "Signing in...") : (isSignUp ? "Create Account" : "Sign In")}
               </Button>
             </form>
+
+            {/* Toggle Sign In / Sign Up */}
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => { setIsSignUp(!isSignUp); setError(null); }}
+                className="text-sm text-blue-600 hover:text-blue-800 underline"
+              >
+                {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+              </button>
+            </div>
 
             {/* Divider */}
             <div className="relative">
