@@ -4,10 +4,9 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card } from '@/components/ui/Card'
-import { useUser } from '@clerk/clerk-react'
 
 export default function AllowedUsersSettings() {
-    const { user } = useUser()
+    const currentUser = useQuery(api.users.getCurrentUser)
     const authorizedEmails = useQuery(api.auth.listAuthorizedEmails) || []
     const addEmail = useMutation(api.auth.addAuthorizedEmail)
     const removeEmail = useMutation(api.auth.removeAuthorizedEmail)
@@ -16,9 +15,9 @@ export default function AllowedUsersSettings() {
     const [notes, setNotes] = useState('')
     const [isAdding, setIsAdding] = useState(false)
 
-    // Check if current user is admin (first authorized email)
-    const userEmail = user?.primaryEmailAddress?.emailAddress?.toLowerCase()
-    const isAdmin = userEmail === 'tomas@englisch-lehrer.com'
+    // Check if current user is admin
+    const userEmail = currentUser?.email?.toLowerCase()
+    const isAdmin = userEmail === 'tomas@englisch-lehrer.com' || currentUser?.isAdmin
 
     if (!isAdmin) {
         return (
