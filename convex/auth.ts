@@ -75,14 +75,13 @@ export const removeAuthorizedEmail = mutation({
     },
 });
 
-// Seed initial admin user with pre-computed password hash
-// Password: belladonna (bcrypt hash below)
-export const seedAdminUser = mutation({
-    args: {},
-    handler: async (ctx) => {
+// Internal mutation to store admin with hashed password (called by Node action)
+export const storeAdminWithHash = internalMutation({
+    args: {
+        hashedPassword: v.string(),
+    },
+    handler: async (ctx, args): Promise<Id<"users">> => {
         const adminEmail = "tomas@englisch-lehrer.com";
-        // Pre-computed bcrypt hash for "belladonna"
-        const hashedPassword = "$2b$10$lag6guF0pvYlWH.gU3JLau3SgIEHfr7T02xzsbOCvP7Y2GRiG/8b6";
 
         // Check if admin already exists
         const existingUser = await ctx.db
@@ -103,6 +102,7 @@ export const seedAdminUser = mutation({
                 role: "admin",
                 createdAt: Date.now(),
             });
+            console.log("Admin user created");
         }
 
         // Add to authorized emails
@@ -120,7 +120,7 @@ export const seedAdminUser = mutation({
             });
         }
 
-        // Create auth account with password
+        // Delete any existing auth account (might have wrong hash)
         const existingAuthAccount = await ctx.db
             .query("authAccounts")
             .withIndex("userIdAndProvider", (q) =>
@@ -128,17 +128,19 @@ export const seedAdminUser = mutation({
             )
             .first();
 
-        if (!existingAuthAccount) {
-            await ctx.db.insert("authAccounts", {
-                userId: userId,
-                provider: "password",
-                providerAccountId: adminEmail,
-                secret: hashedPassword,
-            });
-            console.log("Auth account created with password");
-        } else {
-            console.log("Auth account already exists");
+        if (existingAuthAccount) {
+            await ctx.db.delete(existingAuthAccount._id);
+            console.log("Deleted old auth account");
         }
+
+        // Create new auth account with Scrypt hash
+        await ctx.db.insert("authAccounts", {
+            userId: userId,
+            provider: "password",
+            providerAccountId: adminEmail,
+            secret: args.hashedPassword,
+        });
+        console.log("Auth account created with Scrypt hash");
 
         console.log("Admin user setup complete:", userId);
         return userId;

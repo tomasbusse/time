@@ -36,6 +36,7 @@ import type * as migrations_migrateAccounts from "../migrations/migrateAccounts.
 import type * as migrations_setIsActive from "../migrations/setIsActive.js";
 import type * as migrations_updateUserInvitations from "../migrations/updateUserInvitations.js";
 import type * as products from "../products.js";
+import type * as seedAdmin from "../seedAdmin.js";
 import type * as settings from "../settings.js";
 import type * as setup from "../setup.js";
 import type * as sharing from "../sharing.js";
@@ -88,6 +89,7 @@ declare const fullApi: ApiFromModules<{
   "migrations/setIsActive": typeof migrations_setIsActive;
   "migrations/updateUserInvitations": typeof migrations_updateUserInvitations;
   products: typeof products;
+  seedAdmin: typeof seedAdmin;
   settings: typeof settings;
   setup: typeof setup;
   sharing: typeof sharing;
