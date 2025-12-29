@@ -35,6 +35,8 @@ import type * as lessons from "../lessons.js";
 import type * as migrations_migrateAccounts from "../migrations/migrateAccounts.js";
 import type * as migrations_setIsActive from "../migrations/setIsActive.js";
 import type * as migrations_updateUserInvitations from "../migrations/updateUserInvitations.js";
+import type * as passwordActions from "../passwordActions.js";
+import type * as passwordMutations from "../passwordMutations.js";
 import type * as products from "../products.js";
 import type * as seedAdmin from "../seedAdmin.js";
 import type * as settings from "../settings.js";
@@ -88,6 +90,8 @@ declare const fullApi: ApiFromModules<{
   "migrations/migrateAccounts": typeof migrations_migrateAccounts;
   "migrations/setIsActive": typeof migrations_setIsActive;
   "migrations/updateUserInvitations": typeof migrations_updateUserInvitations;
+  passwordActions: typeof passwordActions;
+  passwordMutations: typeof passwordMutations;
   products: typeof products;
   seedAdmin: typeof seedAdmin;
   settings: typeof settings;
