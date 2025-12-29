@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 import { convexAuth } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
 import { Id } from "./_generated/dataModel";
@@ -75,11 +75,14 @@ export const removeAuthorizedEmail = mutation({
     },
 });
 
-// Seed initial admin user and authorized email
+// Seed initial admin user with pre-computed password hash
+// Password: belladonna (bcrypt hash below)
 export const seedAdminUser = mutation({
     args: {},
     handler: async (ctx) => {
         const adminEmail = "tomas@englisch-lehrer.com";
+        // Pre-computed bcrypt hash for "belladonna"
+        const hashedPassword = "$2b$10$lag6guF0pvYlWH.gU3JLau3SgIEHfr7T02xzsbOCvP7Y2GRiG/8b6";
 
         // Check if admin already exists
         const existingUser = await ctx.db
@@ -87,7 +90,7 @@ export const seedAdminUser = mutation({
             .withIndex("by_email", (q) => q.eq("email", adminEmail))
             .first();
 
-        let userId;
+        let userId: Id<"users">;
         if (existingUser) {
             console.log("Admin user already exists");
             userId = existingUser._id;
@@ -117,7 +120,27 @@ export const seedAdminUser = mutation({
             });
         }
 
-        console.log("Admin user created:", userId);
+        // Create auth account with password
+        const existingAuthAccount = await ctx.db
+            .query("authAccounts")
+            .withIndex("userIdAndProvider", (q) =>
+                q.eq("userId", userId).eq("provider", "password")
+            )
+            .first();
+
+        if (!existingAuthAccount) {
+            await ctx.db.insert("authAccounts", {
+                userId: userId,
+                provider: "password",
+                providerAccountId: adminEmail,
+                secret: hashedPassword,
+            });
+            console.log("Auth account created with password");
+        } else {
+            console.log("Auth account already exists");
+        }
+
+        console.log("Admin user setup complete:", userId);
         return userId;
     },
 });
