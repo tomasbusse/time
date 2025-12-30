@@ -152,50 +152,36 @@ export const setupDefaultData = mutation({
 export const ensureWorkspaceExists = mutation({
   args: {},
   handler: async (ctx) => {
-    // Try multiple approaches to find the authenticated user
-
-    // Approach 1: Convex built-in auth (for non-OAuth users)
-    let user = null;
     const identity = await ctx.auth.getUserIdentity();
-
-    if (identity && identity.email) {
-      user = await ctx.db
-        .query("users")
-        .withIndex("by_email", (q) => q.eq("email", identity.email!))
-        .first();
+    if (!identity || !identity.email) {
+      throw new Error("Not authenticated");
     }
 
-    // Approach 2: If no user from Convex auth, get the most recent OAuth user
-    if (!user) {
-      const recentToken = await ctx.db
-        .query("userTokens")
-        .order("desc") // Most recent first
-        .first();
+    let user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", identity.email!))
+      .first();
 
-      if (recentToken) {
-        user = await ctx.db.get(recentToken.userId);
-      }
-    }
-
-    // Approach 3: Fallback - get any existing user (for demo/testing)
     if (!user) {
-      user = await ctx.db
-        .query("users")
-        .order("desc") // Most recent first
-        .first();
+      const userId = await ctx.db.insert("users", {
+        email: identity.email,
+        name: identity.name || identity.email.split("@")[0],
+        isAdmin: false,
+        role: "user",
+        createdAt: Date.now(),
+      });
+      user = await ctx.db.get(userId);
     }
 
     if (!user) {
-      throw new Error("No user found");
+      throw new Error("Failed to create user");
     }
 
-    // Check if workspace exists
     let workspace = await ctx.db
       .query("workspaces")
       .withIndex("by_owner", (q) => q.eq("ownerId", user._id))
       .first();
 
-    // Create workspace if it doesn't exist
     if (!workspace) {
       const workspaceId = await ctx.db.insert("workspaces", {
         name: `${user.name}'s Workspace`,
@@ -203,7 +189,6 @@ export const ensureWorkspaceExists = mutation({
         createdAt: Date.now(),
       });
 
-      // Add default permissions for the owner
       await ctx.db.insert("permissions", {
         workspaceId,
         userId: user._id,
@@ -229,38 +214,15 @@ export const ensureWorkspaceExists = mutation({
 export const getDefaultWorkspace = query({
   args: {},
   handler: async (ctx) => {
-    // Try multiple approaches to find the authenticated user
-
-    // Approach 1: Convex built-in auth (for non-OAuth users)
-    let user = null;
     const identity = await ctx.auth.getUserIdentity();
-
-    if (identity && identity.email) {
-      user = await ctx.db
-        .query("users")
-        .withIndex("by_email", (q) => q.eq("email", identity.email!))
-        .first();
+    if (!identity || !identity.email) {
+      return null;
     }
 
-    // Approach 2: If no user from Convex auth, get the most recent OAuth user
-    if (!user) {
-      const recentToken = await ctx.db
-        .query("userTokens")
-        .order("desc") // Most recent first
-        .first();
-
-      if (recentToken) {
-        user = await ctx.db.get(recentToken.userId);
-      }
-    }
-
-    // Approach 3: Fallback - get any existing user (for demo/testing)
-    if (!user) {
-      user = await ctx.db
-        .query("users")
-        .order("desc") // Most recent first
-        .first();
-    }
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", identity.email!))
+      .first();
 
     if (!user) {
       return null;

@@ -1,148 +1,116 @@
 import { v } from "convex/values";
-import { mutation, query, internalMutation } from "./_generated/server";
-import { convexAuth } from "@convex-dev/auth/server";
-import { Password } from "@convex-dev/auth/providers/Password";
-import { Id } from "./_generated/dataModel";
+import { mutation, query, QueryCtx, MutationCtx } from "./_generated/server";
 
-export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-    providers: [Password],
-});
+export async function getCurrentUser(ctx: QueryCtx | MutationCtx) {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) return null;
 
-// Check if email is authorized
+  const email = identity.email;
+  if (!email) return null;
+
+  const user = await ctx.db
+    .query("users")
+    .withIndex("by_email", (q) => q.eq("email", email))
+    .first();
+
+  return user;
+}
+
+export async function getOrCreateUser(ctx: MutationCtx) {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) return null;
+
+  const email = identity.email;
+  if (!email) return null;
+
+  let user = await ctx.db
+    .query("users")
+    .withIndex("by_email", (q) => q.eq("email", email))
+    .first();
+
+  if (!user) {
+    const userId = await ctx.db.insert("users", {
+      email: email,
+      name: identity.name || email.split("@")[0],
+      isAdmin: false,
+      role: "user",
+      createdAt: Date.now(),
+    });
+    user = await ctx.db.get(userId);
+  }
+
+  return user;
+}
+
 export const isEmailAuthorized = query({
-    args: { email: v.string() },
-    handler: async (ctx, args) => {
-        const authorized = await ctx.db
-            .query("authorizedEmails")
-            .withIndex("by_email", (q) => q.eq("email", args.email))
-            .first();
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const authorized = await ctx.db
+      .query("authorizedEmails")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .first();
 
-        return !!authorized;
-    },
+    return !!authorized;
+  },
 });
 
-// List all authorized emails
 export const listAuthorizedEmails = query({
-    args: {},
-    handler: async (ctx) => {
-        return await ctx.db.query("authorizedEmails").collect();
-    },
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query("authorizedEmails").collect();
+  },
 });
 
-// Add authorized email (admin only)
 export const addAuthorizedEmail = mutation({
-    args: {
-        email: v.string(),
-        notes: v.optional(v.string()),
-    },
-    handler: async (ctx, args) => {
-        const userId = await auth.getUserId(ctx);
-        if (!userId) throw new Error("Not authenticated");
+  args: {
+    email: v.string(),
+    notes: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) throw new Error("Not authenticated");
+    if (!user.isAdmin) throw new Error("Admin access required");
 
-        const user = await ctx.db.get(userId);
-        if (!user?.isAdmin) throw new Error("Admin access required");
+    const existing = await ctx.db
+      .query("authorizedEmails")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .first();
 
-        // Check if already exists
-        const existing = await ctx.db
-            .query("authorizedEmails")
-            .withIndex("by_email", (q) => q.eq("email", args.email))
-            .first();
+    if (existing) {
+      throw new Error("Email already authorized");
+    }
 
-        if (existing) {
-            throw new Error("Email already authorized");
-        }
-
-        return await ctx.db.insert("authorizedEmails", {
-            email: args.email,
-            addedBy: userId,
-            addedAt: Date.now(),
-            notes: args.notes,
-        });
-    },
+    return await ctx.db.insert("authorizedEmails", {
+      email: args.email,
+      addedBy: user._id,
+      addedAt: Date.now(),
+      notes: args.notes,
+    });
+  },
 });
 
-// Remove authorized email (admin only)
 export const removeAuthorizedEmail = mutation({
-    args: { id: v.id("authorizedEmails") },
-    handler: async (ctx, args) => {
-        const userId = await auth.getUserId(ctx);
-        if (!userId) throw new Error("Not authenticated");
+  args: { id: v.id("authorizedEmails") },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) throw new Error("Not authenticated");
+    if (!user.isAdmin) throw new Error("Admin access required");
 
-        const user = await ctx.db.get(userId);
-        if (!user?.isAdmin) throw new Error("Admin access required");
-
-        await ctx.db.delete(args.id);
-    },
+    await ctx.db.delete(args.id);
+  },
 });
 
-// Internal mutation to store admin with hashed password (called by Node action)
-export const storeAdminWithHash = internalMutation({
-    args: {
-        hashedPassword: v.string(),
-    },
-    handler: async (ctx, args): Promise<Id<"users">> => {
-        const adminEmail = "tomas@englisch-lehrer.com";
+export const getCurrentUserInfo = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) return null;
 
-        // Check if admin already exists
-        const existingUser = await ctx.db
-            .query("users")
-            .withIndex("by_email", (q) => q.eq("email", adminEmail))
-            .first();
-
-        let userId: Id<"users">;
-        if (existingUser) {
-            console.log("Admin user already exists");
-            userId = existingUser._id;
-        } else {
-            // Create admin user
-            userId = await ctx.db.insert("users", {
-                email: adminEmail,
-                name: "Tomas",
-                isAdmin: true,
-                role: "admin",
-                createdAt: Date.now(),
-            });
-            console.log("Admin user created");
-        }
-
-        // Add to authorized emails
-        const existingAuth = await ctx.db
-            .query("authorizedEmails")
-            .withIndex("by_email", (q) => q.eq("email", adminEmail))
-            .first();
-
-        if (!existingAuth) {
-            await ctx.db.insert("authorizedEmails", {
-                email: adminEmail,
-                addedBy: userId,
-                addedAt: Date.now(),
-                notes: "Initial admin user",
-            });
-        }
-
-        // Delete any existing auth account (might have wrong hash)
-        const existingAuthAccount = await ctx.db
-            .query("authAccounts")
-            .withIndex("userIdAndProvider", (q) =>
-                q.eq("userId", userId).eq("provider", "password")
-            )
-            .first();
-
-        if (existingAuthAccount) {
-            await ctx.db.delete(existingAuthAccount._id);
-            console.log("Deleted old auth account");
-        }
-
-        // Create new auth account with Scrypt hash
-        await ctx.db.insert("authAccounts", {
-            userId: userId,
-            provider: "password",
-            providerAccountId: adminEmail,
-            secret: args.hashedPassword,
-        });
-        console.log("Auth account created with Scrypt hash");
-
-        console.log("Admin user setup complete:", userId);
-        return userId;
-    },
+    return {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      isAdmin: user.isAdmin,
+    };
+  },
 });

@@ -1,5 +1,5 @@
-import { createContext, useContext, ReactNode } from 'react'
-import { useQuery } from 'convex/react'
+import { createContext, useContext, ReactNode, useEffect, useState } from 'react'
+import { useQuery, useMutation, useConvexAuth } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import type { Doc, Id } from '../../convex/_generated/dataModel'
 
@@ -20,27 +20,43 @@ const WorkspaceContext = createContext<WorkspaceContextType>({
 })
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
-  // Get workspace data from Convex
+  const { isAuthenticated, isLoading: authLoading } = useConvexAuth()
+  const [isSettingUp, setIsSettingUp] = useState(false)
+  
   const workspaceData = useQuery(api.setup.getDefaultWorkspace)
+  const ensureWorkspace = useMutation(api.setup.ensureWorkspaceExists)
 
-  console.log('WorkspaceProvider - workspaceData:', workspaceData);
-  console.log('WorkspaceProvider - userId:', workspaceData?.userId);
-  console.log('WorkspaceProvider - workspaceId:', workspaceData?.workspaceId);
+  useEffect(() => {
+    const setupWorkspace = async () => {
+      if (!authLoading && isAuthenticated && workspaceData === null && !isSettingUp) {
+        setIsSettingUp(true)
+        try {
+          await ensureWorkspace()
+        } catch (error) {
+          console.error('Failed to setup workspace:', error)
+        }
+        setIsSettingUp(false)
+      }
+    }
+    setupWorkspace()
+  }, [authLoading, isAuthenticated, workspaceData, isSettingUp, ensureWorkspace])
+
+  const isLoading = authLoading || workspaceData === undefined || isSettingUp || (isAuthenticated && workspaceData === null)
 
   const value: WorkspaceContextType = {
     userId: workspaceData?.userId || null,
     workspaceId: workspaceData?.workspaceId || null,
     userName: workspaceData?.userName || null,
     workspace: workspaceData?.workspace || null,
-    isLoading: workspaceData === undefined,
+    isLoading,
   }
 
-  if (value.isLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-off-white">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-brown mx-auto mb-4"></div>
-          <p className="text-gray">Loading workspace...</p>
+          <p className="text-gray">{isSettingUp ? 'Setting up your workspace...' : 'Loading workspace...'}</p>
         </div>
       </div>
     )
@@ -60,4 +76,3 @@ export function useWorkspace() {
   }
   return context
 }
-
