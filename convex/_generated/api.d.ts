@@ -20,6 +20,7 @@ import type * as crons from "../crons.js";
 import type * as customerImports from "../customerImports.js";
 import type * as customers from "../customers.js";
 import type * as dashboardLayouts from "../dashboardLayouts.js";
+import type * as debug from "../debug.js";
 import type * as debug_check from "../debug_check.js";
 import type * as email from "../email.js";
 import type * as equityMonitoring from "../equityMonitoring.js";
@@ -72,6 +73,7 @@ declare const fullApi: ApiFromModules<{
   customerImports: typeof customerImports;
   customers: typeof customers;
   dashboardLayouts: typeof dashboardLayouts;
+  debug: typeof debug;
   debug_check: typeof debug_check;
   email: typeof email;
   equityMonitoring: typeof equityMonitoring;

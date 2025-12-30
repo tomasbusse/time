@@ -12,6 +12,7 @@ import TempDeletePage from './pages/TempDeletePage'
 import LoginPage from './pages/LoginPage'
 import SettingsPage from './pages/SettingsPage'
 import OAuthCallback from './pages/OAuthCallback'
+import DebugPage from './pages/DebugPage'
 
 export default function AppRoutes() {
   return (
@@ -29,6 +30,7 @@ export default function AppRoutes() {
       <Route path="/settings/users" element={<AllowedUsersSettings />} />
       <Route path="/temp-delete" element={<TempDeletePage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/debug" element={<DebugPage />} />
     </Routes>
   )
 }
