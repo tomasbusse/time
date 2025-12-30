@@ -9,3 +9,11 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+interface Window {
+  Clerk?: {
+    session?: {
+      getToken: (options?: { template?: string }) => Promise<string | null>;
+    };
+  };
+}
