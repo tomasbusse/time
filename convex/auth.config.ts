@@ -4,5 +4,9 @@ export default {
       domain: process.env.CLERK_ISSUER_URL ?? "https://helping-buffalo-10.clerk.accounts.dev",
       applicationID: "convex",
     },
+    {
+      domain: "https://clerk.time.simmonds.online",
+      applicationID: "convex",
+    },
   ],
 };

@@ -19,6 +19,7 @@ export default function DebugPage() {
 
     const checkToken = async () => {
         try {
+            // @ts-ignore
             const token = await window.Clerk?.session?.getToken({ template: "convex" });
             if (!token) {
                 setTokenClaims("No token generated");
