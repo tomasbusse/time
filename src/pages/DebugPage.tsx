@@ -15,6 +15,21 @@ export default function DebugPage() {
 
     const [loadingId, setLoadingId] = useState<Id<"workspaces"> | null>(null);
     const [message, setMessage] = useState("");
+    const [tokenClaims, setTokenClaims] = useState<any>(null);
+
+    const checkToken = async () => {
+        try {
+            const token = await window.Clerk?.session?.getToken({ template: "convex" });
+            if (!token) {
+                setTokenClaims("No token generated");
+                return;
+            }
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            setTokenClaims(payload);
+        } catch (e: any) {
+            setTokenClaims(`Error: ${e.message}`);
+        }
+    };
 
     if (!isLoaded) return <div className="p-8">Loading Clerk...</div>;
 
@@ -80,6 +95,25 @@ export default function DebugPage() {
                 >
                     Sign Out
                 </button>
+            </div>
+
+            <div className="bg-yellow-50 p-6 rounded-lg mb-8 border border-yellow-200">
+                <h2 className="text-xl font-semibold mb-2">Auth Debugger</h2>
+                <p className="mb-4 text-sm text-gray-600">
+                    If you see "No auth provider found" errors, click below to see what your token looks like.
+                    The "iss" (Issuer) field must match your Convex Env Var.
+                </p>
+                <button
+                    onClick={checkToken}
+                    className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700"
+                >
+                    Inspect Token
+                </button>
+                {tokenClaims && (
+                    <pre className="mt-4 p-4 bg-gray-800 text-green-400 rounded overflow-auto text-xs">
+                        {JSON.stringify(tokenClaims, null, 2)}
+                    </pre>
+                )}
             </div>
 
             {message && (
