@@ -8,7 +8,9 @@ import { formatCurrency } from '@/lib/utils'
 import { SimpleAssetForm } from './SimpleAssetForm'
 import { SimpleLiabilityForm } from './SimpleLiabilityForm'
 import AssetValuationModal from './AssetValuationModal'
-import { Plus, Edit2, Trash2, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Plus, Edit2, Trash2, TrendingUp, TrendingDown, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react'
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import { useSearchParams } from 'react-router-dom'
 
 interface SimpleAsset {
   _id: string
@@ -35,6 +37,7 @@ interface SimpleLiability {
 
 export function SimpleAssetsLiabilities() {
   const { workspaceId } = useWorkspace()
+  const [, setSearchParams] = useSearchParams()
 
   // Month selection
   const now = new Date()
@@ -75,6 +78,12 @@ export function SimpleAssetsLiabilities() {
   const progress = useQuery(
     api.simpleFinance.getSimpleProgress,
     workspaceId ? { workspaceId } : 'skip'
+  )
+
+  // Get 12-month equity history for chart
+  const equityHistory = useQuery(
+    api.simpleFinance.getEquityMonitoring,
+    workspaceId ? { workspaceId, months: 12 } : 'skip'
   )
 
   // Mutations
@@ -290,6 +299,79 @@ export function SimpleAssetsLiabilities() {
           </div>
         </Card>
       )}
+
+      {/* Net Worth Trend Chart */}
+      <Card className="p-4" style={{ backgroundColor: '#F1F5EE' }}>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <BarChart3 className="w-5 h-5" style={{ color: '#384C5A' }} />
+            <h3 className="text-lg font-semibold" style={{ color: '#384C5A' }}>Net Worth Trend</h3>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSearchParams({ tab: 'equity-monitoring' })}
+          >
+            View Details
+          </Button>
+        </div>
+        {equityHistory && equityHistory.history.length > 0 ? (
+          <div className="h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={equityHistory.history}>
+                <XAxis
+                  dataKey="month"
+                  tickFormatter={(value) => {
+                    const [year, month] = value.split('-')
+                    const date = new Date(parseInt(year), parseInt(month) - 1)
+                    return date.toLocaleDateString('en-IE', { month: 'short' })
+                  }}
+                  tick={{ fontSize: 11, fill: '#B6B2B5' }}
+                  axisLine={{ stroke: '#E5E7EB' }}
+                  tickLine={false}
+                />
+                <YAxis
+                  tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
+                  tick={{ fontSize: 11, fill: '#B6B2B5' }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={60}
+                />
+                <Tooltip
+                  formatter={(value: number) => [formatCurrency(value), 'Net Worth']}
+                  labelFormatter={(label) => {
+                    const [year, month] = label.split('-')
+                    const date = new Date(parseInt(year), parseInt(month) - 1)
+                    return date.toLocaleDateString('en-IE', { month: 'long', year: 'numeric' })
+                  }}
+                  contentStyle={{
+                    backgroundColor: 'white',
+                    border: '1px solid #E5E7EB',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="netWorth"
+                  stroke="#384C5A"
+                  strokeWidth={2}
+                  dot={{ fill: '#384C5A', strokeWidth: 0, r: 3 }}
+                  activeDot={{ r: 5, fill: '#384C5A' }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="h-48 flex items-center justify-center text-center">
+            <div>
+              <BarChart3 className="w-10 h-10 mx-auto mb-2 opacity-30" style={{ color: '#B6B2B5' }} />
+              <p className="text-sm" style={{ color: '#B6B2B5' }}>No historical data yet</p>
+              <p className="text-xs" style={{ color: '#B6B2B5' }}>Update valuations monthly to see trends</p>
+            </div>
+          </div>
+        )}
+      </Card>
 
       {/* Assets Section */}
       <div className="space-y-4">

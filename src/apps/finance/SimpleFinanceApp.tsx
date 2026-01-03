@@ -17,8 +17,9 @@ import { Card } from '@/components/ui/Card'
 import { TrendingUp, TrendingDown, Users, GraduationCap } from 'lucide-react'
 import UserManagementPage from '../admin/UserManagementPage'
 import TeacherDashboard from '../teacher/TeacherDashboard'
+import EquityMonitoring from './components/EquityMonitoring'
 
-type TabType = 'overview' | 'assets-liabilities' | 'equity' | 'subscriptions' | 'budget' | 'invoices-overview' | 'invoices-list' | 'invoices-drafts' | 'invoices-customers' | 'invoices-lessons' | 'users' | 'teacher-dashboard'
+type TabType = 'overview' | 'assets-liabilities' | 'equity' | 'equity-monitoring' | 'subscriptions' | 'budget' | 'invoices-overview' | 'invoices-list' | 'invoices-drafts' | 'invoices-customers' | 'invoices-lessons' | 'users' | 'teacher-dashboard'
 
 interface Subscription {
   id: string
@@ -43,7 +44,7 @@ export default function FinanceApp() {
   // Read tab parameter from URL on mount
   useEffect(() => {
     const tab = searchParams.get('tab')
-    const validTabs: TabType[] = ['overview', 'assets-liabilities', 'equity', 'subscriptions', 'budget', 'invoices-overview', 'invoices-list', 'invoices-drafts', 'invoices-customers', 'invoices-lessons', 'users', 'teacher-dashboard']
+    const validTabs: TabType[] = ['overview', 'assets-liabilities', 'equity', 'equity-monitoring', 'subscriptions', 'budget', 'invoices-overview', 'invoices-list', 'invoices-drafts', 'invoices-customers', 'invoices-lessons', 'users', 'teacher-dashboard']
     if (tab && validTabs.includes(tab as TabType)) {
       setActiveTab(tab as TabType)
     }
@@ -145,7 +146,7 @@ export default function FinanceApp() {
                 <span className="text-xs sm:text-sm font-medium text-gray-600 sm:w-16">Money:</span>
                 <div className="relative flex-1 w-full">
                   <select
-                    value={['overview', 'assets-liabilities', 'equity', 'subscriptions', 'budget'].includes(activeTab) ? activeTab : ''}
+                    value={['overview', 'assets-liabilities', 'equity', 'equity-monitoring', 'subscriptions', 'budget'].includes(activeTab) ? activeTab : ''}
                     onChange={(e) => {
                       if (e.target.value) setActiveTab(e.target.value as TabType)
                     }}
@@ -154,6 +155,7 @@ export default function FinanceApp() {
                     <option value="" disabled>Select View</option>
                     <option value="overview">Overview</option>
                     <option value="assets-liabilities">Assets & Liability</option>
+                    <option value="equity-monitoring">Net Worth History</option>
                     <option value="equity">Liquidity</option>
                     <option value="subscriptions">Subscriptions</option>
                     <option value="budget">Budget</option>
@@ -215,6 +217,13 @@ export default function FinanceApp() {
         {activeTab === 'equity' && (
           <div className="mt-6">
             <NewLiquidityManager />
+          </div>
+        )}
+
+        {/* Net Worth History Tab */}
+        {activeTab === 'equity-monitoring' && (
+          <div className="mt-6">
+            <EquityMonitoring />
           </div>
         )}
 
