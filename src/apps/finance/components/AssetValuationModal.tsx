@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../../../convex/_generated/api'
 import { formatCurrency } from '@/lib/utils'
@@ -16,7 +16,7 @@ interface AssetValuationModalProps {
 
 export default function AssetValuationModal({ isOpen, onClose, workspaceId, year, month }: AssetValuationModalProps) {
     const allAssets = useQuery(api.simpleFinance.listSimpleAssets, workspaceId ? { workspaceId } : 'skip')
-    const liabilities = useQuery(api.simpleFinance.listSimpleLiabilities, workspaceId ? { workspaceId } : 'skip')
+    const liabilitiesData = useQuery(api.simpleFinance.listSimpleLiabilities, workspaceId ? { workspaceId } : 'skip')
     const monthlyValuations = useQuery(
         api.simpleFinance.listMonthlyValuations,
         workspaceId ? { workspaceId, year, month } : 'skip'
@@ -30,11 +30,21 @@ export default function AssetValuationModal({ isOpen, onClose, workspaceId, year
     const [hasChanges, setHasChanges] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
 
-    // Filter out bank accounts (they belong to Liquidity)
-    const assets = allAssets?.filter((a: any) => a.type !== 'bank_account') || []
+    // Track if we've initialized to prevent resetting on every render
+    const initializedRef = useRef(false)
 
+    // Memoize filtered assets to prevent useEffect from running on every render
+    const assets = useMemo(() => {
+        return allAssets?.filter((a: any) => a.type !== 'bank_account') || []
+    }, [allAssets])
+
+    const liabilities = useMemo(() => liabilitiesData || [], [liabilitiesData])
+
+    // Initialize values only once when data loads
     useEffect(() => {
-        if (monthlyValuations && assets && liabilities) {
+        if (monthlyValuations && allAssets && liabilitiesData && !initializedRef.current) {
+            initializedRef.current = true
+
             const newAssetValues: Record<string, number> = {}
             const newLiabilityValues: Record<string, number> = {}
             const newAssetNotes: Record<string, string> = {}
@@ -56,7 +66,7 @@ export default function AssetValuationModal({ isOpen, onClose, workspaceId, year
             setLiabilityNotes(newLiabilityNotes)
             setHasChanges(false)
         }
-    }, [monthlyValuations, assets, liabilities])
+    }, [monthlyValuations, allAssets, liabilitiesData])
 
     const handleSave = async () => {
         if (!workspaceId) return
