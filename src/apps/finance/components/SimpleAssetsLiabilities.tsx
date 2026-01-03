@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { useQuery, useMutation } from 'convex/react'
@@ -138,6 +138,25 @@ export function SimpleAssetsLiabilities() {
     return valuation ? valuation.value : fallbackValue
   }
 
+  // Calculate totals from monthly valuations for the SELECTED month
+  const selectedMonthTotals = useMemo(() => {
+    const assetTotal = monthlyValuations
+      .filter((v: any) => v.itemType === 'asset')
+      .reduce((sum: number, v: any) => sum + v.value, 0);
+    const liabilityTotal = monthlyValuations
+      .filter((v: any) => v.itemType === 'liability')
+      .reduce((sum: number, v: any) => sum + v.value, 0);
+
+    const hasData = monthlyValuations.length > 0;
+
+    return {
+      totalAssets: assetTotal,
+      totalLiabilities: liabilityTotal,
+      netWorth: assetTotal - liabilityTotal,
+      hasData,
+    };
+  }, [monthlyValuations]);
+
   const getAssetTypeLabel = (type: string) => {
     const types: Record<string, string> = {
       bank_account: 'Bank Account',
@@ -231,15 +250,18 @@ export function SimpleAssetsLiabilities() {
         </button>
       </div>
 
-      {/* Summary Cards */}
+      {/* Summary Cards - Shows values for SELECTED month */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4" style={{ backgroundColor: '#F1F5EE' }}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm" style={{ color: '#B6B2B5' }}>Total Assets</p>
               <p className="text-2xl font-bold" style={{ color: '#384C5A' }}>
-                {formatCurrency(netWorth?.totalAssets || 0)}
+                {formatCurrency(selectedMonthTotals.totalAssets)}
               </p>
+              {!selectedMonthTotals.hasData && (
+                <p className="text-xs" style={{ color: '#B6B2B5' }}>No data for this month</p>
+              )}
             </div>
             <TrendingUp className="w-8 h-8" style={{ color: '#A78573' }} />
           </div>
@@ -250,8 +272,11 @@ export function SimpleAssetsLiabilities() {
             <div>
               <p className="text-sm" style={{ color: '#B6B2B5' }}>Total Liabilities</p>
               <p className="text-2xl font-bold" style={{ color: '#A78573' }}>
-                {formatCurrency(netWorth?.totalLiabilities || 0)}
+                {formatCurrency(selectedMonthTotals.totalLiabilities)}
               </p>
+              {!selectedMonthTotals.hasData && (
+                <p className="text-xs" style={{ color: '#B6B2B5' }}>No data for this month</p>
+              )}
             </div>
             <TrendingDown className="w-8 h-8" style={{ color: '#A78573' }} />
           </div>
@@ -261,9 +286,12 @@ export function SimpleAssetsLiabilities() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm" style={{ color: '#B6B2B5' }}>Net Worth</p>
-              <p className={`text-2xl font-bold`} style={{ color: (netWorth?.netWorth || 0) >= 0 ? '#384C5A' : '#A78573' }}>
-                {formatCurrency(netWorth?.netWorth || 0)}
+              <p className={`text-2xl font-bold`} style={{ color: selectedMonthTotals.netWorth >= 0 ? '#384C5A' : '#A78573' }}>
+                {formatCurrency(selectedMonthTotals.netWorth)}
               </p>
+              {!selectedMonthTotals.hasData && (
+                <p className="text-xs" style={{ color: '#B6B2B5' }}>No data for this month</p>
+              )}
             </div>
             <div className="text-right">
               {progress && (
