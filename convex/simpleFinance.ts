@@ -528,30 +528,21 @@ export const getEquityMonitoring = query({
     const monthsToFetch = args.months || 12;
     const now = new Date();
     const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth() + 1;
+    const currentMonth = now.getMonth() + 1; // 1-indexed (1-12)
 
-    // Calculate date range
-    const endYear = currentYear;
-    const endMonth = currentMonth;
-    const startMonth = currentMonth - monthsToFetch + 1;
-    const startYear = startMonth > 0 ? currentYear : currentYear - 1;
-    const adjustedStartMonth = startMonth > 0 ? startMonth : startMonth + 12;
+    // Use JavaScript Date to handle year boundaries correctly
+    // End date is current month
+    const endDate = new Date(currentYear, currentMonth - 1); // JS months are 0-indexed
+    // Start date is (monthsToFetch - 1) months before current
+    const startDate = new Date(currentYear, currentMonth - monthsToFetch);
 
-    // Get all valuations in the date range
+    // Get all valuations from database
     const allValuations = await ctx.db
       .query("simpleMonthlyValuations")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
 
-    // Filter valuations in the date range
-    const filteredValuations = allValuations.filter((valuation) => {
-      const dateKey = valuation.year * 12 + valuation.month;
-      const startKey = startYear * 12 + adjustedStartMonth;
-      const endKey = endYear * 12 + endMonth;
-      return dateKey >= startKey && dateKey <= endKey;
-    });
-
-    // Get current net worth
+    // Get current net worth from actual asset/liability tables
     const assets = await ctx.db
       .query("simpleAssets")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
@@ -564,26 +555,21 @@ export const getEquityMonitoring = query({
 
     const totalAssets = assets.reduce((sum, asset) => sum + (asset.currentValue || 0), 0);
     const totalLiabilities = liabilities.reduce((sum, liability) => sum + (liability.currentBalance || 0), 0);
-    const netWorthData = {
-      totalAssets,
-      totalLiabilities,
-      netWorth: totalAssets - totalLiabilities,
-    };
 
-    // Group valuations by month
+    // Generate all month keys in the date range using Date arithmetic
     const monthlyData: { [key: string]: { assets: number; liabilities: number; netWorth: number } } = {};
+    const tempDate = new Date(startDate);
 
-    // Initialize all months in range
-    for (let i = 0; i < monthsToFetch; i++) {
-      const month = adjustedStartMonth + i;
-      const year = month > 12 ? startYear + 1 : startYear;
-      const adjustedMonth = month > 12 ? month - 12 : month;
-      const key = `${year}-${adjustedMonth.toString().padStart(2, '0')}`;
+    while (tempDate <= endDate) {
+      const year = tempDate.getFullYear();
+      const month = tempDate.getMonth() + 1; // Convert back to 1-indexed
+      const key = `${year}-${month.toString().padStart(2, '0')}`;
       monthlyData[key] = { assets: 0, liabilities: 0, netWorth: 0 };
+      tempDate.setMonth(tempDate.getMonth() + 1);
     }
 
-    // Process valuations
-    filteredValuations.forEach(valuation => {
+    // Filter and process valuations that fall within our date range
+    allValuations.forEach(valuation => {
       const key = `${valuation.year}-${valuation.month.toString().padStart(2, '0')}`;
       if (monthlyData[key]) {
         if (valuation.itemType === "asset") {
@@ -602,13 +588,13 @@ export const getEquityMonitoring = query({
       netWorth: data.assets - data.liabilities,
     }));
 
-    // Sort by date
+    // Sort by date (chronological order)
     equityHistory.sort((a, b) => a.month.localeCompare(b.month));
 
     return {
-      currentNetWorth: netWorthData.netWorth,
-      currentAssets: netWorthData.totalAssets,
-      currentLiabilities: netWorthData.totalLiabilities,
+      currentNetWorth: totalAssets - totalLiabilities,
+      currentAssets: totalAssets,
+      currentLiabilities: totalLiabilities,
       history: equityHistory,
       lastUpdated: Date.now(),
     };
