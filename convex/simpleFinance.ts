@@ -221,6 +221,30 @@ export const createMonthlyValuation = mutation({
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Check for existing valuation for this item/month/year
+    const existing = await ctx.db
+      .query("simpleMonthlyValuations")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("itemType"), args.itemType),
+          q.eq(q.field("itemId"), args.itemId),
+          q.eq(q.field("year"), args.year),
+          q.eq(q.field("month"), args.month)
+        )
+      )
+      .first();
+
+    if (existing) {
+      // Update existing valuation
+      await ctx.db.patch(existing._id, {
+        value: args.value,
+        notes: args.notes,
+      });
+      return existing._id;
+    }
+
+    // Insert new valuation
     return await ctx.db.insert("simpleMonthlyValuations", {
       workspaceId: args.workspaceId,
       itemType: args.itemType,
