@@ -330,8 +330,10 @@ export const getSimpleProgress = query({
       .query("simpleMonthlyValuations")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .filter((q) =>
-        q.eq(q.field("year"), currentYear) &&
-        q.eq(q.field("month"), currentMonth)
+        q.and(
+          q.eq(q.field("year"), currentYear),
+          q.eq(q.field("month"), currentMonth)
+        )
       )
       .collect();
 
@@ -339,22 +341,40 @@ export const getSimpleProgress = query({
       .query("simpleMonthlyValuations")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .filter((q) =>
-        q.eq(q.field("year"), previousYear) &&
-        q.eq(q.field("month"), previousMonth)
+        q.and(
+          q.eq(q.field("year"), previousYear),
+          q.eq(q.field("month"), previousMonth)
+        )
       )
       .collect();
 
-    // Calculate totals
-    const currentTotal = currentValuations.reduce((sum, v) => sum + v.value, 0);
-    const previousTotal = previousValuations.reduce((sum, v) => sum + v.value, 0);
-    const change = currentTotal - previousTotal;
-    const changePercent = previousTotal > 0 ? (change / previousTotal) * 100 : 0;
+    // Calculate net worth for current month (assets - liabilities)
+    const currentAssets = currentValuations
+      .filter(v => v.itemType === 'asset')
+      .reduce((sum, v) => sum + v.value, 0);
+    const currentLiabilities = currentValuations
+      .filter(v => v.itemType === 'liability')
+      .reduce((sum, v) => sum + v.value, 0);
+    const currentNetWorth = currentAssets - currentLiabilities;
+
+    // Calculate net worth for previous month (assets - liabilities)
+    const previousAssets = previousValuations
+      .filter(v => v.itemType === 'asset')
+      .reduce((sum, v) => sum + v.value, 0);
+    const previousLiabilities = previousValuations
+      .filter(v => v.itemType === 'liability')
+      .reduce((sum, v) => sum + v.value, 0);
+    const previousNetWorth = previousAssets - previousLiabilities;
+
+    // Calculate change
+    const change = currentNetWorth - previousNetWorth;
+    const changePercent = previousNetWorth !== 0 ? (change / Math.abs(previousNetWorth)) * 100 : 0;
 
     return {
       currentMonth: `${currentYear}-${currentMonth.toString().padStart(2, '0')}`,
       previousMonth: `${previousYear}-${previousMonth.toString().padStart(2, '0')}`,
-      currentTotal,
-      previousTotal,
+      currentTotal: currentNetWorth,
+      previousTotal: previousNetWorth,
       change,
       changePercent,
       valuationCount: currentValuations.length,
