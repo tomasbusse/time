@@ -86,11 +86,6 @@ export function SimpleAssetsLiabilities() {
     workspaceId ? { workspaceId, months: 12 } : 'skip'
   )
 
-  // DEBUG: Get all valuations to see what's in the database
-  const debugValuations = useQuery(
-    api.simpleFinance.debugAllValuations,
-    workspaceId ? { workspaceId } : 'skip'
-  )
 
   // Mutations
   const deleteAsset = useMutation(api.simpleFinance.deleteSimpleAsset)
@@ -553,18 +548,6 @@ export function SimpleAssetsLiabilities() {
         />
       )}
 
-      {/* DEBUG PANEL - Remove after debugging */}
-      <Card className="p-4 mt-6 bg-yellow-50 border-yellow-200">
-        <h3 className="font-bold text-yellow-800 mb-2">Debug: Database Valuations</h3>
-        <p className="text-sm text-yellow-700 mb-2">
-          Selected: {selectedYear}-{selectedMonth.toString().padStart(2, '0')} |
-          Monthly valuations for this month: {monthlyValuations.length} |
-          Total in DB: {debugValuations?.length || 0}
-        </p>
-        <div className="text-xs text-yellow-600 max-h-48 overflow-auto">
-          <pre>{JSON.stringify(debugValuations, null, 2)}</pre>
-        </div>
-      </Card>
     </div>
   )
 }
