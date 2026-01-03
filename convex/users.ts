@@ -5,32 +5,19 @@ import { Doc } from "./_generated/dataModel";
 
 export const getCurrentUser = query({
   handler: async (ctx): Promise<Doc<"users"> | null> => {
-    // Approach 1: Convex built-in auth
+    // Get identity from Clerk auth
     const identity = await ctx.auth.getUserIdentity();
-    if (identity) {
-      const user = await ctx.db
-        .query("users")
-        .withIndex("by_email", (q) => q.eq("email", identity.email!))
-        .unique();
-      if (user) return user;
+    if (!identity || !identity.email) {
+      return null;
     }
 
-    // Approach 2: Most recent OAuth user
-    const recentToken = await ctx.db
-      .query("userTokens")
-      .order("desc")
-      .first();
-
-    if (recentToken) {
-      const user = await ctx.db.get(recentToken.userId);
-      if (user) return user;
-    }
-
-    // Approach 3: Fallback - get any existing user (for demo/testing)
-    return await ctx.db
+    // Find user by email
+    const user = await ctx.db
       .query("users")
-      .order("desc")
+      .withIndex("by_email", (q) => q.eq("email", identity.email!))
       .first();
+
+    return user;
   },
 });
 export const getUserByEmail = query({
@@ -39,7 +26,7 @@ export const getUserByEmail = query({
     return await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", email))
-      .unique();
+      .first();
   },
 });
 

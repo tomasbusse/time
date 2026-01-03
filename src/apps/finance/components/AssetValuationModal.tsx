@@ -30,8 +30,8 @@ export default function AssetValuationModal({ isOpen, onClose, workspaceId, year
     const [hasChanges, setHasChanges] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
 
-    // Track if we've initialized to prevent resetting on every render
-    const initializedRef = useRef(false)
+    // Track the last loaded year/month to detect changes
+    const lastLoadedRef = useRef<string | null>(null)
 
     // Memoize filtered assets to prevent useEffect from running on every render
     const assets = useMemo(() => {
@@ -40,10 +40,13 @@ export default function AssetValuationModal({ isOpen, onClose, workspaceId, year
 
     const liabilities = useMemo(() => liabilitiesData || [], [liabilitiesData])
 
-    // Initialize values only once when data loads
+    // Initialize values when data loads or when year/month changes
     useEffect(() => {
-        if (monthlyValuations && allAssets && liabilitiesData && !initializedRef.current) {
-            initializedRef.current = true
+        const currentKey = `${year}-${month}`
+
+        // Only initialize when data is ready and we haven't loaded this month yet
+        if (monthlyValuations && allAssets && liabilitiesData && lastLoadedRef.current !== currentKey) {
+            lastLoadedRef.current = currentKey
 
             const newAssetValues: Record<string, number> = {}
             const newLiabilityValues: Record<string, number> = {}
@@ -66,7 +69,7 @@ export default function AssetValuationModal({ isOpen, onClose, workspaceId, year
             setLiabilityNotes(newLiabilityNotes)
             setHasChanges(false)
         }
-    }, [monthlyValuations, allAssets, liabilitiesData])
+    }, [monthlyValuations, allAssets, liabilitiesData, year, month])
 
     const handleSave = async () => {
         if (!workspaceId) return

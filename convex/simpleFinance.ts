@@ -276,8 +276,8 @@ export const listMonthlyValuations = query({
       .filter((valuation) => {
         if (args.itemType && valuation.itemType !== args.itemType) return false;
         if (args.itemId && valuation.itemId !== args.itemId) return false;
-        if (args.year && valuation.year !== args.year) return false;
-        if (args.month && valuation.month !== args.month) return false;
+        if (args.year !== undefined && valuation.year !== args.year) return false;
+        if (args.month !== undefined && valuation.month !== args.month) return false;
         return true;
       })
       .sort((a, b) => {
@@ -285,6 +285,26 @@ export const listMonthlyValuations = query({
         const bKey = b.year * 12 + b.month;
         return bKey - aKey;
       });
+  },
+});
+
+// Debug query to see all valuations in database
+export const debugAllValuations = query({
+  args: { workspaceId: v.id("workspaces") },
+  handler: async (ctx, args) => {
+    const valuations = await ctx.db
+      .query("simpleMonthlyValuations")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .collect();
+
+    return valuations.map(v => ({
+      id: v._id,
+      itemType: v.itemType,
+      itemId: v.itemId,
+      year: v.year,
+      month: v.month,
+      value: v.value,
+    }));
   },
 });
 
